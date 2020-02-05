@@ -1,0 +1,10 @@
+steps:
+  - bash: |
+      if [[ -z "$(System.PullRequest.SourceBranch)" ]]; then
+        branch_name="$(Build.SourceBranchName)"
+      else
+        branch_name="$(System.PullRequest.SourceBranch)"
+      fi
+      echo "Determined branch name: $branch_name"
+      echo "##vso[task.setvariable variable=current_branch]$branch_name"
+    displayName: "Set current_branch variable"

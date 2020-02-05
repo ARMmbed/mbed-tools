@@ -1,0 +1,13 @@
+parameters:
+  message: 'Release'
+  releaseType: 'development'
+  currentBranch: ''
+
+steps:
+  - bash: tag-and-release -b ${{ parameters.currentBranch }} --release-type=${{ parameters.releaseType }} -vv
+    displayName: ${{ parameters.message }}
+    env:
+      GIT_TOKEN: $(GIT_TOKEN)
+      TWINE_USERNAME: $(TWINE_USERNAME)
+      TWINE_PASSWORD: $(TWINE_PASSWORD)
+      IGNORE_PYPI_TEST_UPLOAD: $(IGNORE_PYPI_TEST_UPLOAD)

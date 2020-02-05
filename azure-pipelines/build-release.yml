@@ -1,0 +1,205 @@
+# Azure Pipeline for Build and Release a Python package.
+#
+# This pipeline performs multiple actions to ensure the quality of the package:
+# - Performs static analysis and runs test on multiple Python versions and host platforms.
+# - Uploads test coverage to Code Climate
+# - Generates reference documentation
+# - Optionally releases the software on PyPI
+
+# Rebuild after commits to master for GA releases, beta for pre-release and release branches for patches.
+trigger:
+  - master
+  - beta
+  - releases/*
+
+# Trigger on a PR to master, beta or releases branches (this includes PRs from forks but secrets are not exposed).
+pr:
+  - master
+  - beta
+  - releases/*
+
+stages:
+  - stage: AnalyseTest
+    displayName: 'Analyse and Test'
+    jobs:
+      - job: Test
+        strategy:
+          maxParallel: 10
+          matrix:
+            Linux_Py_3_6:
+              python.version: '3.6'
+              vmImageName: ubuntu-18.04
+              uploadCoverage: "false"
+
+            Linux_Py_3_7:
+              python.version: '3.7'
+              vmImageName: ubuntu-18.04
+              uploadCoverage: "true"
+
+            Windows_Py_3_6:
+              python.version: '3.6'
+              vmImageName: windows-2019
+              uploadCoverage: "false"
+
+            Windows_Py_3_7:
+              python.version: '3.7'
+              vmImageName: windows-2019
+              uploadCoverage: "false"
+
+            macOS_Py_3_6:
+              python.version: '3.6'
+              vmImageName: macOS-10.14
+              uploadCoverage: "false"
+
+            macOS_Py_3_7:
+              python.version: '3.7'
+              vmImageName: macOS-10.14
+              uploadCoverage: "false"
+        pool:
+          vmImage: $(vmImageName)
+
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '$(python.version)'
+            displayName: 'Use Python $(python.version)'
+
+          - template: steps/install-development-dependencies.yml
+
+          # Static analysis is different for Python versions so should be run in each environment.
+          - script: |
+              flake8
+            displayName: 'Static Analysis - general (flake8)'
+
+          - script: |
+              mypy -p mbed_tools
+            displayName: 'Static Analysis - type checks (mypy)'
+
+          - script: |
+              pip install pytest-azurepipelines
+            displayName: 'Add pytest plugin to upload test results to Azure UI'
+
+          - script: |
+              pytest
+            displayName: 'Run unit tests (pytest)'
+
+          - template: steps/publish-code-coverage-results.yml
+
+  - stage: AssertNews
+    displayName: 'Checks news files'
+    dependsOn: []
+    jobs:
+      - job: News
+        displayName: 'Assert news files'
+        pool:
+          vmImage: 'ubuntu-latest'
+
+        steps:
+          - task: UsePythonVersion@0
+            displayName: 'Use Python 3.7'
+            inputs:
+              versionSpec: '3.7'
+
+          - template: steps/determine-current-branch.yml
+
+          - template: steps/install-development-dependencies.yml
+
+          - script: |
+              assert-news -b $(current_branch)
+            displayName: 'Run check'
+
+  - stage: DocBuild
+    displayName: 'Build Documentation'
+    dependsOn: []
+    jobs:
+      - job: Docs
+        displayName: 'Build Documentation'
+        pool:
+          vmImage: 'ubuntu-latest'
+
+        steps:
+          - task: UsePythonVersion@0
+            displayName: 'Use Python 3.7'
+            inputs:
+              versionSpec: '3.7'
+
+          - template: steps/install-development-dependencies.yml
+
+          - template: steps/generate-documentation.yml
+
+          - publish: $(temp_docs_path)
+            artifact: Documentation
+            displayName: 'Publish documentation'
+
+  - stage: BetaRelease
+    displayName: 'Beta Release'
+    # Only allow beta releases if the tests pass and we are on the beta branch.
+    dependsOn:
+      - AnalyseTest
+      - AssertNews
+    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/beta'))
+    jobs:
+      - deployment: PyPIBetaRelease
+        displayName: 'PyPI Beta Release'
+        # The following environment has a manual approval step to gate releases.
+        # This can only be created and configured within the Environment section of Pipelines.
+        # The release can be approved from the Azure pipeline run.
+        environment: 'PyPI Release'
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: 'ubuntu-latest'
+              steps:
+                - task: UsePythonVersion@0
+                  inputs:
+                    versionSpec: '3.7'
+
+                - template: steps/determine-current-branch.yml
+
+                - template: steps/override-checkout.yml
+
+                - template: steps/install-development-dependencies.yml
+
+                - template: steps/tag-and-release.yml
+                  parameters:
+                    message: 'Beta Release'
+                    releaseType: 'beta'
+                    currentBranch: $(current_branch)
+
+  - stage: ProductionReleasePyPI
+    displayName: 'Production Release'
+    # Only allow production releases if the tests pass and we are on the master branch.
+    dependsOn:
+      - AnalyseTest
+      - DocBuild
+      - AssertNews
+    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
+    jobs:
+      - deployment: PyPIProductionRelease
+        displayName: 'PyPI Production Release'
+        # The following environment has a manual approval step to gate releases.
+        # This can only be created and configured within the Environment section of Pipelines.
+        # The release can be approved from the Azure pipeline run.
+        environment: 'PyPI Release'
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: 'ubuntu-latest'
+              steps:
+                - task: UsePythonVersion@0
+                  inputs:
+                    versionSpec: '3.7'
+
+                - template: steps/determine-current-branch.yml
+
+                - template: steps/override-checkout.yml
+
+                - template: steps/install-development-dependencies.yml
+
+                - template: steps/tag-and-release.yml
+                  parameters:
+                    message: 'Production Release'
+                    releaseType: 'release'
+                    currentBranch: $(current_branch)

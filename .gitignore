@@ -1,0 +1,30 @@
+# Don't lock the versions of this library or installation gridlock will ensue
+Pipfile.lock
+
+# PyCharm
+.idea/
+
+# macOS
+.DS_Store
+
+# Python
+*.pyc
+__pycache__/
+*.egg-info/
+
+# Coverage.py
+.coverage
+coverage/
+junit/
+htmlcov/
+
+# Package
+build/
+dist/
+release-dist/
+
+# Temporary file used by CI
+dev-requirements.txt
+
+# Local docs output
+local_docs/

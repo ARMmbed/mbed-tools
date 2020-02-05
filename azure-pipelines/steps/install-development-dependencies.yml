@@ -1,0 +1,14 @@
+steps:
+  # Note
+  # The below code generates a pip requirements file from the pipenv development requirements (also obtaining the
+  # normal dependencies from setup.py) and then installs via pip. As a virtual machine is already being used, pipenv
+  # is superfluous and eliminating pipenv in CI reduces overhead and reduce complexity, while retaining a single
+  # location for development dependencies.
+  - script: |
+      python -m pip install --upgrade pip wheel setuptools
+      pip install pipenv
+      python -m pipenv lock --dev -r > dev-requirements.txt
+      pip install -r dev-requirements.txt
+      pip install pytest-azurepipelines
+      pip list
+    displayName: 'Install development dependencies'

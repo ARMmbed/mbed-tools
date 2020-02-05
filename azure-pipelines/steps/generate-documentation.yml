@@ -1,0 +1,8 @@
+steps:
+  - bash: |
+      echo "##vso[task.setvariable variable=temp_docs_path]`get-config --key DOCUMENTATION_PRODUCTION_OUTPUT_PATH`"
+    displayName: 'Set variable for temporary docs dir'
+
+  - script: |
+      generate-docs --output_dir $(temp_docs_path)
+    displayName: 'Generate documentation'
