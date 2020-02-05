@@ -7,13 +7,13 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mbed-tools)](https://pypi.org/project/mbed-tools/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/ARMmbed/mbed-tools/blob/master/LICENSE)
 
-[![Build Status]()](TODO_AZURE)
+[![Build Status](https://dev.azure.com/mbed-tools/mbed-tools-ci-scripts/_apis/build/status/Build%20and%20Release?branchName=master)](https://dev.azure.com/mbed-tools/mbed-tools-ci-scripts/_build/latest?definitionId=8&branchName=master)
 [![Test Coverage](https://codecov.io/gh/ARMmbed/mbed-tools/branch/master/graph/badge.svg)](https://codecov.io/gh/ARMmbed/mbed-tools)
-[![Maintainability]()](TODO_CODE_CLIMATE)
+[![Maintainability](https://api.codeclimate.com/v1/badges/b9fca0e16f7a85da7674/maintainability)](https://codeclimate.com/github/ARMmbed/mbed-tools/maintainability)
 
 ## Overview
 
-TODO_OVERVIEW
+Command line tooling for Mbed OS applications.
 
 ## Releases
 
