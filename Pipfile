@@ -4,12 +4,17 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+black = "*"
 coverage = "*"
 flake8 = "*"
 flake8-docstrings = "*"
+flake8-black = "*"
 mypy = ">=0.500"
 pytest = "*"
 pytest-cov = "*"
 wheel = "*"
 mbed-tools = {editable = true, path = "."}
 mbed-tools-ci-scripts = "*"
+
+[pipenv]
+allow_prereleases = true

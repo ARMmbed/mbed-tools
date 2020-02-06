@@ -51,7 +51,7 @@ pipenv --three
 pipenv install --dev
 ```
 
-## Unit Tests and Static Analysis
+## Unit Tests, Code Formatting and Static Analysis
 
 Shell into virtual environment:
 
@@ -66,6 +66,13 @@ pytest
 ```
 Note that other test runners can be used (e.g. [green](https://github.com/CleanCut/green)) 
 as long as they support test written using unittest.TestCase.
+
+
+Run code formatter (it will format files in place):
+
+```bash
+black .
+```
 
 Run static analysis (note that no output means all is well):
 

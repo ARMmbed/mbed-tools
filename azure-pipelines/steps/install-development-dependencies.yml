@@ -4,10 +4,12 @@ steps:
   # normal dependencies from setup.py) and then installs via pip. As a virtual machine is already being used, pipenv
   # is superfluous and eliminating pipenv in CI reduces overhead and reduce complexity, while retaining a single
   # location for development dependencies.
+  # This code also forces the system to install latest tools as the ones present on the CI system may be too old
+  # for the process to go through properly.
   - script: |
       python -m pip install --upgrade pip wheel setuptools
       pip install pipenv
-      python -m pipenv lock --dev -r > dev-requirements.txt
+      python -m pipenv lock --dev -r --pre > dev-requirements.txt
       pip install -r dev-requirements.txt
       pip install pytest-azurepipelines
       pip list

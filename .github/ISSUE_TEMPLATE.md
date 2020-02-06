@@ -13,7 +13,8 @@ Things to consider sharing:
 ### Issue request type
 
 <!--
-Please add only one X to one of the following types. Do not fill multiple types (split the issue otherwise).
+Please add only one `x` to one of the following types. Do not fill multiple types (split the issue otherwise).
+
 
 For questions please use https://forums.mbed.com/
 -->
