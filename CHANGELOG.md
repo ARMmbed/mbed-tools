@@ -11,3 +11,25 @@ beta releases are not included in this history. For a full list of all releases,
 [PyPI Release History](https://pypi.org/project/mbed-tools/#history).
 
 [//]: # (begin_release_notes)
+
+"1.0.0" (2020-03-06)
+====================
+"" "1.0.0" (2020-03-06)
+=======================
+
+Major changes
+-------------
+
+- Artificial release bump because of old mbed-tools (#20200207)
+
+
+Features
+--------
+
+- Integrate mbed-devices (#20200207)
+
+
+Misc
+----
+
+- #20200210
