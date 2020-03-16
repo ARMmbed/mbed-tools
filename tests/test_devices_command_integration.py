@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from mbed_tools.cli import cli
-from mbed_devices.mbed_tools.cli import cli as mbed_devices_cli
+from mbed_devices.mbed_tools import cli as mbed_devices_cli
 
 
 class TestDevicesCommandIntegration(TestCase):

@@ -1,6 +1,6 @@
 """Integration point with all sub-packages."""
 import click
-from mbed_devices.mbed_tools.cli import cli as mbed_devices_cli
+from mbed_devices.mbed_tools import cli as mbed_devices_cli
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
