@@ -22,9 +22,9 @@ class TestBuildOutput(TestCase):
     def test_prints_preamble(self):
         config_var = mock.Mock(docstring="Foo doc")
         config_var.name = "FOO"
-        self.maxDiff = None
+        variable_output = f"{config_var.name}\n\n{_tab_prefix(config_var.docstring)}"
 
-        expected_output = f"{_OUTPUT_PREAMBLE}\n\n{config_var.name}\n\n\t{config_var.docstring}"
+        expected_output = f"{_OUTPUT_PREAMBLE}\n\n{variable_output}"
 
         self.assertEqual(expected_output, _build_output([config_var]))
 
