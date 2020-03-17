@@ -28,7 +28,7 @@ class GroupWithExceptionHandling(click.Group):
             traceback = context.params["traceback"]
             if LOGGER.level != logging.DEBUG and not traceback:
                 err = (
-                    f"{err} Increase the verbosity level to `-vvv` to see debug information."
+                    f"{err}\nIncrease the verbosity level to `-vvv` to see debug information."
                     " Use the `--traceback` argument to see a full stack trace."
                 )
             log_exception(LOGGER, err, traceback)
