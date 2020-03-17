@@ -15,6 +15,7 @@ pytest-cov = "*"
 wheel = "*"
 mbed-tools = {editable = true, path = "."}
 mbed-tools-ci-scripts = "*"
+pre-commit = "*"
 
 [pipenv]
 allow_prereleases = true

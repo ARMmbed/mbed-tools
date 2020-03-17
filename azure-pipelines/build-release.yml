@@ -28,32 +28,32 @@ stages:
           matrix:
             Linux_Py_3_6:
               python.version: '3.6'
-              vmImageName: ubuntu-18.04
+              vmImageName: ubuntu-latest
               uploadCoverage: "false"
 
             Linux_Py_3_7:
               python.version: '3.7'
-              vmImageName: ubuntu-18.04
+              vmImageName: ubuntu-latest
               uploadCoverage: "true"
 
             Windows_Py_3_6:
               python.version: '3.6'
-              vmImageName: windows-2019
+              vmImageName: windows-latest
               uploadCoverage: "false"
 
             Windows_Py_3_7:
               python.version: '3.7'
-              vmImageName: windows-2019
+              vmImageName: windows-latest
               uploadCoverage: "false"
 
             macOS_Py_3_6:
               python.version: '3.6'
-              vmImageName: macOS-10.14
+              vmImageName: macOS-latest
               uploadCoverage: "false"
 
             macOS_Py_3_7:
               python.version: '3.7'
-              vmImageName: macOS-10.14
+              vmImageName: macOS-latest
               uploadCoverage: "false"
         pool:
           vmImage: $(vmImageName)
@@ -131,12 +131,25 @@ stages:
             artifact: Documentation
             displayName: 'Publish documentation'
 
+  # Collect test and build stages together before the release stages to provide a pass/fail point for the status badge.
+  - stage: CiCheckpoint
+    displayName: 'CI Checkpoint'
+    dependsOn:
+      - AnalyseTest
+      - AssertNews
+      - DocBuild
+    jobs:
+      - job: ChecksPassing
+        displayName: 'Checks Passing'
+        # A dummy job is required due to a bug in Azure which runs the previous job if nothing is defined.
+        steps:
+          - bash: echo "All prerequisite stages have passed and the package should be suitable for release."
+
   - stage: BetaRelease
     displayName: 'Beta Release'
     # Only allow beta releases if the tests pass and we are on the beta branch.
     dependsOn:
-      - AnalyseTest
-      - AssertNews
+      - CiCheckpoint
     condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/beta'))
     jobs:
       - deployment: PyPIBetaRelease
@@ -171,9 +184,7 @@ stages:
     displayName: 'Production Release'
     # Only allow production releases if the tests pass and we are on the master branch.
     dependsOn:
-      - AnalyseTest
-      - DocBuild
-      - AssertNews
+      - CiCheckpoint
     condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
     jobs:
       - deployment: PyPIProductionRelease
