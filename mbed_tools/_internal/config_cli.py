@@ -19,7 +19,7 @@ using a `.env` file containing the variable definitions as follows:
 
 VARIABLE=value
 
-Environmenta variables take precendence, meaning the values set in the file will be overriden
+Environment variables take precendence, meaning the values set in the file will be overriden
 by any values previously set in your environment.
 
 +---------------------------------------------------------------------------------+
