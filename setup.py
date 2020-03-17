@@ -34,7 +34,7 @@ setup(
     description="Command line interface for Mbed OS.",
     keywords="Arm Mbed OS MbedOS cli command line tools",
     include_package_data=True,
-    install_requires=["python-dotenv", "Click==7.0", "mbed-devices", "mbed_tools_lib"],
+    install_requires=["python-dotenv", "Click==7.0", "mbed-devices", "mbed-tools-lib"],
     license="Apache 2.0",
     long_description_content_type="text/markdown",
     long_description=long_description,

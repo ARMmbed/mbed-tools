@@ -2,8 +2,8 @@ from click.testing import CliRunner
 from unittest import TestCase, mock
 from tabulate import tabulate
 
+from mbed_tools_lib.config_option import ConfigOption
 from mbed_tools._internal.config_cli import (
-    _ConfigOption,
     _OUTPUT_PREAMBLE,
     _build_output,
     cli,
@@ -22,12 +22,10 @@ class TestConfigCommand(TestCase):
 class TestBuildOutput(TestCase):
     def test_merges_configuration_options_with_preamble(self):
         options = {
-            _ConfigOption(key="SOME_KEY", description="Does something."),
-            _ConfigOption(key="OTHER_KEY", description="Does something else."),
+            ConfigOption(name="SOME_KEY", doc="Does something."),
+            ConfigOption(name="OTHER_KEY", doc="Does something else."),
         }
-        options_table = tabulate(
-            [[option.key, option.description] for option in options], headers=["Key", "Description"]
-        )
+        options_table = tabulate([[option.name, option.doc] for option in options], headers=["Name", "Description"])
         expected_output = f"{_OUTPUT_PREAMBLE}\n{options_table}"
 
         self.assertEqual(expected_output, _build_output(options))

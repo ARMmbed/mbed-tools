@@ -3,8 +3,9 @@
 TODO: describe the common interface of exposing configuration options by child packages
 """
 import click
-import dataclasses
 from tabulate import tabulate
+
+from mbed_devices.mbed_tools import config as mbed_devices_config
 
 
 @click.command()
@@ -13,14 +14,8 @@ def cli():
     click.echo(_build_output(_gather_configuration_options()))
 
 
-@dataclasses.dataclass(frozen=True)
-class _ConfigOption:
-    key: str
-    description: str
-
-
 def _gather_configuration_options():
-    return ()
+    return mbed_devices_config()
 
 
 _OUTPUT_PREAMBLE = """
@@ -42,6 +37,6 @@ override any values previously set in your environment.
 
 def _build_output(configuration_options):
     options_table = tabulate(
-        [[option.key, option.description] for option in configuration_options], headers=["Key", "Description"]
+        [[option.name, option.doc] for option in configuration_options], headers=["Name", "Description"]
     )
     return f"{_OUTPUT_PREAMBLE}\n{options_table}"
