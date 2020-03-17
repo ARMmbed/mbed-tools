@@ -1,31 +1,26 @@
-"""Exposes a click command which prints information about configuration options of all child mbed packages.
-
-TODO: describe the common interface of exposing configuration options by child packages
-"""
+"""Exposes a click command which prints information about configuration variables of all child mbed packages."""
 import click
-from tabulate import tabulate
 
-from mbed_devices.mbed_tools import config as mbed_devices_config
+from mbed_devices.mbed_tools import config_variables as mbed_devices_config_variables
 
 
 @click.command()
 def cli():
-    """Prints information about configuration options of all child mbed packages."""
-    click.echo(_build_output(_gather_configuration_options()))
+    """Prints information about configuration variables of all child mbed packages."""
+    click.echo(_build_output(_gather_configuration_variables()))
 
 
-def _gather_configuration_options():
-    return mbed_devices_config()
+def _gather_configuration_variables():
+    return mbed_devices_config_variables
 
 
-_OUTPUT_PREAMBLE = """
-All the configuration options can be set either via environment variables or
+_OUTPUT_PREAMBLE = """All the configuration variables can be set either via environment variables or
 using a `.env` file containing the variable definitions as follows:
 
 VARIABLE=value
 
-The `.env` file takes precendence, meaning the values set in the file will
-override any values previously set in your environment.
+Environmenta variables take precendence, meaning the values set in the file will be overriden
+by any values previously set in your environment.
 
 +---------------------------------------------------------------------------------+
 | Do not upload `.env` files containing private tokens to version control! If you |
@@ -35,8 +30,14 @@ override any values previously set in your environment.
 """
 
 
-def _build_output(configuration_options):
-    options_table = tabulate(
-        [[option.name, option.doc] for option in configuration_options], headers=["Name", "Description"]
-    )
-    return f"{_OUTPUT_PREAMBLE}\n{options_table}"
+def _build_output(config_variables):
+    variables_output = "\n\n".join([_build_variable_output(variable) for variable in config_variables])
+    return f"{_OUTPUT_PREAMBLE}\n\n{variables_output}"
+
+
+def _build_variable_output(config_variable):
+    return "{name}\n\n{docstring}".format(name=config_variable.name, docstring=_tab_prefix(config_variable.docstring))
+
+
+def _tab_prefix(mutiline_text):
+    return "\n".join([f"\t{line}" for line in mutiline_text.split("\n")])

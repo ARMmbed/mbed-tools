@@ -1,31 +1,34 @@
 from click.testing import CliRunner
 from unittest import TestCase, mock
-from tabulate import tabulate
 
-from mbed_tools_lib.config_option import ConfigOption
 from mbed_tools._internal.config_cli import (
     _OUTPUT_PREAMBLE,
     _build_output,
+    _tab_prefix,
     cli,
 )
 
 
 class TestConfigCommand(TestCase):
-    @mock.patch("mbed_tools._internal.config_cli._gather_configuration_options", autospec=True)
-    def test_outputs_output_built_with_gathered_configuration_options(self, _gather_configuration_options):
+    @mock.patch("mbed_tools._internal.config_cli._gather_configuration_variables", autospec=True)
+    def test_outputs_output_built_with_gathered_configuration_variables(self, _gather_configuration_variables):
         result = CliRunner().invoke(cli)
 
         self.assertEqual(result.exit_code, 0)
-        self.assertIn(_build_output(_gather_configuration_options.return_value), result.output)
+        self.assertIn(_build_output(_gather_configuration_variables.return_value), result.output)
 
 
 class TestBuildOutput(TestCase):
-    def test_merges_configuration_options_with_preamble(self):
-        options = {
-            ConfigOption(name="SOME_KEY", doc="Does something."),
-            ConfigOption(name="OTHER_KEY", doc="Does something else."),
-        }
-        options_table = tabulate([[option.name, option.doc] for option in options], headers=["Name", "Description"])
-        expected_output = f"{_OUTPUT_PREAMBLE}\n{options_table}"
+    def test_prints_preamble(self):
+        config_var = mock.Mock(docstring="Foo doc")
+        config_var.name = "FOO"
+        self.maxDiff = None
 
-        self.assertEqual(expected_output, _build_output(options))
+        expected_output = f"{_OUTPUT_PREAMBLE}\n\n{config_var.name}\n\n\t{config_var.docstring}"
+
+        self.assertEqual(expected_output, _build_output([config_var]))
+
+
+class TestTabPrefix(TestCase):
+    def test_prefixes_all_lines_with_tab(self):
+        self.assertEqual("\tHAT\n\tBOAT", _tab_prefix("HAT\nBOAT"))
