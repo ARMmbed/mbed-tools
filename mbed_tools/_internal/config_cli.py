@@ -1,11 +1,8 @@
 """Exposes a click command which prints information about configuration variables of all child mbed packages."""
 import click
 import pdoc
-from typing import (
-    Iterable,
-    List,
-    cast,
-)
+from typing import Iterable
+
 
 from mbed_devices.mbed_tools import config_variables as mbed_devices_config_variables
 
