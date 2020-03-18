@@ -13,11 +13,7 @@ from mbed_devices.mbed_tools import config_variables as mbed_devices_config_vari
 @click.command()
 def cli() -> None:
     """Prints information about configuration variables of all child mbed packages."""
-    click.echo(_build_output(_gather_configuration_variables()))
-
-
-def _gather_configuration_variables() -> List[pdoc.Variable]:
-    return cast(List[pdoc.Variable], mbed_devices_config_variables)
+    click.echo(_build_output(mbed_devices_config_variables))
 
 
 _OUTPUT_PREAMBLE = """All the configuration variables can be set either via environment variables or
