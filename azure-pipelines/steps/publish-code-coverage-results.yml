@@ -1,7 +1,8 @@
 steps:
   # This script only runs for one set of unit tests (to avoid duplicate uploads) and will only run when the variable
   # CODECOV_TOKEN is available, which means this step is disabled for PRs from forked repositories.
-  - script: |
+  # Use "bash" rather than "script" to allow upload from all host platforms including Windows.
+  - bash: |
       bash <(curl -s https://codecov.io/bash) -Z -t $(CODECOV_TOKEN)
     condition: and(succeeded(), eq(variables['uploadCoverage'], 'true'), ne(variables['CODECOV_TOKEN'], ''))
     displayName: 'Upload test coverage to codecov.io'

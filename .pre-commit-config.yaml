@@ -1,0 +1,32 @@
+- repo: local
+  hooks:
+  - id: black
+    name: black
+    entry: black
+    language: python
+    types: [python]
+    require_serial: true
+
+  - id: flake8
+    name: flake8
+    entry: flake8
+    language: python
+    types: [python]
+    require_serial: true
+
+  - id: mypy
+    name: mypy
+    entry: mypy -p mbed_tools
+    language: python
+    types: [python]
+    require_serial: true
+    pass_filenames: false
+
+  - id: pytest
+    name: pytest
+    entry: pytest -vvv
+    language: python
+    types: [python]
+    pass_filenames: false
+    always_run: true
+
