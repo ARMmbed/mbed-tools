@@ -6,7 +6,9 @@
 # Only path variables can and must contain 'DIR', 'PATH' or 'ROOT' in their name as
 # these tokens are used to identify path variables from other variable types.
 PROJECT_ROOT = "."
-PROJECT_NAME= "Mbed Tools"
+PROJECT_NAME = "Mbed Tools"
+PROJECT_UUID = "a58676f2-0505-4916-84ee-2ef116b07352"
+PACKAGE_NAME = "mbed-tools"
 NEWS_DIR = "news/"
 SOURCE_DIR = "mbed_tools"
 RELEASE_BRANCH_PATTERN = "^release.*$"
@@ -76,3 +78,8 @@ showcontent = false
 
 [tool.black]
 line-length = 120
+
+[spdx]
+CreatorWebsite = "spdx.org"
+PathToSpdx = "spdx/spdxdocs"
+UUID = "8d60126f-ae17-4e1f-b953-b2ace2c6aab1"

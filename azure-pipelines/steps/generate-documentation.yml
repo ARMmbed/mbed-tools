@@ -6,3 +6,7 @@ steps:
   - script: |
       generate-docs --output_dir $(temp_docs_path)
     displayName: 'Generate documentation'
+
+  - script: |
+      license-files
+    displayName: 'Add copyright/licence notice.'

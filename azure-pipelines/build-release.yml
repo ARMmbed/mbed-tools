@@ -131,6 +131,29 @@ stages:
             artifact: Documentation
             displayName: 'Publish documentation'
 
+  - stage: Licensing
+    displayName: 'Report licences in use (SPDX)'
+    dependsOn: []
+    jobs:
+      - job: Licensing
+        displayName: 'Generate SPDX documents'
+        pool:
+          vmImage: 'ubuntu-latest'
+
+        steps:
+          - task: UsePythonVersion@0
+            displayName: 'Use Python 3.7'
+            inputs:
+              versionSpec: '3.7'
+
+          - template: steps/install-development-dependencies.yml
+
+          - template: steps/generate-spdx-documents.yml
+
+          - publish: $(temp_spdx_reports_path)
+            artifact: SPDX
+            displayName: 'Publish SPDX reports'
+
   # Collect test and build stages together before the release stages to provide a pass/fail point for the status badge.
   - stage: CiCheckpoint
     displayName: 'CI Checkpoint'
@@ -138,6 +161,7 @@ stages:
       - AnalyseTest
       - AssertNews
       - DocBuild
+      - Licensing
     jobs:
       - job: ChecksPassing
         displayName: 'Checks Passing'
