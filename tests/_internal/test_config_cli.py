@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 from click.testing import CliRunner
 from unittest import TestCase, mock
 from mbed_devices.mbed_tools import config_variables as mbed_devices_config_variables

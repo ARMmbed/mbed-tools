@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
 """Exposes a click command which prints information about configuration variables of all child mbed packages."""
 import click
 import pdoc

@@ -1,0 +1,13 @@
+steps:
+  - bash: |
+      echo "##vso[task.setvariable variable=temp_spdx_reports_path]licensing"
+    displayName: 'Set variable for temporary SPDX reports dir'
+
+  - bash: |
+      mkdir -p $(temp_spdx_reports_path)
+      generate-spdx --output-dir $(temp_spdx_reports_path)
+    displayName: 'Generate SPDX documents'
+
+  - script: |
+      license-files
+    displayName: 'Add copyright/licence notice.'
