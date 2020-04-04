@@ -26,6 +26,8 @@ class GroupWithExceptionHandling(click.Group):
         Args:
             context: The current click context.
         """
+        # Use the context manager to ensure tools exceptions (expected behaviour) are shown as messages to the user,
+        # but all other exceptions (unexpected behaviour) are shown as errors.
         with MbedToolsHandler(LOGGER, context.params["traceback"]):
             super().invoke(context)
 
