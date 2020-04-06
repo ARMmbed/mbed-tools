@@ -7,8 +7,7 @@ import logging
 
 import click
 
-from mbed_tools_lib.logging import log_exception, set_log_level
-from mbed_tools_lib.exceptions import ToolsError
+from mbed_tools_lib.logging import set_log_level, MbedToolsHandler
 
 from mbed_devices.mbed_tools import cli as mbed_devices_cli
 from mbed_tools._internal.config_cli import cli as config_cli
@@ -27,16 +26,10 @@ class GroupWithExceptionHandling(click.Group):
         Args:
             context: The current click context.
         """
-        try:
+        # Use the context manager to ensure tools exceptions (expected behaviour) are shown as messages to the user,
+        # but all other exceptions (unexpected behaviour) are shown as errors.
+        with MbedToolsHandler(LOGGER, context.params["traceback"]):
             super().invoke(context)
-        except ToolsError as err:
-            traceback = context.params["traceback"]
-            if LOGGER.level != logging.DEBUG and not traceback:
-                err = (
-                    f"{err}\nIncrease the verbosity level to `-vvv` to see debug information."
-                    " Use the `--traceback` argument to see a full stack trace."
-                )
-            log_exception(LOGGER, err, traceback)
 
 
 @click.group(cls=GroupWithExceptionHandling, context_settings=CONTEXT_SETTINGS)
