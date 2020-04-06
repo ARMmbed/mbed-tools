@@ -18,8 +18,8 @@ class TestDevicesCommandIntegration(TestCase):
 
 
 class TestClickGroupWithExceptionHandling(TestCase):
-    @mock.patch("mbed_tools.cli.log_exception", autospec=True)
-    def test_logs_tools_errors(self, log_except):
+    @mock.patch("mbed_tools.cli.LOGGER.error", autospec=True)
+    def test_logs_tools_errors(self, logger_error):
         def callback():
             raise ToolsError()
 
@@ -28,4 +28,4 @@ class TestClickGroupWithExceptionHandling(TestCase):
 
         CliRunner().invoke(cli, ["test"])
 
-        log_except.assert_called_once()
+        logger_error.assert_called_once()
