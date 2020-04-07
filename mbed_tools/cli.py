@@ -9,6 +9,7 @@ import click
 
 from mbed_tools_lib.logging import set_log_level, MbedToolsHandler
 
+from mbed_build.mbed_tools import cli as mbed_build_export_cli
 from mbed_devices.mbed_tools import cli as mbed_devices_cli
 from mbed_tools._internal.config_cli import cli as config_cli
 
@@ -46,5 +47,6 @@ def cli(verbose: int, traceback: bool) -> None:
     set_log_level(verbose)
 
 
+cli.add_command(mbed_build_export_cli, "export")
 cli.add_command(mbed_devices_cli, "devices")
 cli.add_command(config_cli, "config")
