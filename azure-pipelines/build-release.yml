@@ -150,10 +150,6 @@ stages:
 
           - template: steps/generate-spdx-documents.yml
 
-          - publish: $(temp_spdx_reports_path)
-            artifact: SPDX
-            displayName: 'Publish SPDX reports'
-
   # Collect test and build stages together before the release stages to provide a pass/fail point for the status badge.
   - stage: CiCheckpoint
     displayName: 'CI Checkpoint'
