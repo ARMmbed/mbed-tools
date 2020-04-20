@@ -10,7 +10,7 @@ steps:
 
   - script: |
       license-files
-      displayName: 'Add copyright/licence notice.'
+    displayName: 'Add copyright/licence notice.'
 
   - publish: $(temp_spdx_reports_path)
     artifact: SPDX
