@@ -47,6 +47,6 @@ def cli(verbose: int, traceback: bool) -> None:
     set_log_level(verbose)
 
 
-cli.add_command(mbed_build_export_cli, "export")
+cli.add_command(mbed_build_export_cli, "export-keys")
 cli.add_command(mbed_devices_cli, "devices")
 cli.add_command(config_cli, "config")
