@@ -4,7 +4,9 @@
 #
 """Integration point with all sub-packages."""
 import logging
+from pkg_resources import working_set
 
+from typing import Union, Any
 import click
 
 from mbed_tools_lib.logging import set_log_level, MbedToolsHandler
@@ -33,7 +35,35 @@ class GroupWithExceptionHandling(click.Group):
             super().invoke(context)
 
 
+def print_version(context: click.Context, param: Union[click.Option, click.Parameter], value: bool) -> Any:
+    """A click callback which prints the versions of all Mbed Python packages."""
+    if not value or context.resilient_parsing:
+        return
+
+    # Get a list of Mbed Python packages
+    mbed_packages = {d.project_name: d.version for d in working_set if d.project_name.startswith("mbed-")}
+
+    # Show this package at the top of the list
+    top_level_version_string = f"mbed-tools: {mbed_packages.pop('mbed-tools', '<unknown>')}"
+    click.echo(top_level_version_string)
+    click.echo("-" * len(top_level_version_string))
+
+    # Show the remainder of the packages in alphabetical order
+    for project_name, version in sorted(mbed_packages.items()):
+        click.echo(f"{project_name}: {version}")
+
+    context.exit()
+
+
 @click.group(cls=GroupWithExceptionHandling, context_settings=CONTEXT_SETTINGS)
+@click.option(
+    "--version",
+    is_flag=True,
+    callback=print_version,
+    expose_value=False,
+    is_eager=True,
+    help="Display versions of all Mbed Tools packages.",
+)
 @click.option(
     "-v",
     "--verbose",
