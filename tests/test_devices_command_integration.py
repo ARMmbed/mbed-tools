@@ -29,3 +29,11 @@ class TestClickGroupWithExceptionHandling(TestCase):
         CliRunner().invoke(cli, ["test"])
 
         logger_error.assert_called_once()
+
+
+class TestVersionCommand(TestCase):
+    def test_version_command(self):
+        runner = CliRunner()
+        result = runner.invoke(cli, ["--version"])
+        self.assertIn("mbed-tools", result.output)
+        self.assertEqual(0, result.exit_code)
