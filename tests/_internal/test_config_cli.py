@@ -4,9 +4,9 @@
 #
 from click.testing import CliRunner
 from unittest import TestCase, mock
-from mbed_devices.mbed_tools import config_variables as mbed_devices_config_variables
+from mbed_devices.mbed_tools import env_variables as mbed_devices_env_variables
 
-from mbed_tools._internal.config_cli import (
+from mbed_tools._internal.env_cli import (
     _OUTPUT_PREAMBLE,
     _build_output,
     _tab_prefix,
@@ -14,12 +14,12 @@ from mbed_tools._internal.config_cli import (
 )
 
 
-class TestConfigCommand(TestCase):
-    def test_outputs_output_built_with_gathered_configuration_variables(self):
+class TestEnvCommand(TestCase):
+    def test_outputs_output_built_with_gathered_environment_variables(self):
         result = CliRunner().invoke(cli)
 
         self.assertEqual(result.exit_code, 0)
-        self.assertIn(_build_output(mbed_devices_config_variables), result.output)
+        self.assertIn(_build_output(mbed_devices_env_variables), result.output)
 
 
 class TestBuildOutput(TestCase):

@@ -13,7 +13,7 @@ from mbed_tools_lib.logging import set_log_level, MbedToolsHandler
 
 from mbed_build.mbed_tools import cli as mbed_build_export_cli
 from mbed_devices.mbed_tools import cli as mbed_devices_cli
-from mbed_tools._internal.config_cli import cli as config_cli
+from mbed_tools._internal.env_cli import cli as env_cli
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -79,4 +79,4 @@ def cli(verbose: int, traceback: bool) -> None:
 
 cli.add_command(mbed_build_export_cli, "export-keys")
 cli.add_command(mbed_devices_cli, "devices")
-cli.add_command(config_cli, "config")
+cli.add_command(env_cli, "env")
