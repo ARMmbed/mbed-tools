@@ -2,22 +2,22 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Exposes a click command which prints information about configuration variables of all child mbed packages."""
+"""Exposes a click command which prints information about environment variables of all child mbed packages."""
 import click
 import pdoc
 from typing import Iterable
 
 
-from mbed_devices.mbed_tools import config_variables as mbed_devices_config_variables
+from mbed_devices.mbed_tools import env_variables as mbed_devices_env_variables
 
 
 @click.command()
 def cli() -> None:
-    """Prints information about configuration variables of all child mbed packages."""
-    click.echo(_build_output(mbed_devices_config_variables))
+    """Prints information about environment variables of all child mbed packages."""
+    click.echo(_build_output(mbed_devices_env_variables))
 
 
-_OUTPUT_PREAMBLE = """All the configuration variables can be set either via environment variables or
+_OUTPUT_PREAMBLE = """These variables used by Mbed Tools can be set either directly via environment variables or
 using a `.env` file containing the variable definitions as follows:
 
 VARIABLE=value
@@ -33,8 +33,8 @@ by any values previously set in your environment.
 """
 
 
-def _build_output(config_variables: Iterable[pdoc.Variable]) -> str:
-    variables_outputs = [f"{v.name}\n\n{_tab_prefix(v.docstring)}" for v in config_variables]
+def _build_output(env_variables: Iterable[pdoc.Variable]) -> str:
+    variables_outputs = [f"{v.name}\n\n{_tab_prefix(v.docstring)}" for v in env_variables]
     variables_output = "\n\n".join(variables_outputs)
     return f"{_OUTPUT_PREAMBLE}\n\n{variables_output}"
 
