@@ -34,6 +34,11 @@ stages:
             Linux_Py_3_7:
               python.version: '3.7'
               vmImageName: ubuntu-latest
+              uploadCoverage: "false"
+
+            Linux_Py_3_8:
+              python.version: '3.8'
+              vmImageName: ubuntu-latest
               uploadCoverage: "true"
 
             Windows_Py_3_6:
@@ -46,6 +51,11 @@ stages:
               vmImageName: windows-latest
               uploadCoverage: "false"
 
+            Windows_Py_3_8:
+              python.version: '3.8'
+              vmImageName: windows-latest
+              uploadCoverage: "false"
+
             macOS_Py_3_6:
               python.version: '3.6'
               vmImageName: macOS-latest
@@ -55,6 +65,12 @@ stages:
               python.version: '3.7'
               vmImageName: macOS-latest
               uploadCoverage: "false"
+
+            macOS_Py_3_8:
+              python.version: '3.8'
+              vmImageName: macOS-latest
+              uploadCoverage: "false"
+
         pool:
           vmImage: $(vmImageName)
 
