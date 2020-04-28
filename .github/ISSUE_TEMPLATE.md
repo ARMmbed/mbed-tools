@@ -4,7 +4,7 @@
 A detailed description of what is being reported. Please include steps to reproduce the problem.
 
 Things to consider sharing:
-- What version of the package is being used (pip show mbed-targets)?
+- What version of the package is being used (pip show mbed-tools)?
 - What is the host platform and version (e.g. macOS 10.15.2, Windows 10, Ubuntu 18.04 LTS)?
 -->
 

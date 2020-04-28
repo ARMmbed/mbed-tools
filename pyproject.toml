@@ -18,6 +18,15 @@ DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs"
 VERSION_FILE_PATH = "mbed_tools/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 
+[ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE]
+GitPython = "BSD-3-Clause"
+python-dotenv = "BSD-3-Clause"
+setuptools  = "MIT"
+typing-extensions = "Actually licensed as PSF-2.0."
+chardet = "LGPL-2.1 - Accepted temporarily"
+pyudev = "LGPL-2.1 - Accepted temporarily"
+pdoc3 = "AGPL-3.0 - Accepted temporarily"
+
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"
 PRERELEASE_TOKEN = "beta"
