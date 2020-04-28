@@ -80,6 +80,12 @@ Run static analysis (note that no output means all is well):
 flake8
 ```
 
+Perform static type check:
+
+```bash
+mypy -p mbed_tools
+```
+
 ## Documenting code
 
 Inclusion of docstrings is needed in all areas of the code for Flake8 

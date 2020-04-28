@@ -14,8 +14,6 @@ beta releases are not included in this history. For a full list of all releases,
 
 "1.0.0" (2020-03-06)
 ====================
-"" "1.0.0" (2020-03-06)
-=======================
 
 Major changes
 -------------
