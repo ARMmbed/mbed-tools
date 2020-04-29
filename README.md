@@ -15,7 +15,7 @@
 
 ## Overview
 
-This is the **future** command line tool for Mbed OS. It provides the ability to detect Mbed Enables devices connected
+This is the **future** command line tool for Mbed OS. It provides the ability to detect Mbed Enabled devices connected
 by USB, checkout Mbed projects and perform builds amongst other operations.
 
 > :warning: While this package is generally available it is not complete. The available functionality can be viewed with
