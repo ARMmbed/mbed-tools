@@ -44,7 +44,7 @@ setup(
         "Click==7.0",
         "mbed-build~=1.0",
         "mbed-devices~=1.0",
-        "mbed-project~=1.0",
+        "mbed-project~=2.0",
         "pdoc3",
         "mbed-tools-lib~=1.2",
     ],
