@@ -12,6 +12,48 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"2.0.0" (2020-04-29)
+====================
+
+Major changes
+-------------
+
+- Change export command name to be more accurate for the time being. (#20200416)
+
+
+Features
+--------
+
+- Catch and log ToolsErrors in the CLI (#20200318)
+- Use new context manager for handling tools errors and improved user friendly message about increasing verbosity (#20200403)
+- Add export command to tools (#20200407)
+- Added --version option to return versions of all Mbed packages (#20200422)
+- Support added for Python 3.8 (#20200423)
+- Add mbed-project commands (#20200427)
+- Add conig command. (#20200428)
+- Add config sub command (#2020031801)
+
+
+Bugfixes
+--------
+
+- Sync with internal cookiecutter template (#20200317)
+- Fixed spelling error (#20200408)
+- Checked 3rd-party licences. (#20200427)
+
+
+Improved Documentation
+----------------------
+
+- Added license headers for SPDX compliance. (#20200402)
+
+
+Misc
+----
+
+- #20200316, #20200402, #20200420, #20200423, #20200427, #20200428
+
+
 "1.0.0" (2020-03-06)
 ====================
 

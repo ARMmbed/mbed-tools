@@ -1,1 +1,0 @@
-Use new context manager for handling tools errors and improved user friendly message about increasing verbosity

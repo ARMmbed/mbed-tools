@@ -1,0 +1,572 @@
+<!--
+-- Copyright (C) 2020 Arm Mbed. All rights reserved.
+-- SPDX-License-Identifier: Apache-2.0
+-->
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Platform Database Validation Results</title>
+    <style type="text/css">
+      html {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+          "Helvetica Neue", sans-serif;
+        background-color: #16161a;
+        color: #ccc;
+      }
+      h1,
+      h2 {
+        background-color: #002b49;
+        padding: 0.5rem;
+        font-weight: 400;
+      }
+      h1 {
+        color: white;
+      }
+      h2 {
+        color: #ddd;
+      }
+      a {
+        color: #00c1de;
+        text-decoration: none;
+      }
+      a:hover {
+        opacity: 0.5;
+      }
+      table {
+        border-collapse: collapse;
+        text-align: center;
+      }
+      td {
+        padding: 0.3rem 1rem 0.3rem 1rem;
+        font-weight: 300;
+      }
+      th {
+        font-weight: 400;
+      }
+      thead {
+        font-size: 1.1rem;
+      }
+      tbody {
+        font-size: 0.9rem;
+      }
+      tbody tr:nth-child(odd) {
+        background-color: #1c1c1c;
+      }
+      ul {
+        list-style-type: circle;
+      }
+      .link_info {
+        color: #666;
+        margin: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Project's 3rd party IP report</h1>
+    <p><i>2020-04-29 13:41:05.679721</i></p>
+    <h2>Summary</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Licence compliance</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span style="color: #00c246;">Compliant</span></td>
+          <td>Project [mbed-tools]'s licence is compliant: Apache-2.0.All its dependencies are also compliant licence-wise.</td>
+        </tr>
+      </tbody>
+    </table>
+    <h2>Package licences</h2>
+    <table id="third_party_ip">
+      <tr>
+      <th>Compliance</th>
+      <th>Name</th>
+      <th>Is a dependency?</th>
+      <th>URL</th>
+      <th>Licence</th>
+      <th>Details</th>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           certifi
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://certifiio.readthedocs.io/en/latest/
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">MPL-2.0</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           chardet
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/chardet/chardet
+        </td>
+        <td style="text-align:center">
+            <span style="color: #ffdf28;">Unknown</span>
+
+        </td>
+        <td style="text-align:center">
+           Package's licence manually checked: LGPL-2.1 - Accepted temporarily
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           Click
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://palletsprojects.com/p/click/
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">0BSD</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           gitdb
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/gitpython-developers/gitdb
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">0BSD</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           GitPython
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/gitpython-developers/GitPython
+        </td>
+        <td style="text-align:center">
+            <span style="color: #ffdf28;">Unknown</span>
+
+        </td>
+        <td style="text-align:center">
+           Package's licence manually checked: BSD-3-Clause
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           idna
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/kjd/idna
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">0BSD</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           Jinja2
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://palletsprojects.com/p/jinja/
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">BSD-3-Clause</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           Mako
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://www.makotemplates.org/
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">MIT</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           Markdown
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://Python-Markdown.github.io/
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">0BSD</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           MarkupSafe
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://palletsprojects.com/p/markupsafe/
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">BSD-3-Clause</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           mbed-build
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/ARMmbed/mbed-build
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">Apache-2.0</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           mbed-devices
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/ARMmbed/mbed-devices
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">Apache-2.0</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           mbed-project
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/ARMmbed/mbed-project
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">Apache-2.0</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           mbed-targets
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/ARMmbed/mbed-targets
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">Apache-2.0</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           mbed-tools
+        </td>
+        <td style="text-align:center">N</td>
+        <td style="text-align:center">
+           https://github.com/ARMmbed/mbed-tools
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">Apache-2.0</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           mbed-tools-lib
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/ARMmbed/mbed-tools-lib
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">Apache-2.0</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           pdoc3
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://pdoc3.github.io/pdoc/
+        </td>
+        <td style="text-align:center">
+            <span style="color: #ffdf28;">AGPL-3.0</span>
+
+        </td>
+        <td style="text-align:center">
+           Package's licence manually checked: AGPL-3.0 - Accepted temporarily
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           psutil
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/giampaolo/psutil
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">0BSD</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           python-dotenv
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           http://github.com/theskumar/python-dotenv
+        </td>
+        <td style="text-align:center">
+            <span style="color: #ffdf28;">Unknown</span>
+
+        </td>
+        <td style="text-align:center">
+           Package's licence manually checked: BSD-3-Clause
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           pyudev
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           http://pyudev.readthedocs.org/
+        </td>
+        <td style="text-align:center">
+            <span style="color: #ffdf28;">LGPL-2.1</span>
+
+        </td>
+        <td style="text-align:center">
+           Package's licence manually checked: LGPL-2.1 - Accepted temporarily
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           requests
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://requests.readthedocs.io
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">Apache-2.0</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           setuptools
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/pypa/setuptools
+        </td>
+        <td style="text-align:center">
+            <span style="color: #ffdf28;">Unknown</span>
+
+        </td>
+        <td style="text-align:center">
+           Package's licence manually checked: MIT
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           six
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/benjaminp/six
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">MIT</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           smmap
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/gitpython-developers/smmap
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">0BSD</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           tabulate
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/astanin/python-tabulate
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">MIT</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           tqdm
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/tqdm/tqdm
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">MPL-2.0</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           typing-extensions
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://github.com/python/typing/blob/master/typing_extensions/README.rst
+        </td>
+        <td style="text-align:center">
+            <span style="color: #ffdf28;">ISC</span>
+
+        </td>
+        <td style="text-align:center">
+           Package's licence manually checked: Actually licensed as PSF-2.0.
+        </td>
+      </tr>
+        <tr>
+        <td style="text-align:center">✅</td>
+        <td style="text-align:center">
+           urllib3
+        </td>
+        <td style="text-align:center">Y</td>
+        <td style="text-align:center">
+           https://urllib3.readthedocs.io/
+        </td>
+        <td style="text-align:center">
+            <span style="color: ;">MIT</span>
+
+        </td>
+        <td style="text-align:center">
+           Licence is compliant.
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

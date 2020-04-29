@@ -1,0 +1,205 @@
+                                3rd party IP report for mbed-tools
+
+                                         2020-04-29 13:41:05.679721
+
+# Summary:
+    Licence compliance: Compliant
+    Details: Project [mbed-tools]'s licence is compliant: Apache-2.0.All its dependencies are also compliant licence-wise.
+
+# More details:
+
+- certifi:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://certifiio.readthedocs.io/en/latest/
+    Licence: MPL-2.0
+    Licence compliance: Licence is compliant.
+
+- chardet:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/chardet/chardet
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: LGPL-2.1 - Accepted temporarily
+
+- Click:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://palletsprojects.com/p/click/
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- gitdb:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/gitpython-developers/gitdb
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- GitPython:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/gitpython-developers/GitPython
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: BSD-3-Clause
+
+- idna:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/kjd/idna
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- Jinja2:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://palletsprojects.com/p/jinja/
+    Licence: BSD-3-Clause
+    Licence compliance: Licence is compliant.
+
+- Mako:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://www.makotemplates.org/
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- Markdown:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://Python-Markdown.github.io/
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- MarkupSafe:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://palletsprojects.com/p/markupsafe/
+    Licence: BSD-3-Clause
+    Licence compliance: Licence is compliant.
+
+- mbed-build:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/ARMmbed/mbed-build
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- mbed-devices:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/ARMmbed/mbed-devices
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- mbed-project:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/ARMmbed/mbed-project
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- mbed-targets:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/ARMmbed/mbed-targets
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- mbed-tools:
+    [X] Compliant?
+    [] Dependency?
+    URL: https://github.com/ARMmbed/mbed-tools
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- mbed-tools-lib:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/ARMmbed/mbed-tools-lib
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- pdoc3:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://pdoc3.github.io/pdoc/
+    Licence: AGPL-3.0
+    Licence compliance: Package's licence manually checked: AGPL-3.0 - Accepted temporarily
+
+- psutil:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/giampaolo/psutil
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- python-dotenv:
+    [X] Compliant?
+    [X] Dependency?
+    URL: http://github.com/theskumar/python-dotenv
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: BSD-3-Clause
+
+- pyudev:
+    [X] Compliant?
+    [X] Dependency?
+    URL: http://pyudev.readthedocs.org/
+    Licence: LGPL-2.1
+    Licence compliance: Package's licence manually checked: LGPL-2.1 - Accepted temporarily
+
+- requests:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://requests.readthedocs.io
+    Licence: Apache-2.0
+    Licence compliance: Licence is compliant.
+
+- setuptools:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/pypa/setuptools
+    Licence: Unknown
+    Licence compliance: Package's licence manually checked: MIT
+
+- six:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/benjaminp/six
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- smmap:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/gitpython-developers/smmap
+    Licence: 0BSD
+    Licence compliance: Licence is compliant.
+
+- tabulate:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/astanin/python-tabulate
+    Licence: MIT
+    Licence compliance: Licence is compliant.
+
+- tqdm:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/tqdm/tqdm
+    Licence: MPL-2.0
+    Licence compliance: Licence is compliant.
+
+- typing-extensions:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://github.com/python/typing/blob/master/typing_extensions/README.rst
+    Licence: ISC
+    Licence compliance: Package's licence manually checked: Actually licensed as PSF-2.0.
+
+- urllib3:
+    [X] Compliant?
+    [X] Dependency?
+    URL: https://urllib3.readthedocs.io/
+    Licence: MIT
+    Licence compliance: Licence is compliant.
