@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"2.1.0" (2020-04-30)
+====================
+
+Features
+--------
+
+- Add build command. (#20200430)
+
+
 "2.0.0" (2020-04-29)
 ====================
 
