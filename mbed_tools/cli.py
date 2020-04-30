@@ -11,7 +11,7 @@ import click
 
 from mbed_tools_lib.logging import set_log_level, MbedToolsHandler
 
-from mbed_build.mbed_tools import export, config
+from mbed_build.mbed_tools import export, config, build
 from mbed_devices.mbed_tools import cli as mbed_devices_cli
 from mbed_tools._internal.env_cli import cli as env_cli
 from mbed_project.mbed_tools.cli import init, clone, checkout, libs
@@ -78,6 +78,7 @@ def cli(verbose: int, traceback: bool) -> None:
     set_log_level(verbose)
 
 
+cli.add_command(build, "build")
 cli.add_command(export, "export-keys")
 cli.add_command(config, "config")
 cli.add_command(mbed_devices_cli, "devices")

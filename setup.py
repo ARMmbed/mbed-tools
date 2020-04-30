@@ -42,7 +42,7 @@ setup(
     install_requires=[
         "python-dotenv",
         "Click==7.0",
-        "mbed-build~=1.0",
+        "mbed-build~=1.1",
         "mbed-devices~=1.0",
         "mbed-project~=2.0",
         "pdoc3",
