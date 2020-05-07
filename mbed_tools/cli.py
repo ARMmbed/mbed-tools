@@ -4,6 +4,7 @@
 #
 """Integration point with all sub-packages."""
 import logging
+import sys
 from pkg_resources import working_set
 
 from typing import Union, Any
@@ -32,9 +33,10 @@ class GroupWithExceptionHandling(click.Group):
         """
         # Use the context manager to ensure tools exceptions (expected behaviour) are shown as messages to the user,
         # but all other exceptions (unexpected behaviour) are shown as errors.
-        with MbedToolsHandler(LOGGER, context.params["traceback"]):
+        with MbedToolsHandler(LOGGER, context.params["traceback"]) as handler:
             super().invoke(context)
 
+        sys.exit(handler.return_code)
 
 def print_version(context: click.Context, param: Union[click.Option, click.Parameter], value: bool) -> Any:
     """A click callback which prints the versions of all Mbed Python packages."""
