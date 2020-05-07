@@ -38,6 +38,7 @@ class GroupWithExceptionHandling(click.Group):
 
         sys.exit(handler.return_code)
 
+
 def print_version(context: click.Context, param: Union[click.Option, click.Parameter], value: bool) -> Any:
     """A click callback which prints the versions of all Mbed Python packages."""
     if not value or context.resilient_parsing:
