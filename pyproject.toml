@@ -26,6 +26,7 @@ typing-extensions = "Actually licensed as PSF-2.0."
 chardet = "LGPL-2.1 - Accepted temporarily"
 pyudev = "LGPL-2.1 - Accepted temporarily"
 pdoc3 = "AGPL-3.0 - Accepted temporarily"
+zipp = "MIT"
 
 [AutoVersionConfig]
 CONFIG_NAME = "DEFAULT"
