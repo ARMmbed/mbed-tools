@@ -79,7 +79,7 @@ def cli(verbose: int, traceback: bool) -> None:
 
 
 cli.add_command(build, "build")
-cli.add_command(export, "export-keys")
+cli.add_command(export, "export")
 cli.add_command(config, "config")
 cli.add_command(mbed_devices_cli, "devices")
 cli.add_command(env_cli, "env")
