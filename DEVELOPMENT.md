@@ -1,6 +1,6 @@
 # Development and Testing
 
-For development and testing purposes, it is essential to use a virtual environment. It is recommended that `pipenv` is used.
+For development and testing purposes, it is essential to use a virtual environment. It is recommended that `pipenv >= 2018.11.26` is used.
 
 ## Setup Pipenv
 
