@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"3.0.1" (2020-07-20)
+====================
+
+Bugfixes
+--------
+
+- Pin mbed-build to ~1.2 (#20200720152641)
+
+
 "3.0.0" (2020-07-20)
 ====================
 
