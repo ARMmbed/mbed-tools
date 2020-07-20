@@ -12,6 +12,39 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"3.0.0" (2020-07-20)
+====================
+
+Major changes
+-------------
+
+- Rename export to configure. (#20200717104411)
+
+
+Features
+--------
+
+- Rename export-keys command to export (#20200701)
+
+
+Bugfixes
+--------
+
+- Declare MIT license for zipp dependency (#20200701)
+
+
+Improved Documentation
+----------------------
+
+- Add the minimal version requirement on pipenv (#20200709222031)
+
+
+Misc
+----
+
+- #20200715101809
+
+
 "2.1.0" (2020-04-30)
 ====================
 
