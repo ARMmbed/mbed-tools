@@ -5,10 +5,10 @@
 """Package definition for PyPI."""
 import os
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 PROJECT_SLUG = "mbed-tools"
-SOURCE_DIR = "mbed_tools"
+SOURCE_DIR = "src/mbed_tools"
 __version__ = None
 
 repository_dir = os.path.dirname(__file__)
@@ -52,15 +52,16 @@ setup(
     long_description_content_type="text/markdown",
     long_description=long_description,
     name=PROJECT_SLUG,
-    packages=[SOURCE_DIR],
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
     python_requires=">=3.6,<4",
     url=f"https://github.com/ARMmbed/{PROJECT_SLUG}",
     version=__version__,
     entry_points={
         "console_scripts": [
-            f"mbedtools={SOURCE_DIR}.cli:cli",
-            f"mbed-tools={SOURCE_DIR}.cli:cli",
-            f"mbed_tools={SOURCE_DIR}.cli:cli",
+            "mbedtools=mbed_tools.cli.cli:cli",
+            "mbed-tools=mbed_tools.cli.cli:cli",
+            "mbed_tools=mbed_tools.cli.cli:cli",
         ]
     },
 )

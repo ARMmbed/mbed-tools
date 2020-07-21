@@ -36,7 +36,7 @@
 
     - id: mypy
       name: mypy
-      entry: mypy -p mbed_tools
+      entry: mypy src/mbed_tools
       language: python
       types: [python]
       require_serial: true

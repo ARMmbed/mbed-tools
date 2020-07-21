@@ -10,12 +10,12 @@ PROJECT_NAME = "Mbed Tools"
 PROJECT_UUID = "a58676f2-0505-4916-84ee-2ef116b07352"
 PACKAGE_NAME = "mbed-tools"
 NEWS_DIR = "news/"
-SOURCE_DIR = "mbed_tools"
+SOURCE_DIR = "src/mbed_tools"
 RELEASE_BRANCH_PATTERN = "^release.*$"
 MODULE_TO_DOCUMENT = "mbed_tools"
 DOCUMENTATION_DEFAULT_OUTPUT_PATH = "local_docs"
 DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs"
-VERSION_FILE_PATH = "mbed_tools/_version.py"
+VERSION_FILE_PATH = "src/mbed_tools/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 
 [ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE]
@@ -33,7 +33,7 @@ CONFIG_NAME = "DEFAULT"
 PRERELEASE_TOKEN = "beta"
 BUILD_TOKEN = "dev"
 TAG_TEMPLATE = "release/{version}"
-targets = [ "mbed_tools/_version.py",]
+targets = [ "src/mbed_tools/_version.py",]
 
 [AutoVersionConfig.key_aliases]
 __version__ = "VERSION_KEY"
