@@ -14,7 +14,7 @@ from mbed_tools.lib.logging import set_log_level, MbedToolsHandler
 from mbed_build.mbed_tools import configure
 from mbed_devices.mbed_tools import cli as mbed_devices_cli
 from mbed_tools.cli._internal.env_cli import cli as env_cli
-from mbed_project.mbed_tools.cli import init, clone, checkout, libs
+from mbed_tools.project.mbed_tools.cli import init, clone, checkout, libs
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
