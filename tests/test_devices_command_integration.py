@@ -9,7 +9,7 @@ from click.testing import CliRunner
 
 from mbed_tools.cli import cli
 from mbed_devices.mbed_tools import cli as mbed_devices_cli
-from mbed_tools_lib.exceptions import ToolsError
+from mbed_tools.lib.exceptions import ToolsError
 
 
 class TestDevicesCommandIntegration(TestCase):
