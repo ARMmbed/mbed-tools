@@ -20,6 +20,11 @@ mbed-tools-ci-scripts = "*"
 pre-commit = "*"
 requests-mock = "*"
 factory_boy = "*"
+# Additional requirements for ./ci_scripts
+boto3 = "*"
+jinja2 = "*"
+mbed-os-tools = "*"
+PyGithub = "*"
 
 [pipenv]
 allow_prereleases = true

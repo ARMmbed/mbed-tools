@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Platform Database Validation Results</title>
+    <style type="text/css">
+body {
+	font-family: Trebuchet MS, sans-serif;
+	font-size: 15px;
+	color: #444;
+	margin-right: 24px;
+}
+h1 {
+	font-size: 25px;
+}
+h2 {
+	font-size: 20px;
+}
+h3 {
+	font-size: 16px;
+	font-weight: bold;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 2px;
+    text-align: left;
+}
+table th {
+    background-color: black;
+    color: white;
+}
+    </style>
+  </head>
+  <body>
+    <h1>Platform Database Validation Results</h1>
+    <p><i>{{ render_time }}</i></p>
+    <h2>Data Sources</h2>
+    <ul>
+{%- for data_source in data_sources %}
+    <li><b>{{ data_source }}</b> defines {{ meta_data[data_source].product_code_count }} product codes for {{ meta_data[data_source].board_type_count }} board types.</li>
+{%- endfor %}
+        <li>A total of {{ meta_data["*"].product_code_count }} unique product codes and {{ meta_data["*"].board_type_count }} board types are defined.</li>
+    </ul>
+    <h2>Analysis Summary</h2>
+    <ul>
+      <li>Errors: {{ error_count }}</li>
+      <li>Warnings: {{ warning_count }}</li>
+    </ul>
+    <h2>{% if show_all %}All{% else %}Problematic{% endif %} Product Code Definitions</h2>
+    <table id="analysis_results">
+      <tr>
+      <th>Product Code</th>
+      <th>Mbed Enabled</th>
+      <th>Mbed OS</th>
+{%- for data_source in data_sources %}
+        <th colspan="2">{{ data_source }}</th>
+{%- endfor %}
+        <th>Analysis</th>
+      </tr>
+{%- for product_code, analysis_result in analysis_results|dictsort %}
+  {% if show_all or analysis_result.messages %}
+      <tr>
+        <td>{{ product_code }}</td>
+        <td>
+    {%- for mbed_enabled_type in mbed_support.mbed_enabled.get(product_code, []) -%}
+          {{ mbed_enabled_type }}<br>
+    {%- endfor -%}
+        </td>
+        <td>{{ mbed_support.mbed_os_support.get(product_code, [])|join(", ") }}</td>
+    {%- for data_source in data_sources %}
+      {%- set status = analysis_result.status[data_source] -%}
+        <td style="text-align:center">
+            {%- if status == "ok" -%}
+                ✅
+            {%- elif status == "error" -%}
+                ❌
+            {%- elif status == "warning" -%}
+                ⚠️
+            {%- else -%}
+                {{ status }}
+            {%- endif -%}
+        </td>
+        <td>
+      {%- for board_type in analysis_result.board_types[data_source] -%}
+          {{ board_type }}<br>
+      {%- endfor -%}
+        </td>
+    {%- endfor %}
+        <td>
+    {%- for message in analysis_result.messages -%}
+          {{ message }}<br>
+    {%- endfor -%}
+        </td>
+      </tr>
+  {% endif %}
+{%- endfor %}
+    </table>
+  </body>
+</html>

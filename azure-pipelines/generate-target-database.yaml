@@ -1,0 +1,38 @@
+# Azure Pipeline which syncs the offline and online board databases for mbed-targets
+#
+# This pipeline performs the following actions:
+# * Downloads the online board database and saves it in a file
+# * Creates a PR on a dedicated branch to commit the new board database to the mbed-targets repo
+
+# Disable branch triggers as we're running this pipeline on a schedule.
+trigger:
+  - none
+
+pr:
+  - none
+
+schedules:
+  - cron: "00 5 * * *"
+    displayName: "Sync offline board database"
+    branches:
+      include:
+        - master
+    always: true
+
+jobs:
+  - job: SyncDatabase
+    displayName: 'Sync board database'
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.7'
+
+      - template: steps/install-development-dependencies.yml
+
+      - script: python ci_scripts/sync_board_database.py
+        displayName: "Sync board database"
+        env:
+          GIT_TOKEN: $(GIT_TOKEN)

@@ -1,0 +1,37 @@
+# Generate a consistency report for the various sources of platform data.
+
+# Comment out the following if the report needs to be regenerated in a development branch.
+trigger: none
+
+# No need to use PR triggers as the code doesn't impact the contents of the report.
+pr: none
+
+# Generate the report at midnight every day.
+schedules:
+  - cron: "0 0 * * *"
+    displayName: Daily Report
+    branches:
+      include:
+        - master
+    always: true
+
+
+jobs:
+  - job: GenerateReport
+    displayName: 'Generate report'
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.7'
+
+      - template: steps/install-development-dependencies.yml
+
+      - script: python ci_scripts/publish_target_validation_report.py
+        displayName: 'Publish validation report'
+        env:
+          AWS_ACCESS_KEY_ID: $(AWS_ACCESS_KEY_ID)
+          AWS_SECRET_ACCESS_KEY: $(AWS_SECRET_ACCESS_KEY)
+          MBED_API_AUTH_TOKEN: $(MBED_API_AUTH_TOKEN)
