@@ -4,9 +4,9 @@
 #
 from click.testing import CliRunner
 from unittest import TestCase, mock
-from mbed_tools.devices.mbed_tools import env_variables as devices_env_variables
+from mbed_tools.targets.env import env_variables as devices_env_variables
 
-from mbed_tools.cli._internal.env_cli import (
+from mbed_tools.cli.env_cli import (
     _OUTPUT_PREAMBLE,
     _build_output,
     _tab_prefix,

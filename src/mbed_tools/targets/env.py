@@ -19,7 +19,9 @@ by any values previously set in your environment.
    as a dependency of your project, please ensure to include the `.env` in your `.gitignore`.
 """
 import os
+
 import dotenv
+import pdoc
 
 dotenv.load_dotenv(dotenv.find_dotenv(usecwd=True))
 
@@ -70,3 +72,5 @@ class Env:
 
 env = Env()
 """Instance of `Env` class."""
+
+env_variables = pdoc.Class("Env", pdoc.Module("mbed_tools.targets.env"), Env).instance_variables()

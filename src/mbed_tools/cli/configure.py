@@ -2,7 +2,7 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Export top-level CMakeLists.txt command."""
+"""Command to generate the application CMake configuration script used by the build system."""
 import pathlib
 
 import click
