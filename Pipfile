@@ -19,6 +19,7 @@ mbed-tools = {editable = true, path = "."}
 mbed-tools-ci-scripts = "*"
 pre-commit = "*"
 requests-mock = "*"
+factory_boy = "*"
 
 [pipenv]
 allow_prereleases = true
