@@ -1,0 +1,64 @@
+# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+# Automatically generated configuration file.
+# DO NOT EDIT. Content may be overwritten.
+
+add_library(gen_config INTERFACE)
+
+set(MBED_TOOLCHAIN "{{toolchain_name}}" CACHE STRING "")
+set(MBED_TARGET "{{target_name}}" CACHE STRING "")
+set(MBED_CPU_CORE "{{core}}" CACHE STRING "")
+set(MBED_PROFILE "develop" CACHE STRING "")
+
+set_property(GLOBAL APPEND PROPERTY MBED_TARGET_LABELS{% for label in labels %}
+    {{label}};
+{%- endfor %}
+{% for component in components %}
+    {{component}};
+{%- endfor %}
+{% for feature in features %}
+    {{feature}};
+{%- endfor %}
+)
+
+# target
+add_definitions({% for component in components %}
+    -DCOMPONENT_{{component.upper()}}=1
+{%- endfor %}
+{% for feature in features %}
+    -DFEATURE_{{feature.upper()}}=1
+{%- endfor %}
+{% for device in device_has %}
+    -DDEVICE_{{device.upper()}}=1
+{%- endfor %}
+{% for label in labels %}
+    -DTARGET_{{label}}
+{%- endfor %}
+{% for macro in target_macros %}
+    -D{{macro.upper()}}
+{%- endfor %}
+{% for form_factor in supported_form_factors %}
+    -DTARGET_FF_{{form_factor.upper()}}
+{%- endfor %}
+    -DMBED_BUILD_TIMESTAMP={{timestamp}}
+    -DTARGET_LIKE_MBED
+    -D__MBED__=1
+)
+
+# config
+add_definitions(
+# options
+{% for option in options -%}
+{% if option.value is not none -%}
+   {%if '{' in option.value|string or '(' in option.value|string %}"{% endif %}-D{{option.macro_name}}={{option.value}}{% if '}' in option.value|string or ')' in option.value|string %}"{% endif %}
+{% endif %}
+{%- endfor %}
+# macros
+{% for macro in macros -%}
+{% if macro.value is not none -%}
+    {%if '{' in macro.value|string or '(' in macro.value|string %}"{% endif %}-D{{macro.name}}={{macro.value}}{% if '}' in macro.value|string or ')' in macro.value|string %}"{% endif %}
+{% else -%}
+    -D{{macro.name}}
+{% endif %}
+{%- endfor %})

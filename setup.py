@@ -42,9 +42,6 @@ setup(
     install_requires=[
         "python-dotenv",
         "Click==7.0",
-        "mbed-build~=1.2",
-        "mbed-devices~=1.0",
-        "mbed-project~=2.0",
         "pdoc3",
         "GitPython",
         "tqdm",
@@ -55,6 +52,7 @@ setup(
         "psutil; platform_system=='Linux'",
         "pyudev; platform_system=='Linux'",
         "typing-extensions",
+        "Jinja2",
     ],
     license="Apache 2.0",
     long_description_content_type="text/markdown",
