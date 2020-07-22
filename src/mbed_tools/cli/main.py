@@ -2,19 +2,19 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Integration point with all sub-packages."""
+"""Main cli entry point."""
 import logging
-from pkg_resources import working_set
+from pkg_resources import get_distribution
 
 from typing import Union, Any
 import click
 
 from mbed_tools.lib.logging import set_log_level, MbedToolsHandler
 
-from mbed_tools.build.mbed_tools import configure
-from mbed_tools.devices.mbed_tools import cli as devices_cli
-from mbed_tools.cli._internal.env_cli import cli as env_cli
-from mbed_tools.project.mbed_tools.cli import init, clone, checkout, libs
+from mbed_tools.cli.configure import configure
+from mbed_tools.cli.list_connected_devices import list_connected_devices
+from mbed_tools.cli.env_cli import cli as env_cli
+from mbed_tools.cli.project_management import init, clone, checkout, libs
 
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -37,22 +37,12 @@ class GroupWithExceptionHandling(click.Group):
 
 
 def print_version(context: click.Context, param: Union[click.Option, click.Parameter], value: bool) -> Any:
-    """A click callback which prints the versions of all Mbed Python packages."""
+    """Print the version of mbed-tools."""
     if not value or context.resilient_parsing:
         return
 
-    # Get a list of Mbed Python packages
-    mbed_packages = {d.project_name: d.version for d in working_set if d.project_name.startswith("mbed-")}
-
-    # Show this package at the top of the list
-    top_level_version_string = f"mbed-tools: {mbed_packages.pop('mbed-tools', '<unknown>')}"
-    click.echo(top_level_version_string)
-    click.echo("-" * len(top_level_version_string))
-
-    # Show the remainder of the packages in alphabetical order
-    for project_name, version in sorted(mbed_packages.items()):
-        click.echo(f"{project_name}: {version}")
-
+    version_string = get_distribution("mbed-tools").version
+    click.echo(version_string)
     context.exit()
 
 
@@ -79,7 +69,7 @@ def cli(verbose: int, traceback: bool) -> None:
 
 
 cli.add_command(configure, "configure")
-cli.add_command(devices_cli, "devices")
+cli.add_command(list_connected_devices, "devices")
 cli.add_command(env_cli, "env")
 cli.add_command(init, "init")
 cli.add_command(checkout, "checkout")

@@ -2,7 +2,7 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""List all devices cli command."""
+"""Command to list all Mbed enabled devices connected to the host computer."""
 import click
 import json
 from operator import attrgetter

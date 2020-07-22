@@ -65,9 +65,9 @@ setup(
     version=__version__,
     entry_points={
         "console_scripts": [
-            "mbedtools=mbed_tools.cli.cli:cli",
-            "mbed-tools=mbed_tools.cli.cli:cli",
-            "mbed_tools=mbed_tools.cli.cli:cli",
+            "mbedtools=mbed_tools.cli.main:cli",
+            "mbed-tools=mbed_tools.cli.main:cli",
+            "mbed_tools=mbed_tools.cli.main:cli",
         ]
     },
 )

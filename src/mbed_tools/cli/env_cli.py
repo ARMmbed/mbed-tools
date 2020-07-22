@@ -2,13 +2,12 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Exposes a click command which prints information about environment variables of all child mbed packages."""
+"""Command to print information about environment variables used by the tools."""
 import click
 import pdoc
 from typing import Iterable
 
-
-from mbed_tools.devices.mbed_tools import env_variables as devices_env_variables
+from mbed_tools.targets.env import env_variables as devices_env_variables
 
 
 @click.command()
