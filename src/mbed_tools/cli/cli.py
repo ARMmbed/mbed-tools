@@ -11,7 +11,7 @@ import click
 
 from mbed_tools.lib.logging import set_log_level, MbedToolsHandler
 
-from mbed_build.mbed_tools import configure
+from mbed_tools.build.mbed_tools import configure
 from mbed_tools.devices.mbed_tools import cli as devices_cli
 from mbed_tools.cli._internal.env_cli import cli as env_cli
 from mbed_tools.project.mbed_tools.cli import init, clone, checkout, libs

@@ -19,7 +19,6 @@ junit/
 htmlcov/
 
 # Package
-build/
 dist/
 release-dist/
 
