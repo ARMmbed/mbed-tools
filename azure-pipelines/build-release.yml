@@ -54,7 +54,7 @@ stages:
             Windows_Py_3_8:
               python.version: '3.8'
               vmImageName: windows-latest
-              uploadCoverage: "false"
+              uploadCoverage: "true"
 
             macOS_Py_3_6:
               python.version: '3.6'
@@ -69,7 +69,7 @@ stages:
             macOS_Py_3_8:
               python.version: '3.8'
               vmImageName: macOS-latest
-              uploadCoverage: "false"
+              uploadCoverage: "true"
 
         pool:
           vmImage: $(vmImageName)
