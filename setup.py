@@ -50,6 +50,7 @@ setup(
         "tqdm",
         "tabulate",
         "dataclasses; python_version<'3.7'",
+        "requests>=2.20",
     ],
     license="Apache 2.0",
     long_description_content_type="text/markdown",
