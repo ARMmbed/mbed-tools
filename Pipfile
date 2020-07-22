@@ -18,6 +18,7 @@ wheel = "*"
 mbed-tools = {editable = true, path = "."}
 mbed-tools-ci-scripts = "*"
 pre-commit = "*"
+requests-mock = "*"
 
 [pipenv]
 allow_prereleases = true
