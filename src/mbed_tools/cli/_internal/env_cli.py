@@ -8,13 +8,13 @@ import pdoc
 from typing import Iterable
 
 
-from mbed_devices.mbed_tools import env_variables as mbed_devices_env_variables
+from mbed_tools.devices.mbed_tools import env_variables as devices_env_variables
 
 
 @click.command()
 def cli() -> None:
     """Prints information about environment variables of all child mbed packages."""
-    click.echo(_build_output(mbed_devices_env_variables))
+    click.echo(_build_output(devices_env_variables))
 
 
 _OUTPUT_PREAMBLE = """These variables used by Mbed Tools can be set either directly via environment variables or
