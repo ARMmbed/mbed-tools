@@ -63,39 +63,37 @@ The `pre-commit` tool allows developers to easily install git hook scripts which
 must pass in our CI before a PR is merged. Using commit hooks ensures you can't commit code which violates our style
 and maintainability requirements.
 
-To install the commit hooks for the repository, run `pipenv install --dev` then `pipenv shell`, in the `pipenv shell`
-type `pre-commit install`, the checks will now run automatically every time you try to `git commit` to the repository.
+To install the commit hooks for the repository, run:
+```bash
+$ pipenv install --dev
+$ pipenv shell
+$ pre-commit install
+```
+Our code checks and unit tests will now run automatically every time you try to `git commit` to the repository.
+If you prefer not to install the hook scripts, you can use
+```bash
+$ pre-commit run
+```
+to check your staged changes.
 
-## Merging the Pull Request
+## Pull Requests and Commit Messages
 
-When merging the pull request we will normally squash merge the changes give it a title which provides context to
-the changes:
+We aim to compose and review patchsets, not individual patches.
+When merging a pull request, we preserve the commit history. Ensure your commit history is clean and understandable.
 
-- `<emoji> <Issue-Number> <Change Summary> (#<Pull Request Number>)`
+We recommend the following commit structure in the following order:
 
-An emoji is used to highlight what has occurred in the change. Commonly used emojis can be seen below, but for a full
-list please see [Gitmoji](https://gitmoji.carloscuesta.me/):
+1. Whitespace only changes
+1. Style changes (although we use `black` to auto format the code so these should be rare)
+1. Refactoring (no functional change)
+1. Meaningful behavioural changes
 
-Emoji | Topic(s)
-------|---------
-✨ | New features or enhancements.
-🐛 | Bug / defect fixes.
-🔒 | Fixing security issues.
-⚡️ | Improving performance.
-♻️ | Refactoring or addressing technical debt.
-💥 | Breaking changes or removing functionality.
-❗️ | Notice of deprecation.
-📝 | Writing or updating documentation.
-👷 | Adding to the CI or build system.
-💚️ | Fixing CI or build system issues.
-🚀 | Releasing or deploying.
+Follow [this guide](https://chris.beams.io/posts/git-commit/) to ensure you're writing good commit messages.
 
-For more on the version number scheme please see the [ReadMe](./README.md).
+## Contribution Agreement
 
-## One Last Thing...
-
-For us to accept your code contributions, we will need you to agree to our 
-[Mbed Contributor Agreement](https://os.mbed.com/contributor_agreement/) to give us the necessary rights to use and 
+For us to accept your code contributions, we will need you to agree to our
+[Mbed Contributor Agreement](https://os.mbed.com/contributor_agreement/) to give us the necessary rights to use and
 distribute your contributions.
 
-Thank you :smiley:
+Thank you for contributing to `mbed-tools`.
