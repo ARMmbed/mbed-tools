@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"3.1.1" (2020-07-27)
+====================
+
+Bugfixes
+--------
+
+- Add manifest.in rule to upload all data files under the src dorectory (#20200727151049)
+
+
 "3.1.0" (2020-07-27)
 ====================
 
