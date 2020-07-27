@@ -3,6 +3,9 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
+[packages]
+mbed-tools = {editable = true, path = "."}
+
 [dev-packages]
 black = "*"
 coverage = "*"
@@ -15,7 +18,6 @@ mypy = ">=0.500"
 pytest = "*"
 pytest-cov = "*"
 wheel = "*"
-mbed-tools = {editable = true, path = "."}
 mbed-tools-ci-scripts = "*"
 pre-commit = "*"
 requests-mock = "*"
