@@ -1,6 +1,6 @@
                                 3rd party IP report for mbed-tools
 
-                                         2020-07-20 14:57:33.390938
+                                         2020-07-27 13:49:47.189677
 
 # Summary:
     Licence compliance: Compliant
@@ -85,45 +85,10 @@
     Licence: BSD-3-Clause
     Licence compliance: Licence is compliant.
 
-- mbed-build:
-    [X] Compliant?
-    [X] Dependency?
-    URL: https://github.com/ARMmbed/mbed-build
-    Licence: Apache-2.0
-    Licence compliance: Licence is compliant.
-
-- mbed-devices:
-    [X] Compliant?
-    [X] Dependency?
-    URL: https://github.com/ARMmbed/mbed-devices
-    Licence: Apache-2.0
-    Licence compliance: Licence is compliant.
-
-- mbed-project:
-    [X] Compliant?
-    [X] Dependency?
-    URL: https://github.com/ARMmbed/mbed-project
-    Licence: Apache-2.0
-    Licence compliance: Licence is compliant.
-
-- mbed-targets:
-    [X] Compliant?
-    [X] Dependency?
-    URL: https://github.com/ARMmbed/mbed-targets
-    Licence: Apache-2.0
-    Licence compliance: Licence is compliant.
-
 - mbed-tools:
     [X] Compliant?
     [] Dependency?
     URL: https://github.com/ARMmbed/mbed-tools
-    Licence: Apache-2.0
-    Licence compliance: Licence is compliant.
-
-- mbed-tools-lib:
-    [X] Compliant?
-    [X] Dependency?
-    URL: https://github.com/ARMmbed/mbed-tools-lib
     Licence: Apache-2.0
     Licence compliance: Licence is compliant.
 

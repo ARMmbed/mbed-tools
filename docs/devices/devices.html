@@ -8,8 +8,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.4" />
-<title>mbed_tools API documentation</title>
-<meta name="description" content="Exposes the primary interfaces for the library." />
+<title>mbed_tools.devices.devices API documentation</title>
+<meta name="description" content="API for listing devices." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
@@ -23,10 +23,10 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Package <code>mbed_tools</code></h1>
+<h1 class="title">Module <code>mbed_tools.devices.devices</code></h1>
 </header>
 <section id="section-intro">
-<p>Exposes the primary interfaces for the library.</p>
+<p>API for listing devices.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -35,43 +35,95 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-&#34;&#34;&#34;Exposes the primary interfaces for the library.&#34;&#34;&#34;
+&#34;&#34;&#34;API for listing devices.&#34;&#34;&#34;
 
-from mbed_tools._version import __version__</code></pre>
+from typing import Optional
+
+from mbed_tools.targets.exceptions import MbedTargetsError
+from mbed_tools.targets import Board
+
+from mbed_tools.devices._internal.detect_candidate_devices import detect_candidate_devices
+from mbed_tools.devices._internal.resolve_board import resolve_board
+from mbed_tools.devices._internal.exceptions import NoBoardForCandidate
+
+from mbed_tools.devices.device import ConnectedDevices
+from mbed_tools.devices.exceptions import DeviceLookupFailed
+
+
+def get_connected_devices() -&gt; ConnectedDevices:
+    &#34;&#34;&#34;Returns Mbed Devices connected to host computer.
+
+    Connected devices which have been identified as Mbed Boards and also connected devices which are potentially
+    Mbed Boards (but not could not be identified in the database) are returned.
+
+    Raises:
+        DeviceLookupFailed: If there is a problem with the process of identifying Mbed Boards from connected devices.
+    &#34;&#34;&#34;
+    connected_devices = ConnectedDevices()
+
+    board: Optional[&#34;Board&#34;]
+    for candidate_device in detect_candidate_devices():
+        try:
+            board = resolve_board(candidate_device)
+        except NoBoardForCandidate:
+            board = None
+        except MbedTargetsError as err:
+            raise DeviceLookupFailed(&#34;A problem occurred when looking up board data for connected devices.&#34;) from err
+
+        connected_devices.add_device(candidate_device, board)
+
+    return connected_devices</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="mbed_tools.build" href="build/index.html">mbed_tools.build</a></code></dt>
+<dt id="mbed_tools.devices.devices.get_connected_devices"><code class="name flex">
+<span>def <span class="ident">get_connected_devices</span></span>(<span>) ‑> <a title="mbed_tools.devices.device.ConnectedDevices" href="device.html#mbed_tools.devices.device.ConnectedDevices">ConnectedDevices</a></span>
+</code></dt>
 <dd>
-<div class="desc"><p>Provides the core build system for Mbed OS, which relies on CMake and Ninja as underlying technologies …</p></div>
-</dd>
-<dt><code class="name"><a title="mbed_tools.cli" href="cli/index.html">mbed_tools.cli</a></code></dt>
-<dd>
-<div class="desc"><p>mbed_tools command line interface.</p></div>
-</dd>
-<dt><code class="name"><a title="mbed_tools.devices" href="devices/index.html">mbed_tools.devices</a></code></dt>
-<dd>
-<div class="desc"><p>API to detect any Mbed OS devices connected to the host computer …</p></div>
-</dd>
-<dt><code class="name"><a title="mbed_tools.lib" href="lib/index.html">mbed_tools.lib</a></code></dt>
-<dd>
-<div class="desc"><p>Provides a library of common code.</p></div>
-</dd>
-<dt><code class="name"><a title="mbed_tools.project" href="project/index.html">mbed_tools.project</a></code></dt>
-<dd>
-<div class="desc"><p>Creation and management of Mbed OS projects …</p></div>
-</dd>
-<dt><code class="name"><a title="mbed_tools.targets" href="targets/index.html">mbed_tools.targets</a></code></dt>
-<dd>
-<div class="desc"><p>An abstraction layer describing hardware supported by Mbed OS …</p></div>
+<div class="desc"><p>Returns Mbed Devices connected to host computer.</p>
+<p>Connected devices which have been identified as Mbed Boards and also connected devices which are potentially
+Mbed Boards (but not could not be identified in the database) are returned.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>DeviceLookupFailed</code></dt>
+<dd>If there is a problem with the process of identifying Mbed Boards from connected devices.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_connected_devices() -&gt; ConnectedDevices:
+    &#34;&#34;&#34;Returns Mbed Devices connected to host computer.
+
+    Connected devices which have been identified as Mbed Boards and also connected devices which are potentially
+    Mbed Boards (but not could not be identified in the database) are returned.
+
+    Raises:
+        DeviceLookupFailed: If there is a problem with the process of identifying Mbed Boards from connected devices.
+    &#34;&#34;&#34;
+    connected_devices = ConnectedDevices()
+
+    board: Optional[&#34;Board&#34;]
+    for candidate_device in detect_candidate_devices():
+        try:
+            board = resolve_board(candidate_device)
+        except NoBoardForCandidate:
+            board = None
+        except MbedTargetsError as err:
+            raise DeviceLookupFailed(&#34;A problem occurred when looking up board data for connected devices.&#34;) from err
+
+        connected_devices.add_device(candidate_device, board)
+
+    return connected_devices</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -82,14 +134,14 @@ from mbed_tools._version import __version__</code></pre>
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="mbed_tools.build" href="build/index.html">mbed_tools.build</a></code></li>
-<li><code><a title="mbed_tools.cli" href="cli/index.html">mbed_tools.cli</a></code></li>
-<li><code><a title="mbed_tools.devices" href="devices/index.html">mbed_tools.devices</a></code></li>
-<li><code><a title="mbed_tools.lib" href="lib/index.html">mbed_tools.lib</a></code></li>
-<li><code><a title="mbed_tools.project" href="project/index.html">mbed_tools.project</a></code></li>
-<li><code><a title="mbed_tools.targets" href="targets/index.html">mbed_tools.targets</a></code></li>
+<li><code><a title="mbed_tools.devices" href="index.html">mbed_tools.devices</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="mbed_tools.devices.devices.get_connected_devices" href="#mbed_tools.devices.devices.get_connected_devices">get_connected_devices</a></code></li>
 </ul>
 </li>
 </ul>

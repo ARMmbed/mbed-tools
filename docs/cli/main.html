@@ -8,8 +8,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.4" />
-<title>mbed_tools.cli API documentation</title>
-<meta name="description" content="Integration point with all sub-packages." />
+<title>mbed_tools.cli.main API documentation</title>
+<meta name="description" content="Main cli entry point." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
@@ -23,10 +23,10 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>mbed_tools.cli</code></h1>
+<h1 class="title">Module <code>mbed_tools.cli.main</code></h1>
 </header>
 <section id="section-intro">
-<p>Integration point with all sub-packages.</p>
+<p>Main cli entry point.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -35,19 +35,19 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-&#34;&#34;&#34;Integration point with all sub-packages.&#34;&#34;&#34;
+&#34;&#34;&#34;Main cli entry point.&#34;&#34;&#34;
 import logging
-from pkg_resources import working_set
+from pkg_resources import get_distribution
 
 from typing import Union, Any
 import click
 
-from mbed_tools_lib.logging import set_log_level, MbedToolsHandler
+from mbed_tools.lib.logging import set_log_level, MbedToolsHandler
 
-from mbed_build.mbed_tools import configure
-from mbed_devices.mbed_tools import cli as mbed_devices_cli
-from mbed_tools._internal.env_cli import cli as env_cli
-from mbed_project.mbed_tools.cli import init, clone, checkout, libs
+from mbed_tools.cli.configure import configure
+from mbed_tools.cli.list_connected_devices import list_connected_devices
+from mbed_tools.cli.env_cli import cli as env_cli
+from mbed_tools.cli.project_management import init, clone, checkout, libs
 
 
 CONTEXT_SETTINGS = dict(help_option_names=[&#34;-h&#34;, &#34;--help&#34;])
@@ -70,22 +70,12 @@ class GroupWithExceptionHandling(click.Group):
 
 
 def print_version(context: click.Context, param: Union[click.Option, click.Parameter], value: bool) -&gt; Any:
-    &#34;&#34;&#34;A click callback which prints the versions of all Mbed Python packages.&#34;&#34;&#34;
+    &#34;&#34;&#34;Print the version of mbed-tools.&#34;&#34;&#34;
     if not value or context.resilient_parsing:
         return
 
-    # Get a list of Mbed Python packages
-    mbed_packages = {d.project_name: d.version for d in working_set if d.project_name.startswith(&#34;mbed-&#34;)}
-
-    # Show this package at the top of the list
-    top_level_version_string = f&#34;mbed-tools: {mbed_packages.pop(&#39;mbed-tools&#39;, &#39;&lt;unknown&gt;&#39;)}&#34;
-    click.echo(top_level_version_string)
-    click.echo(&#34;-&#34; * len(top_level_version_string))
-
-    # Show the remainder of the packages in alphabetical order
-    for project_name, version in sorted(mbed_packages.items()):
-        click.echo(f&#34;{project_name}: {version}&#34;)
-
+    version_string = get_distribution(&#34;mbed-tools&#34;).version
+    click.echo(version_string)
     context.exit()
 
 
@@ -112,7 +102,7 @@ def cli(verbose: int, traceback: bool) -&gt; None:
 
 
 cli.add_command(configure, &#34;configure&#34;)
-cli.add_command(mbed_devices_cli, &#34;devices&#34;)
+cli.add_command(list_connected_devices, &#34;devices&#34;)
 cli.add_command(env_cli, &#34;env&#34;)
 cli.add_command(init, &#34;init&#34;)
 cli.add_command(checkout, &#34;checkout&#34;)
@@ -127,32 +117,22 @@ cli.add_command(libs, &#34;libs&#34;)</code></pre>
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="mbed_tools.cli.print_version"><code class="name flex">
+<dt id="mbed_tools.cli.main.print_version"><code class="name flex">
 <span>def <span class="ident">print_version</span></span>(<span>context: click.core.Context, param: Union[click.core.Option, click.core.Parameter], value: bool) ‑> Any</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A click callback which prints the versions of all Mbed Python packages.</p></div>
+<div class="desc"><p>Print the version of mbed-tools.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def print_version(context: click.Context, param: Union[click.Option, click.Parameter], value: bool) -&gt; Any:
-    &#34;&#34;&#34;A click callback which prints the versions of all Mbed Python packages.&#34;&#34;&#34;
+    &#34;&#34;&#34;Print the version of mbed-tools.&#34;&#34;&#34;
     if not value or context.resilient_parsing:
         return
 
-    # Get a list of Mbed Python packages
-    mbed_packages = {d.project_name: d.version for d in working_set if d.project_name.startswith(&#34;mbed-&#34;)}
-
-    # Show this package at the top of the list
-    top_level_version_string = f&#34;mbed-tools: {mbed_packages.pop(&#39;mbed-tools&#39;, &#39;&lt;unknown&gt;&#39;)}&#34;
-    click.echo(top_level_version_string)
-    click.echo(&#34;-&#34; * len(top_level_version_string))
-
-    # Show the remainder of the packages in alphabetical order
-    for project_name, version in sorted(mbed_packages.items()):
-        click.echo(f&#34;{project_name}: {version}&#34;)
-
+    version_string = get_distribution(&#34;mbed-tools&#34;).version
+    click.echo(version_string)
     context.exit()</code></pre>
 </details>
 </dd>
@@ -161,7 +141,7 @@ cli.add_command(libs, &#34;libs&#34;)</code></pre>
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="mbed_tools.cli.GroupWithExceptionHandling"><code class="flex name class">
+<dt id="mbed_tools.cli.main.GroupWithExceptionHandling"><code class="flex name class">
 <span>class <span class="ident">GroupWithExceptionHandling</span></span>
 <span>(</span><span>name=None, commands=None, **attrs)</span>
 </code></dt>
@@ -194,7 +174,7 @@ cli.add_command(libs, &#34;libs&#34;)</code></pre>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="mbed_tools.cli.GroupWithExceptionHandling.invoke"><code class="name flex">
+<dt id="mbed_tools.cli.main.GroupWithExceptionHandling.invoke"><code class="name flex">
 <span>def <span class="ident">invoke</span></span>(<span>self, context: click.core.Context) ‑> NoneType</span>
 </code></dt>
 <dd>
@@ -233,20 +213,20 @@ cli.add_command(libs, &#34;libs&#34;)</code></pre>
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="mbed_tools" href="index.html">mbed_tools</a></code></li>
+<li><code><a title="mbed_tools.cli" href="index.html">mbed_tools.cli</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="mbed_tools.cli.print_version" href="#mbed_tools.cli.print_version">print_version</a></code></li>
+<li><code><a title="mbed_tools.cli.main.print_version" href="#mbed_tools.cli.main.print_version">print_version</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="mbed_tools.cli.GroupWithExceptionHandling" href="#mbed_tools.cli.GroupWithExceptionHandling">GroupWithExceptionHandling</a></code></h4>
+<h4><code><a title="mbed_tools.cli.main.GroupWithExceptionHandling" href="#mbed_tools.cli.main.GroupWithExceptionHandling">GroupWithExceptionHandling</a></code></h4>
 <ul class="">
-<li><code><a title="mbed_tools.cli.GroupWithExceptionHandling.invoke" href="#mbed_tools.cli.GroupWithExceptionHandling.invoke">invoke</a></code></li>
+<li><code><a title="mbed_tools.cli.main.GroupWithExceptionHandling.invoke" href="#mbed_tools.cli.main.GroupWithExceptionHandling.invoke">invoke</a></code></li>
 </ul>
 </li>
 </ul>

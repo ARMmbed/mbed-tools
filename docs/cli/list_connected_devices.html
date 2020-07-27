@@ -8,8 +8,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.4" />
-<title>mbed_tools API documentation</title>
-<meta name="description" content="Exposes the primary interfaces for the library." />
+<title>mbed_tools.cli.list_connected_devices API documentation</title>
+<meta name="description" content="Command to list all Mbed enabled devices connected to the host computer." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
@@ -23,10 +23,10 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Package <code>mbed_tools</code></h1>
+<h1 class="title">Module <code>mbed_tools.cli.list_connected_devices</code></h1>
 </header>
 <section id="section-intro">
-<p>Exposes the primary interfaces for the library.</p>
+<p>Command to list all Mbed enabled devices connected to the host computer.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -35,39 +35,96 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-&#34;&#34;&#34;Exposes the primary interfaces for the library.&#34;&#34;&#34;
+&#34;&#34;&#34;Command to list all Mbed enabled devices connected to the host computer.&#34;&#34;&#34;
+import click
+import json
+from operator import attrgetter
+from typing import Iterable
+from tabulate import tabulate
 
-from mbed_tools._version import __version__</code></pre>
+from mbed_tools.devices import get_connected_devices, Device
+from mbed_tools.targets import Board
+
+
+@click.command()
+@click.option(
+    &#34;--format&#34;, type=click.Choice([&#34;table&#34;, &#34;json&#34;]), default=&#34;table&#34;, show_default=True, help=&#34;Set output format.&#34;
+)
+@click.option(
+    &#34;--show-all&#34;,
+    &#34;-a&#34;,
+    is_flag=True,
+    default=False,
+    help=&#34;Show all connected devices, even those which are not Mbed Boards.&#34;,
+)
+def list_connected_devices(format: str, show_all: bool) -&gt; None:
+    &#34;&#34;&#34;Prints connected devices.&#34;&#34;&#34;
+    connected_devices = get_connected_devices()
+
+    if show_all:
+        devices = _sort_devices(connected_devices.identified_devices + connected_devices.unidentified_devices)
+    else:
+        devices = _sort_devices(connected_devices.identified_devices)
+
+    output_builders = {
+        &#34;table&#34;: _build_tabular_output,
+        &#34;json&#34;: _build_json_output,
+    }
+    if devices:
+        output = output_builders[format](devices)
+        click.echo(output)
+    else:
+        click.echo(&#34;No connected Mbed devices found.&#34;)
+
+
+def _sort_devices(devices: Iterable[Device]) -&gt; Iterable[Device]:
+    &#34;&#34;&#34;Sort devices by board name and then serial number (in case there are multiple boards with the same name).&#34;&#34;&#34;
+    return sorted(devices, key=attrgetter(&#34;mbed_board.board_name&#34;, &#34;serial_number&#34;))
+
+
+def _build_tabular_output(devices: Iterable[Device]) -&gt; str:
+    headers = [&#34;Board name&#34;, &#34;Serial number&#34;, &#34;Serial port&#34;, &#34;Mount point(s)&#34;, &#34;Build target(s)&#34;]
+    devices_data = []
+    for device in devices:
+        devices_data.append(
+            [
+                device.mbed_board.board_name or &#34;&lt;unknown&gt;&#34;,
+                device.serial_number,
+                device.serial_port or &#34;&lt;unknown&gt;&#34;,
+                &#34;\n&#34;.join(str(mount_point) for mount_point in device.mount_points),
+                &#34;\n&#34;.join(_get_build_targets(device.mbed_board)),
+            ]
+        )
+    return tabulate(devices_data, headers=headers)
+
+
+def _build_json_output(devices: Iterable[Device]) -&gt; str:
+    devices_data = []
+    for device in devices:
+        board = device.mbed_board
+        devices_data.append(
+            {
+                &#34;serial_number&#34;: device.serial_number,
+                &#34;serial_port&#34;: device.serial_port,
+                &#34;mount_points&#34;: [str(m) for m in device.mount_points],
+                &#34;mbed_board&#34;: {
+                    &#34;product_code&#34;: board.product_code,
+                    &#34;board_type&#34;: board.board_type,
+                    &#34;board_name&#34;: board.board_name,
+                    &#34;mbed_os_support&#34;: board.mbed_os_support,
+                    &#34;mbed_enabled&#34;: board.mbed_enabled,
+                    &#34;build_targets&#34;: _get_build_targets(board),
+                },
+            }
+        )
+    return json.dumps(devices_data, indent=4)
+
+
+def _get_build_targets(board: Board) -&gt; Iterable[str]:
+    return [f&#34;{board.board_type}_{variant}&#34; for variant in board.build_variant] + [board.board_type]</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
-<dl>
-<dt><code class="name"><a title="mbed_tools.build" href="build/index.html">mbed_tools.build</a></code></dt>
-<dd>
-<div class="desc"><p>Provides the core build system for Mbed OS, which relies on CMake and Ninja as underlying technologies …</p></div>
-</dd>
-<dt><code class="name"><a title="mbed_tools.cli" href="cli/index.html">mbed_tools.cli</a></code></dt>
-<dd>
-<div class="desc"><p>mbed_tools command line interface.</p></div>
-</dd>
-<dt><code class="name"><a title="mbed_tools.devices" href="devices/index.html">mbed_tools.devices</a></code></dt>
-<dd>
-<div class="desc"><p>API to detect any Mbed OS devices connected to the host computer …</p></div>
-</dd>
-<dt><code class="name"><a title="mbed_tools.lib" href="lib/index.html">mbed_tools.lib</a></code></dt>
-<dd>
-<div class="desc"><p>Provides a library of common code.</p></div>
-</dd>
-<dt><code class="name"><a title="mbed_tools.project" href="project/index.html">mbed_tools.project</a></code></dt>
-<dd>
-<div class="desc"><p>Creation and management of Mbed OS projects …</p></div>
-</dd>
-<dt><code class="name"><a title="mbed_tools.targets" href="targets/index.html">mbed_tools.targets</a></code></dt>
-<dd>
-<div class="desc"><p>An abstraction layer describing hardware supported by Mbed OS …</p></div>
-</dd>
-</dl>
 </section>
 <section>
 </section>
@@ -82,14 +139,9 @@ from mbed_tools._version import __version__</code></pre>
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="mbed_tools.build" href="build/index.html">mbed_tools.build</a></code></li>
-<li><code><a title="mbed_tools.cli" href="cli/index.html">mbed_tools.cli</a></code></li>
-<li><code><a title="mbed_tools.devices" href="devices/index.html">mbed_tools.devices</a></code></li>
-<li><code><a title="mbed_tools.lib" href="lib/index.html">mbed_tools.lib</a></code></li>
-<li><code><a title="mbed_tools.project" href="project/index.html">mbed_tools.project</a></code></li>
-<li><code><a title="mbed_tools.targets" href="targets/index.html">mbed_tools.targets</a></code></li>
+<li><code><a title="mbed_tools.cli" href="index.html">mbed_tools.cli</a></code></li>
 </ul>
 </li>
 </ul>

@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"3.1.0" (2020-07-27)
+====================
+
+Features
+--------
+
+- Create single package layout for mbed-tools (#20200722134138)
+
+
+Improved Documentation
+----------------------
+
+- Add ADR for removing mbed_config.h (#20200723142705)
+
+
 "3.0.1" (2020-07-20)
 ====================
 

@@ -10,12 +10,7 @@ True,Jinja2,True,https://palletsprojects.com/p/jinja/,BSD-3-Clause,Licence is co
 True,Mako,True,https://www.makotemplates.org/,MIT,Licence is compliant.
 True,Markdown,True,https://Python-Markdown.github.io/,0BSD,Licence is compliant.
 True,MarkupSafe,True,https://palletsprojects.com/p/markupsafe/,BSD-3-Clause,Licence is compliant.
-True,mbed-build,True,https://github.com/ARMmbed/mbed-build,Apache-2.0,Licence is compliant.
-True,mbed-devices,True,https://github.com/ARMmbed/mbed-devices,Apache-2.0,Licence is compliant.
-True,mbed-project,True,https://github.com/ARMmbed/mbed-project,Apache-2.0,Licence is compliant.
-True,mbed-targets,True,https://github.com/ARMmbed/mbed-targets,Apache-2.0,Licence is compliant.
 True,mbed-tools,False,https://github.com/ARMmbed/mbed-tools,Apache-2.0,Licence is compliant.
-True,mbed-tools-lib,True,https://github.com/ARMmbed/mbed-tools-lib,Apache-2.0,Licence is compliant.
 True,pdoc3,True,https://pdoc3.github.io/pdoc/,AGPL-3.0,Package's licence manually checked: AGPL-3.0 - Accepted temporarily
 True,psutil,True,https://github.com/giampaolo/psutil,0BSD,Licence is compliant.
 True,python-dotenv,True,https://github.com/theskumar/python-dotenv,Unknown,Package's licence manually checked: BSD-3-Clause
