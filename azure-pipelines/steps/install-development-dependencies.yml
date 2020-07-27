@@ -9,8 +9,9 @@ steps:
   - script: |
       python -m pip install --upgrade pip wheel setuptools
       pip install pipenv
-      python -m pipenv lock --dev -r --pre > dev-requirements.txt
+      python -m pipenv lock --dev-only -r --pre > dev-requirements.txt
       pip install -r dev-requirements.txt
       pip install pytest-azurepipelines
+      pip install .
       pip list
     displayName: 'Install development dependencies'
