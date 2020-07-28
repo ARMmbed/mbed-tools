@@ -9,7 +9,7 @@ set(MBED_TARGET "{{target_name}}" CACHE STRING "")
 set(MBED_CPU_CORE "{{core}}" CACHE STRING "")
 set(MBED_PROFILE "develop" CACHE STRING "")
 
-set_property(GLOBAL APPEND PROPERTY MBED_TARGET_LABELS{% for label in labels %}
+set(MBED_TARGET_LABELS{% for label in labels %}
     {{label}};
 {%- endfor %}
 {% for component in components %}
@@ -21,7 +21,7 @@ set_property(GLOBAL APPEND PROPERTY MBED_TARGET_LABELS{% for label in labels %}
 )
 
 # target
-add_definitions({% for component in components %}
+set(TARGET_DEFINITIONS{% for component in components %}
     -DCOMPONENT_{{component.upper()}}=1
 {%- endfor %}
 {% for feature in features %}
@@ -45,7 +45,7 @@ add_definitions({% for component in components %}
 )
 
 # config
-add_definitions(
+set(CONFIG_DEFINITIONS
 # options
 {% for option in options -%}
 {% if option.value is not none -%}
