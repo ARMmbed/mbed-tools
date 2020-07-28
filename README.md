@@ -1,4 +1,4 @@
-# Mbed Tools
+# Mbed Toolz
 
 ![Package](https://badgen.net/badge/Package/mbed-tools/grey)
 [![Documentation](https://badgen.net/badge/Documentation/GitHub%20Pages/blue?icon=github)](https://armmbed.github.io/mbed-tools)
