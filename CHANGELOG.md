@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"3.1.2" (2020-07-29)
+====================
+
+Bugfixes
+--------
+
+- Remove gen_config interface library target from cmake template (#20200727143830)
+
+
 "3.1.1" (2020-07-27)
 ====================
 
