@@ -4,16 +4,17 @@
 #
 """Main cli entry point."""
 import logging
-from pkg_resources import get_distribution
 
+from pkg_resources import get_distribution
 from typing import Union, Any
+
 import click
 
 from mbed_tools.lib.logging import set_log_level, MbedToolsHandler
 
 from mbed_tools.cli.configure import configure
-from mbed_tools.cli.list_connected_devices import list_connected_devices
 from mbed_tools.cli.env_cli import cli as env_cli
+from mbed_tools.cli.list_connected_devices import list_connected_devices
 from mbed_tools.cli.project_management import init, clone, checkout, libs
 
 
