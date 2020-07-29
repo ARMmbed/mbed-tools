@@ -35,6 +35,7 @@ class MbedToolsHandler:
         """Keep track of the logger to use and whether or not a traceback should be generated."""
         self._logger = logger
         self._traceback = traceback
+        self.exit_code = 0
 
     def __enter__(self) -> "MbedToolsHandler":
         """Return the Context Manager."""
@@ -51,6 +52,7 @@ class MbedToolsHandler:
             error_msg = _exception_message(cast(BaseException, exc_value), logging.root.level, self._traceback)
             self._logger.error(error_msg, exc_info=self._traceback)
             # Do not propagate exceptions derived from ToolsError
+            self.exit_code = 1
             return True
 
         # Propagate all other exceptions
