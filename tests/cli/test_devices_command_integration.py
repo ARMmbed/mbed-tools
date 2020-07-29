@@ -26,8 +26,10 @@ class TestClickGroupWithExceptionHandling(TestCase):
         mock_cli = click.Command("test", callback=callback)
         cli.add_command(mock_cli, "test")
 
-        CliRunner().invoke(cli, ["test"])
+        runner = CliRunner()
+        result = runner.invoke(cli, ["test"])
 
+        self.assertEqual(1, result.exit_code)
         logger_error.assert_called_once()
 
 
