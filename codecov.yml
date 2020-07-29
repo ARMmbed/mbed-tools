@@ -11,9 +11,9 @@ coverage:
         # basic
         target: auto
         threshold: 2%
-        base: auto 
+        base: auto
         # advanced
-        branches: 
+        branches:
           - master
         if_not_found: success
         if_ci_failed: error
