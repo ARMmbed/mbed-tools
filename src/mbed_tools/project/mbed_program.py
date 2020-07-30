@@ -147,7 +147,7 @@ class MbedProgram:
 
     def list_known_library_dependencies(self) -> List[MbedLibReference]:
         """Returns a list of all known library dependencies."""
-        return [lib for lib in self.lib_references.iter_all()]
+        return sorted([lib for lib in self.lib_references.iter_all()])
 
     def has_unresolved_libraries(self) -> bool:
         """Checks if any unresolved library dependencies exist in the program tree."""
