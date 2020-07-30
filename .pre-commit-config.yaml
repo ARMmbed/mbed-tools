@@ -1,15 +1,5 @@
 - repo: local
   hooks:
-    - id: assertnews
-      name: news file
-      entry: assert-news -l
-      language: python
-      types: [file]
-      require_serial: true
-      verbose: true
-      always_run: true
-      pass_filenames: false
-
     - id: licensing
       name: licensing
       entry: license-files
