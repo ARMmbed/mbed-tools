@@ -2,27 +2,23 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-import pathlib
 from unittest import TestCase, mock
 from mbed_tools.targets.target import Target
 from mbed_tools.targets.get_target import get_target_by_board_type, get_target_by_name
-from mbed_tools.project import MbedProgram
 
 
 class TestGetTarget(TestCase):
     @mock.patch("mbed_tools.targets.get_target.Target", spec_set=Target)
-    @mock.patch("mbed_tools.targets.get_target.MbedProgram", spec_set=MbedProgram)
-    def test_get_by_name(self, MbedProgram, MockTarget):
+    def test_get_by_name(self, MockTarget):
         target_name = "Target"
-        path_to_mbed_program = "my-program"
+        targets_json_file_path = "targets.json"
 
-        result = get_target_by_name(target_name, path_to_mbed_program)
+        result = get_target_by_name(target_name, targets_json_file_path)
 
         self.assertEqual(result, MockTarget.from_targets_json.return_value)
         MockTarget.from_targets_json.assert_called_once_with(
-            target_name, MbedProgram.from_existing.return_value.mbed_os.targets_json_file,
+            target_name, targets_json_file_path,
         )
-        MbedProgram.from_existing.assert_called_once_with(pathlib.Path(path_to_mbed_program))
 
     @mock.patch("mbed_tools.targets.get_target.get_target_by_name")
     def test_get_by_board_type(self, mock_get_target_by_name):

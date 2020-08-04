@@ -2,8 +2,6 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-import pathlib
-
 from unittest import TestCase, mock
 
 from tests.build._internal.config.factories import ConfigFactory
@@ -12,9 +10,7 @@ from mbed_tools.build._internal.cmake_file import generate_mbed_config_cmake_fil
 
 class TestGenerateCMakeListsFile(TestCase):
     @mock.patch("mbed_tools.build._internal.cmake_file.datetime")
-    @mock.patch("mbed_tools.build._internal.cmake_file.assemble_config")
-    @mock.patch("mbed_tools.build._internal.cmake_file.get_target_by_name")
-    def test_correct_arguments_passed(self, get_target_by_name, assemble_config, datetime):
+    def test_correct_arguments_passed(self, datetime):
         target = mock.Mock()
         target.labels = ["foo"]
         target.features = ["bar"]
@@ -26,16 +22,11 @@ class TestGenerateCMakeListsFile(TestCase):
         datetime = mock.Mock()
         datetime.datetime.now.return_value.timestamp.return_value = 2
         config = ConfigFactory()
-        assemble_config.return_value = config
-        get_target_by_name.return_value = target
         mbed_target = "K64F"
-        program_path = pathlib.Path("blinky")
         toolchain_name = "GCC"
 
-        result = generate_mbed_config_cmake_file(mbed_target, program_path, toolchain_name)
+        result = generate_mbed_config_cmake_file(mbed_target, target, config, toolchain_name)
 
-        get_target_by_name.assert_called_once_with(mbed_target, program_path)
-        assemble_config.assert_called_once_with(mbed_target, program_path)
         self.assertEqual(
             result, _render_mbed_config_cmake_template(target, config, toolchain_name, mbed_target,),
         )

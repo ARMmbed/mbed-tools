@@ -10,20 +10,16 @@ from mbed_tools.build._internal.config.config import Config
 from mbed_tools.build._internal.config.cumulative_data import CumulativeData
 from mbed_tools.build._internal.config.source import Source
 from mbed_tools.build._internal.find_files import LabelFilter, filter_files, find_files
-from mbed_tools.project import MbedProgram
 
 
-def assemble_config(mbed_target: str, mbed_program_directory: Path) -> Config:
+def assemble_config(target_source: Source, mbed_program_directory: Path, mbed_app_file: Optional[Path]) -> Config:
     """Assemble Config for given target and program directory.
 
     The structure and configuration of MbedOS requires us to do multiple passes over
     configuration files, as each pass might affect which configuration files should be included
     in the final configuration.
     """
-    target_source = Source.from_target(mbed_target, mbed_program_directory)
     mbed_lib_files = find_files("mbed_lib.json", mbed_program_directory)
-    mbed_program = MbedProgram.from_existing(mbed_program_directory)
-    mbed_app_file = mbed_program.files.app_config_file
     return _assemble_config_from_sources_and_lib_files(target_source, mbed_lib_files, mbed_app_file)
 
 
