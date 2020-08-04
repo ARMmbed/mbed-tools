@@ -79,8 +79,7 @@ class TestSource(TestCase):
             ),
         )
 
-    @mock.patch("mbed_tools.build._internal.config.source.get_target_by_board_type")
-    def test_from_target(self, get_target_by_board_type):
+    def test_from_target(self):
         # Warning: Target is a dataclass and dataclasses provide no type safety when mocking
         target = mock.Mock(
             features={"feature_1"},
@@ -88,16 +87,13 @@ class TestSource(TestCase):
             labels={"label_1"},
             config={"foo": "bar", "target.bool": True},
         )
-        get_target_by_board_type.return_value = target
-        mbed_target = "K66F"
-        mbed_program_directory = pathlib.Path("foo")
 
-        subject = Source.from_target(mbed_target, mbed_program_directory)
+        subject = Source.from_target(target)
 
         self.assertEqual(
             subject,
             Source(
-                human_name=f"mbed_target.Target for {mbed_target}",
+                human_name=f"mbed_target.Target for {target}",
                 config={"target.foo": "bar", "target.bool": True},
                 overrides={
                     "target.features": target.features,

@@ -27,7 +27,6 @@ def create_files(directory, files):
     return created_files
 
 
-@mock.patch("mbed_tools.build._internal.config.assemble_build_config.MbedProgram", autospec=True)
 @mock.patch("mbed_tools.build._internal.config.assemble_build_config.Source", autospec=True)
 @mock.patch("mbed_tools.build._internal.config.assemble_build_config.find_files", autospec=True)
 @mock.patch(
@@ -35,18 +34,17 @@ def create_files(directory, files):
 )
 class TestAssembleConfig(TestCase):
     def test_calls_collaborator_with_source_and_file_paths(
-        self, _assemble_config_from_sources_and_lib_files, find_files, Source, MbedProgram,
+        self, _assemble_config_from_sources_and_lib_files, find_files, Source,
     ):
-        mbed_target = "K64F"
+        mbed_target = mock.Mock()
         mbed_program_directory = Path("foo")
-        program = mock.Mock()
-        MbedProgram.from_existing.return_value = program
+        app_config_file = mbed_program_directory / "mbed_app.json"
 
-        subject = assemble_config(mbed_target, mbed_program_directory)
+        subject = assemble_config(Source.from_target(mbed_target), mbed_program_directory, app_config_file)
 
         self.assertEqual(subject, _assemble_config_from_sources_and_lib_files.return_value)
         _assemble_config_from_sources_and_lib_files.assert_called_once_with(
-            Source.from_target.return_value, find_files.return_value, program.files.app_config_file
+            Source.from_target.return_value, find_files.return_value, app_config_file
         )
         find_files.assert_called_once_with("mbed_lib.json", mbed_program_directory)
 

@@ -9,7 +9,11 @@ import click
 
 from typing import Any
 
+from mbed_tools.project import MbedProgram
+from mbed_tools.targets import get_target_by_name
 from mbed_tools.build._internal.cmake_file import generate_mbed_config_cmake_file
+from mbed_tools.build._internal.config.assemble_build_config import assemble_config
+from mbed_tools.build._internal.config.source import Source
 from mbed_tools.build._internal.write_files import write_file
 
 
@@ -57,7 +61,11 @@ def configure(output_directory: Any, toolchain: str, mbed_target: str, program_p
         mbed_target: the target you are building for (eg. K64F)
         program_path: the path to the local Mbed program
     """
-    cmake_file_contents = generate_mbed_config_cmake_file(mbed_target.upper(), pathlib.Path(program_path), toolchain)
+    program = MbedProgram.from_existing(pathlib.Path(program_path))
+    mbed_target = mbed_target.upper()
+    target_build_attributes = get_target_by_name(mbed_target, program.mbed_os.targets_json_file)
+    config = assemble_config(Source.from_target(target_build_attributes), program.root, program.files.app_config_file)
+    cmake_file_contents = generate_mbed_config_cmake_file(mbed_target, target_build_attributes, config, toolchain)
     output_directory = pathlib.Path(output_directory, ".mbedbuild")
     write_file(output_directory, "mbed_config.cmake", cmake_file_contents)
     click.echo(f"mbed_config.cmake has been generated and written to '{str(output_directory.resolve())}'")
