@@ -42,8 +42,9 @@ class MbedProgram:
         """
         self.repo = repo
         self.files = program_files
+        self.root = self.files.mbed_file.parent
         self.mbed_os = mbed_os
-        self.lib_references = LibraryReferences(root=self.files.mbed_file.parent, ignore_paths=[self.mbed_os.root])
+        self.lib_references = LibraryReferences(root=self.root, ignore_paths=[self.mbed_os.root])
 
     @classmethod
     def from_url(cls, url: str, dst_path: Path, check_mbed_os: bool = True) -> "MbedProgram":
