@@ -1,13 +1,13 @@
 # Mbed Tools
 
 ![Package](https://badgen.net/badge/Package/mbed-tools/grey)
-[![Documentation](https://badgen.net/badge/Documentation/GitHub%20Pages/blue?icon=github)](https://armmbed.github.io/mbed-tools/docs/api)
+[![Documentation](https://badgen.net/badge/Documentation/GitHub%20Pages/blue?icon=github)](https://armmbed.github.io/mbed-tools/api/)
 [![PyPI](https://badgen.net/pypi/v/mbed-tools)](https://pypi.org/project/mbed-tools/)
 [![PyPI - Status](https://img.shields.io/pypi/status/mbed-tools)](https://pypi.org/project/mbed-tools/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mbed-tools)](https://pypi.org/project/mbed-tools/)
 
 [![License](https://badgen.net/pypi/license/mbed-tools)](https://github.com/ARMmbed/mbed-tools/blob/master/LICENSE)
-[![Compliance](https://badgen.net/badge/License%20Report/compliant/green?icon=libraries)](https://armmbed.github.io/mbed-tools/docs/api/third_party_IP_report.html)
+[![Compliance](https://badgen.net/badge/License%20Report/compliant/green?icon=libraries)](https://armmbed.github.io/mbed-tools/api/third_party_IP_report.html)
 
 [![Build Status](https://dev.azure.com/mbed-tools/mbed-tools/_apis/build/status/Build%20and%20Release?branchName=master&stageName=CI%20Checkpoint)](https://dev.azure.com/mbed-tools/mbed-tools/_build/latest?definitionId=10&branchName=master)
 [![Test Coverage](https://codecov.io/gh/ARMmbed/mbed-tools/branch/master/graph/badge.svg)](https://codecov.io/gh/ARMmbed/mbed-tools)
@@ -68,7 +68,7 @@ pip install mbed-tools==<version>
 Interface definition and usage documentation (for developers of Mbed OS tooling) is available for the most recent
 production release here:
 
-- [GitHub Pages](https://armmbed.github.io/mbed-tools/docs/api)
+- [GitHub Pages](https://armmbed.github.io/mbed-tools/api/)
 
 ## Project Structure
 
@@ -82,7 +82,7 @@ The follow described the major aspects of the project structure:
 
 ## Getting Help
 
-- For interface definition and usage documentation, please see [GitHub Pages](https://armmbed.github.io/mbed-tools/docs/api).
+- For interface definition and usage documentation, please see [GitHub Pages](https://armmbed.github.io/mbed-tools/api/).
 - For a list of known issues and possible work arounds, please see [Known Issues](KNOWN_ISSUES.md).
 - To raise a defect or enhancement please use [GitHub Issues](https://github.com/ARMmbed/mbed-tools/issues).
 - To ask a question please use the [Mbed Forum](https://forums.mbed.com/).
