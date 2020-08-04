@@ -29,13 +29,13 @@ class TestGenerateCMakeListsFile(TestCase):
         assemble_config.return_value = config
         get_target_by_name.return_value = target
         mbed_target = "K64F"
-        program_path = "blinky"
+        program_path = pathlib.Path("blinky")
         toolchain_name = "GCC"
 
         result = generate_mbed_config_cmake_file(mbed_target, program_path, toolchain_name)
 
         get_target_by_name.assert_called_once_with(mbed_target, program_path)
-        assemble_config.assert_called_once_with(mbed_target, pathlib.Path(program_path))
+        assemble_config.assert_called_once_with(mbed_target, program_path)
         self.assertEqual(
             result, _render_mbed_config_cmake_template(target, config, toolchain_name, mbed_target,),
         )
