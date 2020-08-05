@@ -29,7 +29,6 @@
       entry: mypy src/mbed_tools
       language: python
       types: [python]
-      require_serial: true
       pass_filenames: false
 
     - id: pytest
