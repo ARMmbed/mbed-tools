@@ -9,7 +9,7 @@ from unittest import TestCase
 from typing import Iterable
 
 
-from mbed_tools.build._internal.find_files import find_files, filter_files, MbedignoreFilter, LabelFilter
+from mbed_tools.build._internal.find_files import find_files, filter_files, MbedignoreFilter, LabelFilter, _find_files
 
 
 @contextlib.contextmanager
@@ -70,6 +70,18 @@ class TestFindFiles(TestCase):
         ]
         with create_files(matching_paths + excluded_paths) as directory:
             subject = find_files("file.txt", directory)
+
+        self.assertEqual(len(subject), len(matching_paths))
+        for path in matching_paths:
+            self.assertIn(Path(directory, path), subject)
+
+    def test_finds_all_with_no_filters(self):
+        matching_paths = [
+            Path("file.txt"),
+            Path("bar", "file.txt"),
+        ]
+        with create_files(matching_paths) as directory:
+            subject = _find_files("file.txt", directory)
 
         self.assertEqual(len(subject), len(matching_paths))
         for path in matching_paths:
