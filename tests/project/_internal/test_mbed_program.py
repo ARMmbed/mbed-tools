@@ -119,15 +119,15 @@ class TestInitialiseProgram(TestCase):
 
 class TestLibReferenceHandling(TestCase):
     @mock.patch("mbed_tools.project.mbed_program.LibraryReferences", autospec=True)
-    def test_resolve_libraries(self, mock_lib_refs):
-        program = MbedProgram(None, MbedProgramFiles(None, pathlib.Path()), MbedOS(pathlib.Path(), None))
+    def test_resolve_libraries_delegation(self, mock_lib_refs):
+        program = MbedProgram(MbedProgramFiles(None, pathlib.Path(), pathlib.Path()), MbedOS(pathlib.Path(), None))
         program.resolve_libraries()
 
         program.lib_references.resolve.assert_called_once()
 
     @mock.patch("mbed_tools.project.mbed_program.LibraryReferences", autospec=True)
-    def test_checkout_libraries(self, mock_lib_refs):
-        program = MbedProgram(None, MbedProgramFiles(None, pathlib.Path()), MbedOS(pathlib.Path(), None))
+    def test_checkout_libraries_delegation(self, mock_lib_refs):
+        program = MbedProgram(MbedProgramFiles(None, pathlib.Path(), pathlib.Path()), MbedOS(pathlib.Path(), None))
         program.checkout_libraries()
 
         program.lib_references.checkout.assert_called_once()
@@ -143,7 +143,7 @@ class TestLibReferenceHandling(TestCase):
         mbed_os_root.mkdir()
 
         program = MbedProgram(
-            None, MbedProgramFiles(None, pathlib.Path(root, "mbed-os.lib")), MbedOS(mbed_os_root, None)
+            MbedProgramFiles(None, pathlib.Path(root, "mbed-os.lib"), pathlib.Path()), MbedOS(mbed_os_root, None),
         )
         libs = program.list_known_library_dependencies()
         self.assertEqual(str(lib_ref_unresolved), str(libs[0]))
@@ -158,7 +158,7 @@ class TestLibReferenceHandling(TestCase):
         mbed_os_root.mkdir()
 
         program = MbedProgram(
-            None, MbedProgramFiles(None, pathlib.Path(root / "mbed-os.lib")), MbedOS(mbed_os_root, None)
+            MbedProgramFiles(None, pathlib.Path(root / "mbed-os.lib"), pathlib.Path()), MbedOS(mbed_os_root, None),
         )
         self.assertTrue(program.has_unresolved_libraries())
 
