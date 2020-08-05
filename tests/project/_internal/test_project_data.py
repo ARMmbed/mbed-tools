@@ -5,15 +5,20 @@
 """Tests for project_data.py."""
 import pathlib
 
-from unittest import TestCase
+from unittest import TestCase, mock
 
-from mbed_tools.project._internal.project_data import MbedProgramFiles, MbedOS
+from mbed_tools.project._internal.project_data import (
+    MbedProgramFiles,
+    MbedOS,
+    CMAKELISTS_FILE_NAME,
+    MAIN_CPP_FILE_NAME,
+)
 from tests.project.factories import make_mbed_lib_reference, make_mbed_program_files, make_mbed_os_files, patchfs
 
 
 class TestMbedProgramFiles(TestCase):
     @patchfs
-    def test_from_new_raises_if_program_already_exists(self, fs):
+    def test_from_new_raises_if_program_files_already_exist(self, fs):
         root = pathlib.Path(fs, "foo")
         make_mbed_program_files(root)
 
@@ -21,13 +26,33 @@ class TestMbedProgramFiles(TestCase):
             MbedProgramFiles.from_new(root)
 
     @patchfs
-    def test_from_new_returns_valid_program(self, fs):
+    def test_from_new_returns_valid_program_file_set(self, fs):
         root = pathlib.Path(fs, "foo")
         root.mkdir()
 
         program = MbedProgramFiles.from_new(root)
 
         self.assertTrue(program.app_config_file.exists())
+        self.assertTrue(program.mbed_os_ref.exists())
+        self.assertTrue(program.cmakelists_file.exists())
+
+    @patchfs
+    def test_from_new_calls_render_template_for_gitignore_cmake_and_main(self, fs):
+        with mock.patch(
+            "mbed_tools.project._internal.project_data.render_cmakelists_template"
+        ) as render_cmakelists_template:
+            with mock.patch(
+                "mbed_tools.project._internal.project_data.render_main_cpp_template"
+            ) as render_main_cpp_template:
+                with mock.patch(
+                    "mbed_tools.project._internal.project_data.render_gitignore_template"
+                ) as render_gitignore_template:
+                    root = pathlib.Path(fs, "foo")
+                    root.mkdir()
+                    program_files = MbedProgramFiles.from_new(root)
+                    render_cmakelists_template.assert_called_once_with(program_files.cmakelists_file, "foo")
+                    render_main_cpp_template.assert_called_once_with(root / MAIN_CPP_FILE_NAME)
+                    render_gitignore_template.assert_called_once_with(root / ".gitignore")
 
     @patchfs
     def test_from_existing_finds_existing_program_data(self, fs):
@@ -37,6 +62,30 @@ class TestMbedProgramFiles(TestCase):
         program = MbedProgramFiles.from_existing(root)
 
         self.assertTrue(program.app_config_file.exists())
+        self.assertTrue(program.mbed_os_ref.exists())
+        self.assertTrue(program.cmakelists_file.exists())
+
+    @patchfs
+    def test_from_existing_calls_render_cmakelists_template_with_program_name_if_file_nonexistent(self, fs):
+        with mock.patch("mbed_tools.project._internal.project_data.render_cmakelists_template") as render_cmake:
+            root = pathlib.Path(fs, "foo")
+            make_mbed_program_files(root)
+            render_cmake.return_value = "foo"
+
+            program_files = MbedProgramFiles.from_existing(root)
+
+            render_cmake.assert_called_with(program_files.cmakelists_file, root.stem)
+
+    @patchfs
+    def test_from_existing_skips_rendering_cmake_template_if_file_exists(self, fs):
+        with mock.patch("mbed_tools.project._internal.project_data.render_cmakelists_template") as render_cmake:
+            root = pathlib.Path(fs, "foo")
+            make_mbed_program_files(root)
+            (root / CMAKELISTS_FILE_NAME).touch()
+
+            MbedProgramFiles.from_existing(root)
+
+            render_cmake.assert_not_called()
 
 
 class TestMbedLibReference(TestCase):

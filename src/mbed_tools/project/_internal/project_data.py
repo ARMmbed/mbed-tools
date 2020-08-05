@@ -10,15 +10,25 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
+from mbed_tools.project._internal.render_templates import (
+    render_cmakelists_template,
+    render_main_cpp_template,
+    render_gitignore_template,
+)
+
 logger = logging.getLogger(__name__)
 
-# mbed program file names and constants.
-TARGETS_JSON_FILE_PATH = Path("targets", "targets.json")
-MBED_OS_DIR_NAME = "mbed-os"
-MBED_OS_REFERENCE_URL = "https://github.com/ARMmbed/mbed-os"
-MBED_OS_REFERENCE_FILE_NAME = "mbed-os.lib"
+# Mbed program file names and constants.
 APP_CONFIG_FILE_NAME = "mbed_app.json"
+CMAKELISTS_FILE_NAME = "CMakeLists.txt"
+MAIN_CPP_FILE_NAME = "main.cpp"
+MBED_OS_REFERENCE_FILE_NAME = "mbed-os.lib"
+MBED_OS_DIR_NAME = "mbed-os"
+TARGETS_JSON_FILE_PATH = Path("targets", "targets.json")
 
+# Information written to mbed-os.lib
+MBED_OS_REFERENCE_URL = "https://github.com/ARMmbed/mbed-os"
+MBED_OS_REFERENCE_ID = "feature-cmake"
 
 # For some reason Mbed OS expects the default mbed_app.json to contain some target_overrides
 # for the K64F target. TODO: Find out why this wouldn't be defined in targets.json.
@@ -37,10 +47,12 @@ class MbedProgramFiles:
     Attributes:
         app_config_file: Path to mbed_app.json file. This can be `None` if the program doesn't set any custom config.
         mbed_os_ref: Library reference file for MbedOS. All programs require this file.
+        cmakelists_file: A top-level CMakeLists.txt containing build definitions for the application.
     """
 
     app_config_file: Optional[Path]
     mbed_os_ref: Path
+    cmakelists_file: Path
 
     @classmethod
     def from_new(cls, root_path: Path) -> "MbedProgramFiles":
@@ -56,13 +68,19 @@ class MbedProgramFiles:
         """
         app_config = root_path / APP_CONFIG_FILE_NAME
         mbed_os_ref = root_path / MBED_OS_REFERENCE_FILE_NAME
+        cmakelists_file = root_path / CMAKELISTS_FILE_NAME
+        main_cpp = root_path / MAIN_CPP_FILE_NAME
+        gitignore = root_path / ".gitignore"
 
         if mbed_os_ref.exists():
             raise ValueError(f"Program already exists at path {root_path}.")
 
         app_config.write_text(json.dumps(DEFAULT_APP_CONFIG, indent=4))
-        mbed_os_ref.write_text(f"{MBED_OS_REFERENCE_URL}#master")
-        return cls(app_config_file=app_config, mbed_os_ref=mbed_os_ref)
+        mbed_os_ref.write_text(f"{MBED_OS_REFERENCE_URL}#{MBED_OS_REFERENCE_ID}")
+        render_cmakelists_template(cmakelists_file, root_path.stem)
+        render_main_cpp_template(main_cpp)
+        render_gitignore_template(gitignore)
+        return cls(app_config_file=app_config, mbed_os_ref=mbed_os_ref, cmakelists_file=cmakelists_file)
 
     @classmethod
     def from_existing(cls, root_path: Path) -> "MbedProgramFiles":
@@ -72,7 +90,7 @@ class MbedProgramFiles:
             root_path: The path containing the MbedProgramFiles.
 
         Raises:
-            ValueError: no MbedProgramFiles exists at this path.
+            ValueError: No MbedProgramFiles exist at this path.
         """
         app_config: Optional[Path]
         app_config = root_path / APP_CONFIG_FILE_NAME
@@ -82,7 +100,12 @@ class MbedProgramFiles:
 
         mbed_os_file = root_path / MBED_OS_REFERENCE_FILE_NAME
 
-        return cls(app_config_file=app_config, mbed_os_ref=mbed_os_file)
+        cmakelists_file = root_path / CMAKELISTS_FILE_NAME
+        if not cmakelists_file.exists():
+            logger.warning("No CMakeLists.txt found in the program root. Creating it...")
+            render_cmakelists_template(cmakelists_file, root_path.stem)
+
+        return cls(app_config_file=app_config, mbed_os_ref=mbed_os_file, cmakelists_file=cmakelists_file)
 
 
 @dataclass
