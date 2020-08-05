@@ -121,7 +121,7 @@ stages:
           - template: steps/install-development-dependencies.yml
 
           - script: |
-              assert-news -l
+              assert-news -b $(current_branch)
             displayName: 'Run check'
 
   - stage: DocBuild
