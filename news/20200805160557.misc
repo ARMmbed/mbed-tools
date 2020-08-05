@@ -1,0 +1,1 @@
+Improve pre-commit config by only running pytest when python files change
