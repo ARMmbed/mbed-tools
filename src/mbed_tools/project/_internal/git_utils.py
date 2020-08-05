@@ -51,12 +51,10 @@ def checkout(repo: git.Repo, ref: str, force: bool = False) -> None:
     Raises:
         VersionControlError: Check out failed.
     """
-    git_object = git.repo.fun.name_to_object(repo, ref)
-    commit = git.repo.fun.to_commit(git_object)
     try:
-        repo.git.checkout(f"--force {commit}" if force else str(commit))
+        repo.git.checkout(f"--force {ref}" if force else str(ref))
     except git.exc.GitCommandError as err:
-        raise VersionControlError(f"Failed to check out revision '{commit}'. Error from VCS: {err.stderr}")
+        raise VersionControlError(f"Failed to check out revision '{ref}'. Error from VCS: {err.stderr}")
 
 
 def init(path: Path) -> git.Repo:
