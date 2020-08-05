@@ -14,7 +14,7 @@ from mbed_tools.project._internal import git_utils
 from mbed_tools.project._internal.project_data import (
     MbedProgramFiles,
     MbedOS,
-    PROGRAM_ROOT_FILE_NAME,
+    MBED_OS_REFERENCE_FILE_NAME,
     MBED_OS_DIR_NAME,
 )
 from mbed_tools.project._internal.libraries import LibraryReferences, MbedLibReference
@@ -42,7 +42,7 @@ class MbedProgram:
         """
         self.repo = repo
         self.files = program_files
-        self.root = self.files.mbed_file.parent
+        self.root = self.files.mbed_os_ref.parent
         self.mbed_os = mbed_os
         self.lib_references = LibraryReferences(root=self.root, ignore_paths=[self.mbed_os.root])
 
@@ -65,11 +65,10 @@ class MbedProgram:
         logger.info(f"Cloning Mbed program from URL '{url}'.")
         repo = git_utils.clone(url, dst_path)
 
-        try:
-            program_files = MbedProgramFiles.from_existing(dst_path)
-        except ValueError as e:
+        program_files = MbedProgramFiles.from_existing(dst_path)
+        if not program_files.mbed_os_ref.exists():
             raise ProgramNotFound(
-                f"This repository does not contain a valid Mbed program at the top level. {e} "
+                "This repository does not contain a valid Mbed program at the top level. "
                 "Cloned programs must contain an mbed-os.lib file containing the URL to the Mbed OS repository. It is "
                 "possible you have cloned a repository containing multiple mbed-programs. If this is the case, you "
                 "should cd to a directory containing a program before performing any other operations."
@@ -97,7 +96,7 @@ class MbedProgram:
         if _tree_contains_program(dir_path):
             raise ExistingProgram(
                 f"An existing Mbed program was found in the directory tree {dir_path}. It is not possible to nest Mbed "
-                "programs. Please ensure there is no .mbed file in the cwd hierarchy."
+                "programs. Please ensure there is no mbed-os.lib file in the cwd hierarchy."
             )
 
         logger.info(f"Creating Mbed program at path '{dir_path.resolve()}'")
@@ -122,10 +121,7 @@ class MbedProgram:
         """
         program_root = _find_program_root(dir_path)
         logger.info(f"Found existing Mbed program at path '{program_root}'")
-        try:
-            program = MbedProgramFiles.from_existing(program_root)
-        except ValueError as program_files_err:
-            raise ProgramNotFound(f"{dir_path} doesn't look like a path to a valid program. {program_files_err}")
+        program = MbedProgramFiles.from_existing(program_root)
 
         repo = git_utils.get_repo(program_root)
         try:
@@ -174,14 +170,14 @@ def parse_url(name_or_url: str) -> Dict[str, str]:
 
 
 def _tree_contains_program(path: Path) -> bool:
-    """Check if the current path or its ancestors contain a .mbed file.
+    """Check if the current path or its ancestors contain an mbed-os.lib file.
 
     Args:
         path: The starting path for the search. The search walks up the tree from this path.
 
     Returns:
-        `True` if a .mbed file is located between `path` and filesystem root.
-        `False` if no .mbed file was found.
+        `True` if an mbed-os.lib file is located between `path` and filesystem root.
+        `False` if no mbed-os.lib file was found.
     """
     try:
         _find_program_root(path)
@@ -191,33 +187,32 @@ def _tree_contains_program(path: Path) -> bool:
 
 
 def _find_program_root(cwd: Path) -> Path:
-    """Walk up the directory tree, looking for a .mbed file.
+    """Walk up the directory tree, looking for an mbed-os.lib file.
 
-    Programs contain a .mbed file at the root of the source tree.
+    Programs contain an mbed-os.lib file at the root of the source tree.
 
     Args:
         cwd: The directory path to search for a program.
 
     Raises:
-        ProgramNotFound: No .mbed file found in the path.
+        ProgramNotFound: No mbed-os.lib file found in the path.
 
     Returns:
-        Path containing the .mbed file.
+        Path containing the mbed-os.lib file.
     """
     potential_root = cwd.resolve()
     while str(potential_root) != str(potential_root.anchor):
-        logger.debug(f"Searching for .mbed file at path {potential_root}")
-        root_file = potential_root / PROGRAM_ROOT_FILE_NAME
+        logger.debug(f"Searching for mbed-os.lib file at path {potential_root}")
+        root_file = potential_root / MBED_OS_REFERENCE_FILE_NAME
         if root_file.exists() and root_file.is_file():
-            logger.debug(f".mbed file found at {potential_root}")
+            logger.debug(f"mbed-os.lib file found at {potential_root}")
             return potential_root
 
         potential_root = potential_root.parent
 
-    logger.debug("No .mbed file found.")
+    logger.debug("No mbed-os.lib file found.")
     raise ProgramNotFound(
-        f"No program found from {cwd.resolve()} to {cwd.resolve().anchor}. Please set the cwd to a program directory "
-        "containing a .mbed file. You can also set your cwd to a program subdirectory if there is a .mbed file at the "
-        "root of your program's directory tree. If your program does not contain a .mbed file, please create an empty "
-        ".mbed file at the root of the program directory tree before performing any other operations."
+        f"No program found from {cwd.resolve()} to {cwd.resolve().anchor}. Please set the directory to a program "
+        "directory containing an mbed-os.lib file. You can also set the directory to a program subdirectory if there "
+        "is an mbed-os.lib file at the root of your program's directory tree."
     )

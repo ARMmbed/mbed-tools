@@ -20,7 +20,6 @@ def make_mbed_program_files(root, config_file_name="mbed_app.json"):
     if not root.exists():
         root.mkdir()
 
-    (root / ".mbed").touch()
     (root / "mbed-os.lib").touch()
     (root / config_file_name).touch()
 

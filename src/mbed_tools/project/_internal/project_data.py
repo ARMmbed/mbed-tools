@@ -17,7 +17,6 @@ TARGETS_JSON_FILE_PATH = Path("targets", "targets.json")
 MBED_OS_DIR_NAME = "mbed-os"
 MBED_OS_REFERENCE_URL = "https://github.com/ARMmbed/mbed-os"
 MBED_OS_REFERENCE_FILE_NAME = "mbed-os.lib"
-PROGRAM_ROOT_FILE_NAME = ".mbed"
 APP_CONFIG_FILE_NAME = "mbed_app.json"
 
 
@@ -32,18 +31,15 @@ class MbedProgramFiles:
 
     This object holds paths to the various files which define an MbedProgram.
 
-    All MbedPrograms must contain a .mbed file, which defines the program root path. MbedPrograms must also contain an
-    mbed-os.lib reference file, defining Mbed OS as a program dependency. Because the mbed-os.lib reference is required
-    by all Mbed programs the path to the file is stored in this object.
+    MbedPrograms must contain an mbed-os.lib reference file, defining Mbed OS as a program dependency. A program can
+    optionally include an mbed_app.json file which defines application level config.
 
     Attributes:
         app_config_file: Path to mbed_app.json file. This can be `None` if the program doesn't set any custom config.
-        mbed_file: Path to the .mbed file which defines the program root.
         mbed_os_ref: Library reference file for MbedOS. All programs require this file.
     """
 
     app_config_file: Optional[Path]
-    mbed_file: Path
     mbed_os_ref: Path
 
     @classmethod
@@ -59,16 +55,14 @@ class MbedProgramFiles:
             ValueError: A program .mbed or mbed-os.lib file already exists at this path.
         """
         app_config = root_path / APP_CONFIG_FILE_NAME
-        mbed_file = root_path / PROGRAM_ROOT_FILE_NAME
         mbed_os_ref = root_path / MBED_OS_REFERENCE_FILE_NAME
 
-        if mbed_file.exists() or mbed_os_ref.exists():
+        if mbed_os_ref.exists():
             raise ValueError(f"Program already exists at path {root_path}.")
 
-        mbed_file.touch()
         app_config.write_text(json.dumps(DEFAULT_APP_CONFIG, indent=4))
         mbed_os_ref.write_text(f"{MBED_OS_REFERENCE_URL}#master")
-        return cls(app_config_file=app_config, mbed_file=mbed_file, mbed_os_ref=mbed_os_ref)
+        return cls(app_config_file=app_config, mbed_os_ref=mbed_os_ref)
 
     @classmethod
     def from_existing(cls, root_path: Path) -> "MbedProgramFiles":
@@ -87,13 +81,8 @@ class MbedProgramFiles:
             app_config = None
 
         mbed_os_file = root_path / MBED_OS_REFERENCE_FILE_NAME
-        if not mbed_os_file.exists():
-            raise ValueError("This path does not contain an mbed-os.lib, which is required for mbed programs.")
 
-        mbed_file = root_path / PROGRAM_ROOT_FILE_NAME
-        mbed_file.touch(exist_ok=True)
-
-        return cls(app_config_file=app_config, mbed_file=mbed_file, mbed_os_ref=mbed_os_file)
+        return cls(app_config_file=app_config, mbed_os_ref=mbed_os_file)
 
 
 @dataclass
