@@ -18,7 +18,7 @@ class TestInitialiseProgram(TestCase):
     def test_from_new_local_dir_raises_if_path_is_existing_program(self, fs):
         program_root = pathlib.Path(fs, "programfoo")
         program_root.mkdir()
-        (program_root / ".mbed").touch()
+        (program_root / "mbed-os.lib").touch()
 
         with self.assertRaises(ExistingProgram):
             MbedProgram.from_new(program_root)
@@ -87,16 +87,6 @@ class TestInitialiseProgram(TestCase):
             MbedProgram.from_existing(program_root)
 
     @patchfs
-    def test_from_existing_raises_if_program_files_missing(self, fs):
-        fs_root = pathlib.Path(fs, "foo")
-        fs_root.mkdir()
-        (fs_root / ".mbed").touch()
-        program_root = fs_root
-
-        with self.assertRaises(ProgramNotFound):
-            MbedProgram.from_existing(program_root)
-
-    @patchfs
     def test_from_existing_raises_if_no_repo_found(self, fs):
         fs_root = pathlib.Path(fs, "foo")
         make_mbed_program_files(fs_root)
@@ -130,14 +120,14 @@ class TestInitialiseProgram(TestCase):
 class TestLibReferenceHandling(TestCase):
     @mock.patch("mbed_tools.project.mbed_program.LibraryReferences", autospec=True)
     def test_resolve_libraries(self, mock_lib_refs):
-        program = MbedProgram(None, MbedProgramFiles(None, pathlib.Path(), None), MbedOS(pathlib.Path(), None))
+        program = MbedProgram(None, MbedProgramFiles(None, pathlib.Path()), MbedOS(pathlib.Path(), None))
         program.resolve_libraries()
 
         program.lib_references.resolve.assert_called_once()
 
     @mock.patch("mbed_tools.project.mbed_program.LibraryReferences", autospec=True)
     def test_checkout_libraries(self, mock_lib_refs):
-        program = MbedProgram(None, MbedProgramFiles(None, pathlib.Path(), None), MbedOS(pathlib.Path(), None))
+        program = MbedProgram(None, MbedProgramFiles(None, pathlib.Path()), MbedOS(pathlib.Path(), None))
         program.checkout_libraries()
 
         program.lib_references.checkout.assert_called_once()
@@ -153,7 +143,7 @@ class TestLibReferenceHandling(TestCase):
         mbed_os_root.mkdir()
 
         program = MbedProgram(
-            None, MbedProgramFiles(None, pathlib.Path(root, ".mbed"), None), MbedOS(mbed_os_root, None)
+            None, MbedProgramFiles(None, pathlib.Path(root, "mbed-os.lib")), MbedOS(mbed_os_root, None)
         )
         libs = program.list_known_library_dependencies()
         self.assertEqual(str(lib_ref_unresolved), str(libs[0]))
@@ -168,7 +158,7 @@ class TestLibReferenceHandling(TestCase):
         mbed_os_root.mkdir()
 
         program = MbedProgram(
-            None, MbedProgramFiles(None, pathlib.Path(root / ".mbed"), None), MbedOS(mbed_os_root, None)
+            None, MbedProgramFiles(None, pathlib.Path(root / "mbed-os.lib")), MbedOS(mbed_os_root, None)
         )
         self.assertTrue(program.has_unresolved_libraries())
 

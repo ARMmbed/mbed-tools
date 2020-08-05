@@ -30,14 +30,6 @@ class TestMbedProgramFiles(TestCase):
         self.assertTrue(program.app_config_file.exists())
 
     @patchfs
-    def test_from_existing_raises_if_program_doesnt_exist(self, fs):
-        root = pathlib.Path(fs, "foo")
-        root.mkdir()
-
-        with self.assertRaises(ValueError):
-            MbedProgramFiles.from_existing(root)
-
-    @patchfs
     def test_from_existing_finds_existing_program_data(self, fs):
         root = pathlib.Path(fs, "foo")
         make_mbed_program_files(root)
