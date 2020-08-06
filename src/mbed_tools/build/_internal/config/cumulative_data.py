@@ -18,6 +18,7 @@ class CumulativeData:
     features: Set[str] = field(default_factory=set)
     components: Set[str] = field(default_factory=set)
     labels: Set[str] = field(default_factory=set)
+    extra_labels: Set[str] = field(default_factory=set)
     device_has: Set[str] = field(default_factory=set)
 
     @classmethod

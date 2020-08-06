@@ -8,7 +8,6 @@ import pathlib
 from typing import Iterable
 
 import jinja2
-from mbed_tools.targets import Target
 
 from mbed_tools.build._internal.config.config import Config
 
@@ -17,13 +16,13 @@ TEMPLATE_NAME = "mbed_config.tmpl"
 
 
 def generate_mbed_config_cmake_file(
-    mbed_target_name: str, target_build_attributes: Target, config: Config, toolchain_name: str
+    mbed_target_name: str, target_build_attributes: dict, config: Config, toolchain_name: str
 ) -> str:
     """Generate the top-level CMakeLists.txt file containing the correct definitions for a build.
 
     Args:
         mbed_target: the target the application is being built for
-        target_build_attributes: Target config object.
+        target_build_attributes: map of target attributes
         program_path: the path to the local Mbed program
         toolchain_name: the toolchain to be used to build the application
 
@@ -34,7 +33,7 @@ def generate_mbed_config_cmake_file(
 
 
 def _render_mbed_config_cmake_template(
-    target_build_attributes: Target, config: Config, toolchain_name: str, target_name: str
+    target_build_attributes: dict, config: Config, toolchain_name: str, target_name: str
 ) -> str:
     """Renders the mbed_config template with the relevant information.
 
@@ -53,14 +52,15 @@ def _render_mbed_config_cmake_template(
     macros = list(config.macros.values())
 
     context = {
-        "labels": target_build_attributes.labels,
-        "features": target_build_attributes.features,
-        "components": target_build_attributes.components,
-        "device_has": target_build_attributes.device_has,
-        "target_macros": target_build_attributes.macros,
-        "supported_form_factors": target_build_attributes.supported_form_factors,
+        "labels": target_build_attributes["labels"],
+        "extra_labels": target_build_attributes["extra_labels"],
+        "features": target_build_attributes["features"],
+        "components": target_build_attributes["components"],
+        "device_has": target_build_attributes["device_has"],
+        "target_macros": target_build_attributes["macros"],
+        "supported_form_factors": target_build_attributes["supported_form_factors"],
+        "core": target_build_attributes["core"],
         "timestamp": datetime.datetime.now().timestamp(),
-        "core": target_build_attributes.core,
         "target_name": target_name,
         "toolchain_name": toolchain_name,
         "options": sorted(options, key=lambda option: option.macro_name),

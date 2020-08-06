@@ -51,7 +51,14 @@ class TestAssembleConfig(TestCase):
 
 class TestAssembleConfigFromSourcesAndLibFiles(TestCase):
     def test_assembles_config_using_all_relevant_files(self):
-        target_source = SourceFactory(config={"target.foo": "foo"}, overrides={"target.labels": ["A"]})
+        target = {
+            "config": {"foo": None},
+            "macros": {},
+            "labels": set("A"),
+            "extra_labels": set(),
+            "features": set("RED"),
+            "components": set(),
+        }
         mbed_lib_files = [
             {
                 "path": Path("TARGET_A", "mbed_lib.json"),
@@ -96,11 +103,11 @@ class TestAssembleConfigFromSourcesAndLibFiles(TestCase):
             create_files(directory, [unused_mbed_lib_file])
 
             subject = _assemble_config_from_sources_and_lib_files(
-                target_source, find_files("mbed_lib.json", Path(directory)), created_mbed_app_file
+                target, find_files("mbed_lib.json", Path(directory)), created_mbed_app_file
             )
 
             mbed_lib_sources = [Source.from_mbed_lib(Path(directory, file), ["A"]) for file in created_mbed_lib_files]
             mbed_app_source = Source.from_mbed_app(created_mbed_app_file, ["A"])
-            expected_config = Config.from_sources([target_source] + mbed_lib_sources + [mbed_app_source])
+            expected_config = Config.from_sources([Source.from_target(target)] + mbed_lib_sources + [mbed_app_source])
 
             self.assertEqual(subject, expected_config)
