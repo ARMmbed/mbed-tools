@@ -10,7 +10,7 @@ found in the mbed-os repo.
 import json
 import pathlib
 from json.decoder import JSONDecodeError
-from typing import Dict, Any, Set, Optional
+from typing import Dict, Any, Set, Optional, cast
 
 from mbed_tools.lib.exceptions import ToolsError
 
@@ -39,7 +39,7 @@ class TargetNotFoundError(TargetAttributesError):
     """Target definition not found in targets.json."""
 
 
-def get_target_attributes(path_to_targets_json: pathlib.Path, target_name: str) -> Any:
+def get_target_attributes(path_to_targets_json: pathlib.Path, target_name: str) -> dict:
     """Retrieves attribute data taken from targets.json for a single target.
 
     Args:
@@ -66,7 +66,7 @@ def get_target_attributes(path_to_targets_json: pathlib.Path, target_name: str) 
     return target_attributes
 
 
-def _read_json_file(path_to_file: pathlib.Path) -> Any:
+def _read_json_file(path_to_file: pathlib.Path) -> dict:
     """Reads the data from a json file.
 
     Args:
@@ -80,12 +80,13 @@ def _read_json_file(path_to_file: pathlib.Path) -> Any:
         FileNotFoundError: path provided does not lead to a valid json file
     """
     try:
-        return json.loads(path_to_file.read_text())
+        # mypy doesn't recognise that json.loads always returns a dictionary
+        return cast(dict, json.loads(path_to_file.read_text()))
     except JSONDecodeError as json_err:
         raise ParsingTargetsJSONError(f"Invalid JSON found in '{path_to_file}'.") from json_err
 
 
-def _extract_target_attributes(all_targets_data: Dict[str, Any], target_name: str) -> Any:
+def _extract_target_attributes(all_targets_data: Dict[str, Any], target_name: str) -> dict:
     """Extracts the definition for a particular target from all the targets in targets.json.
 
     Args:
