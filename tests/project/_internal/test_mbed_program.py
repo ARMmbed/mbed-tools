@@ -7,7 +7,7 @@ import pathlib
 from unittest import mock, TestCase
 
 from mbed_tools.project import MbedProgram
-from mbed_tools.project.exceptions import ExistingProgram, ProgramNotFound, MbedOSNotFound, VersionControlError
+from mbed_tools.project.exceptions import ExistingProgram, ProgramNotFound, MbedOSNotFound
 from mbed_tools.project.mbed_program import _find_program_root, parse_url
 from mbed_tools.project._internal.project_data import MbedProgramFiles, MbedOS
 from tests.project.factories import make_mbed_program_files, make_mbed_os_files, make_mbed_lib_reference, patchfs
@@ -24,8 +24,7 @@ class TestInitialiseProgram(TestCase):
             MbedProgram.from_new(program_root)
 
     @patchfs
-    @mock.patch("mbed_tools.project._internal.git_utils.init", autospec=True)
-    def test_from_new_local_dir_generates_valid_program(self, mock_init, fs):
+    def test_from_new_local_dir_generates_valid_program(self, fs):
         fs_root = pathlib.Path(fs, "foo")
         fs_root.mkdir()
         program_root = fs_root / "programfoo"
@@ -33,8 +32,6 @@ class TestInitialiseProgram(TestCase):
         program = MbedProgram.from_new(program_root)
 
         self.assertEqual(program.files, MbedProgramFiles.from_existing(program_root))
-        self.assertEqual(program.repo, mock_init.return_value)
-        mock_init.assert_called_once_with(program_root)
 
     @patchfs
     def test_from_url_raises_if_dest_dir_contains_program(self, fs):
@@ -87,16 +84,7 @@ class TestInitialiseProgram(TestCase):
             MbedProgram.from_existing(program_root)
 
     @patchfs
-    def test_from_existing_raises_if_no_repo_found(self, fs):
-        fs_root = pathlib.Path(fs, "foo")
-        make_mbed_program_files(fs_root)
-
-        with self.assertRaises(VersionControlError):
-            MbedProgram.from_existing(fs_root)
-
-    @patchfs
-    @mock.patch("mbed_tools.project._internal.git_utils.git.Repo", autospec=True)
-    def test_from_existing_raises_if_no_mbed_os_dir_found_and_check_mbed_os_is_true(self, mock_repo, fs):
+    def test_from_existing_raises_if_no_mbed_os_dir_found_and_check_mbed_os_is_true(self, fs):
         fs_root = pathlib.Path(fs, "foo")
         make_mbed_program_files(fs_root)
 
@@ -104,8 +92,7 @@ class TestInitialiseProgram(TestCase):
             MbedProgram.from_existing(fs_root, check_mbed_os=True)
 
     @patchfs
-    @mock.patch("mbed_tools.project._internal.git_utils.git.Repo", autospec=True)
-    def test_from_existing_returns_valid_program(self, mock_repo, fs):
+    def test_from_existing_returns_valid_program(self, fs):
         fs_root = pathlib.Path(fs, "foo")
         make_mbed_program_files(fs_root)
         make_mbed_os_files(fs_root / "mbed-os")
@@ -114,7 +101,6 @@ class TestInitialiseProgram(TestCase):
 
         self.assertTrue(program.files.app_config_file.exists())
         self.assertTrue(program.mbed_os.root.exists())
-        self.assertIsNotNone(program.repo)
 
 
 class TestLibReferenceHandling(TestCase):
