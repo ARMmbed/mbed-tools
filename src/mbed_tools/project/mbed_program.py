@@ -32,15 +32,13 @@ class MbedProgram:
         * A collection of references to external libraries, defined in .lib files located in the program source tree
     """
 
-    def __init__(self, repo: git_utils.git.Repo, program_files: MbedProgramFiles, mbed_os: MbedOS) -> None:
+    def __init__(self, program_files: MbedProgramFiles, mbed_os: MbedOS) -> None:
         """Initialise the program attributes.
 
         Args:
-            repo: The program's git repository.
             program_files: Object holding paths to a set of files that define an Mbed program.
             mbed_os: An instance of `MbedOS` holding paths to locations in the local copy of the Mbed OS source.
         """
-        self.repo = repo
         self.files = program_files
         self.root = self.files.mbed_os_ref.parent
         self.mbed_os = mbed_os
@@ -63,7 +61,7 @@ class MbedProgram:
                 "to an empty directory."
             )
         logger.info(f"Cloning Mbed program from URL '{url}'.")
-        repo = git_utils.clone(url, dst_path)
+        git_utils.clone(url, dst_path)
 
         program_files = MbedProgramFiles.from_existing(dst_path)
         if not program_files.mbed_os_ref.exists():
@@ -79,7 +77,7 @@ class MbedProgram:
         except ValueError as mbed_err:
             raise MbedOSNotFound(f"{mbed_err}")
 
-        return cls(repo, program_files, mbed_os)
+        return cls(program_files, mbed_os)
 
     @classmethod
     def from_new(cls, dir_path: Path) -> "MbedProgram":
@@ -103,9 +101,8 @@ class MbedProgram:
         dir_path.mkdir(exist_ok=True)
         program_files = MbedProgramFiles.from_new(dir_path)
         logger.info(f"Creating git repository for the Mbed program '{dir_path}'")
-        repo = git_utils.init(dir_path)
         mbed_os = MbedOS.from_new(dir_path / MBED_OS_DIR_NAME)
-        return cls(repo, program_files, mbed_os)
+        return cls(program_files, mbed_os)
 
     @classmethod
     def from_existing(cls, dir_path: Path, check_mbed_os: bool = True) -> "MbedProgram":
@@ -123,7 +120,6 @@ class MbedProgram:
         logger.info(f"Found existing Mbed program at path '{program_root}'")
         program = MbedProgramFiles.from_existing(program_root)
 
-        repo = git_utils.get_repo(program_root)
         try:
             mbed_os = MbedOS.from_existing(program_root / MBED_OS_DIR_NAME, check_mbed_os)
         except ValueError as mbed_os_err:
@@ -132,7 +128,7 @@ class MbedProgram:
                 "\nYou may need to resolve the mbed-os.lib reference. You can do this by performing a `checkout`."
             )
 
-        return cls(repo, program, mbed_os)
+        return cls(program, mbed_os)
 
     def resolve_libraries(self) -> None:
         """Resolve all external dependencies defined in .lib files."""
