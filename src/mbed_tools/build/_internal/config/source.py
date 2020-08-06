@@ -10,8 +10,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Any
 
-from mbed_tools.targets import Target
-
 logger = logging.getLogger(__name__)
 
 
@@ -77,15 +75,16 @@ class Source:
         return cls(human_name=f"File: {file_name}", config=config, overrides=namespaced_overrides, macros=macros)
 
     @classmethod
-    def from_target(cls, target: Target) -> "Source":
+    def from_target(cls, target: dict) -> "Source":
         """Build Source from retrieved mbed_tools.targets.Target data."""
         namespace = "target"
-        config = _namespace_data(target.config, namespace)
+        config = _namespace_data(target["config"], namespace)
 
         overrides = {
-            "features": target.features,
-            "components": target.components,
-            "labels": target.labels,
+            "features": target["features"],
+            "components": target["components"],
+            "labels": target["labels"],
+            "extra_labels": target["extra_labels"],
         }
         namespaced_overrides = _namespace_data(overrides, namespace)
 

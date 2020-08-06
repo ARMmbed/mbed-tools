@@ -9,15 +9,14 @@ can be retrieved by calling one of the public functions.
 """
 import pathlib
 
-from mbed_tools.targets.target import Target
+from mbed_tools.targets.exceptions import TargetError
+from mbed_tools.targets._internal import target_attributes
 
 
-def get_target_by_name(name: str, path_to_targets_json: pathlib.Path) -> Target:
-    """Returns the Target whose name matches the name given.
+def get_target_by_name(name: str, path_to_targets_json: pathlib.Path) -> dict:
+    """Returns a dictionary of attributes for the target whose name matches the name given.
 
-    The Target is as defined in the targets.json file found in the Mbed OS library.
-    The program whose path is provided here will need a valid copy of the Mbed OS library
-    in order to access this file.
+    The target is as defined in the targets.json file found in the Mbed OS library.
 
     Args:
         name: the name of the Target to be returned
@@ -26,15 +25,16 @@ def get_target_by_name(name: str, path_to_targets_json: pathlib.Path) -> Target:
     Raises:
         TargetError: an error has occurred while fetching target
     """
-    return Target.from_targets_json(name, path_to_targets_json)
+    try:
+        return target_attributes.get_target_attributes(path_to_targets_json, name)
+    except (FileNotFoundError, target_attributes.TargetAttributesError) as e:
+        raise TargetError(e) from e
 
 
-def get_target_by_board_type(board_type: str, path_to_targets_json: pathlib.Path) -> Target:
-    """Returns the Target whose name matches a board's build_type.
+def get_target_by_board_type(board_type: str, path_to_targets_json: pathlib.Path) -> dict:
+    """Returns the target whose name matches a board's build_type.
 
-    The Target is as defined in the targets.json file found in the Mbed OS library.
-    The program whose path is provided here will need a valid copy of the Mbed OS library
-    in order to access this file.
+    The target is as defined in the targets.json file found in the Mbed OS library.
 
     Args:
         board_type: a board's board_type (see `mbed_tools.targets.board.Board`)

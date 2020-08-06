@@ -29,21 +29,27 @@ def _assemble_config_from_sources_and_lib_files(
     previous_cumulative_data = None
     current_cumulative_data = CumulativeData.from_sources([target_source])
     while previous_cumulative_data != current_cumulative_data:
-        filtered_files = _filter_files(mbed_lib_files, current_cumulative_data)
-        mbed_lib_sources = [Source.from_mbed_lib(file, current_cumulative_data.labels) for file in filtered_files]
+        current_labels = current_cumulative_data.labels | set(current_cumulative_data.extra_labels)
+        filtered_files = _filter_files(
+            mbed_lib_files, current_labels, current_cumulative_data.features, current_cumulative_data.components
+        )
+        mbed_lib_sources = [Source.from_mbed_lib(file, current_labels) for file in filtered_files]
         all_sources = [target_source] + mbed_lib_sources
         if mbed_app_file:
-            all_sources = all_sources + [Source.from_mbed_app(mbed_app_file, current_cumulative_data.labels)]
+            all_sources = all_sources + [Source.from_mbed_app(mbed_app_file, current_labels)]
+
         previous_cumulative_data = current_cumulative_data
         current_cumulative_data = CumulativeData.from_sources(all_sources)
 
     return Config.from_sources(all_sources)
 
 
-def _filter_files(files: Iterable[Path], cumulative_data: CumulativeData) -> Iterable[Path]:
+def _filter_files(
+    files: Iterable[Path], labels: Iterable[str], features: Iterable[str], components: Iterable[str]
+) -> Iterable[Path]:
     filters = (
-        LabelFilter("TARGET", cumulative_data.labels),
-        LabelFilter("FEATURE", cumulative_data.features),
-        LabelFilter("COMPONENT", cumulative_data.components),
+        LabelFilter("TARGET", labels),
+        LabelFilter("FEATURE", features),
+        LabelFilter("COMPONENT", components),
     )
     return filter_files(files, filters)

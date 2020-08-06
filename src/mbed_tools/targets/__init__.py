@@ -30,4 +30,3 @@ from mbed_tools.targets.get_board import (
     get_board_by_online_id,
 )
 from mbed_tools.targets.board import Board
-from mbed_tools.targets.target import Target

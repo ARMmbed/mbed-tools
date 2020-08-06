@@ -5,7 +5,7 @@
 import json
 import pathlib
 import tempfile
-from unittest import TestCase, mock
+from unittest import TestCase
 
 from mbed_tools.build._internal.config.source import (
     Source,
@@ -81,10 +81,11 @@ class TestSource(TestCase):
 
     def test_from_target(self):
         # Warning: Target is a dataclass and dataclasses provide no type safety when mocking
-        target = mock.Mock(
+        target = dict(
             features={"feature_1"},
             components={"component_1"},
             labels={"label_1"},
+            extra_labels={"label_2"},
             config={"foo": "bar", "target.bool": True},
         )
 
@@ -96,9 +97,10 @@ class TestSource(TestCase):
                 human_name=f"mbed_target.Target for {target}",
                 config={"target.foo": "bar", "target.bool": True},
                 overrides={
-                    "target.features": target.features,
-                    "target.components": target.components,
-                    "target.labels": target.labels,
+                    "target.features": target["features"],
+                    "target.components": target["components"],
+                    "target.labels": target["labels"],
+                    "target.extra_labels": target["extra_labels"],
                 },
                 macros=[],
             ),
