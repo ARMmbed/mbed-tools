@@ -50,4 +50,4 @@ class TestRendersCMakeListsFile(TestCase):
             self.assertIn(label, result)
 
         for macro in target.features + target.components + [toolchain_name]:
-            self.assertIn(macro.upper(), result)
+            self.assertIn(macro, result)

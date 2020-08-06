@@ -12,6 +12,9 @@ set(MBED_PROFILE "develop" CACHE STRING "")
 list(APPEND MBED_TARGET_LABELS{% for label in labels %}
     {{label}}
 {%- endfor %}
+{% for extra_label in extra_labels %}
+    {{extra_label}}
+{%- endfor %}
 {% for component in components %}
     {{component}}
 {%- endfor %}
@@ -22,26 +25,29 @@ list(APPEND MBED_TARGET_LABELS{% for label in labels %}
 
 # target
 set(MBED_TARGET_DEFINITIONS{% for component in components %}
-    -DCOMPONENT_{{component.upper()}}=1
+    COMPONENT_{{component}}=1
 {%- endfor %}
 {% for feature in features %}
-    -DFEATURE_{{feature.upper()}}=1
+    FEATURE_{{feature}}=1
 {%- endfor %}
 {% for device in device_has %}
-    -DDEVICE_{{device.upper()}}=1
+    DEVICE_{{device}}=1
 {%- endfor %}
 {% for label in labels %}
-    -DTARGET_{{label}}
+    TARGET_{{label}}
+{%- endfor %}
+{% for extra_label in extra_labels %}
+    TARGET_{{extra_label}}
 {%- endfor %}
 {% for macro in target_macros %}
-    -D{{macro.upper()}}
+    {{macro}}
 {%- endfor %}
 {% for form_factor in supported_form_factors %}
-    -DTARGET_FF_{{form_factor.upper()}}
+    TARGET_FF_{{form_factor}}
 {%- endfor %}
-    -DMBED_BUILD_TIMESTAMP={{timestamp}}
-    -DTARGET_LIKE_MBED
-    -D__MBED__=1
+    MBED_BUILD_TIMESTAMP={{timestamp}}
+    TARGET_LIKE_MBED
+    __MBED__=1
 )
 
 # config
