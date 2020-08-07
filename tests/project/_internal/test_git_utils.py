@@ -52,3 +52,17 @@ class TestGetRepo(TestCase):
 
         with self.assertRaises(VersionControlError):
             git_utils.get_repo(Path())
+
+
+@mock.patch("mbed_tools.project._internal.git_utils.git.Repo", autospec=True)
+class TestCheckout(TestCase):
+    def test_git_lib_called_with_correct_command(self, mock_repo):
+        git_utils.checkout(mock_repo, "master", force=True)
+
+        mock_repo.git.checkout.assert_called_once_with("--force master")
+
+    def test_raises_version_control_error_when_git_checkout_fails(self, mock_repo):
+        mock_repo.git.checkout.side_effect = git_utils.git.exc.GitCommandError("git checkout", 255)
+
+        with self.assertRaises(VersionControlError):
+            git_utils.checkout(mock_repo, "bad")
