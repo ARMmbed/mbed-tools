@@ -60,6 +60,10 @@ def get_target_attributes(path_to_targets_json: pathlib.Path, target_name: str) 
     target_attributes["labels"] = get_labels_for_target(all_targets_data, target_name).union(
         _extract_core_labels(target_attributes.get("core", None))
     )
+    target_attributes["extra_labels"] = set(target_attributes.get("extra_labels", []))
+    target_attributes["features"] = set(target_attributes.get("features", []))
+    target_attributes["components"] = set(target_attributes.get("components", []))
+    target_attributes["macros"] = set(target_attributes.get("macros", []))
     target_attributes["config"] = _apply_config_overrides(
         target_attributes.get("config", {}), target_attributes.get("overrides", {})
     )
