@@ -20,6 +20,7 @@ class CumulativeData:
     labels: Set[str] = field(default_factory=set)
     extra_labels: Set[str] = field(default_factory=set)
     device_has: Set[str] = field(default_factory=set)
+    macros: Set[str] = field(default_factory=set)
 
     @classmethod
     def from_sources(cls, sources: Iterable[Source]) -> "CumulativeData":

@@ -85,6 +85,7 @@ class Source:
             "components": target["components"],
             "labels": target["labels"],
             "extra_labels": target["extra_labels"],
+            "macros": target["macros"],
         }
         namespaced_overrides = _namespace_data(overrides, namespace)
 
