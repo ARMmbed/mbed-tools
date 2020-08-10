@@ -87,6 +87,7 @@ class TestSource(TestCase):
             labels={"label_1"},
             extra_labels={"label_2"},
             config={"foo": "bar", "target.bool": True},
+            macros=["MACRO_A"],
         )
 
         subject = Source.from_target(target)
@@ -101,6 +102,7 @@ class TestSource(TestCase):
                     "target.components": target["components"],
                     "target.labels": target["labels"],
                     "target.extra_labels": target["extra_labels"],
+                    "target.macros": target["macros"],
                 },
                 macros=[],
             ),

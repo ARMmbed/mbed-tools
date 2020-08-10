@@ -16,10 +16,9 @@ class TestConfigureCommand(TestCase):
     @mock.patch("mbed_tools.cli.configure.get_target_by_name")
     @mock.patch("mbed_tools.cli.configure.generate_mbed_config_cmake_file")
     @mock.patch("mbed_tools.cli.configure.assemble_config")
-    @mock.patch("mbed_tools.cli.configure.Source")
     @mock.patch("mbed_tools.cli.configure.write_file")
     def test_collaborators_called_with_corrrect_arguments(
-        self, write_file, source, assemble_config, gen_config_cmake, get_target_by_name, mbed_program
+        self, write_file, assemble_config, gen_config_cmake, get_target_by_name, mbed_program
     ):
         CliRunner().invoke(configure, ["-m", "k64f", "-t", "GCC_ARM"])
 
@@ -28,7 +27,7 @@ class TestConfigureCommand(TestCase):
             "K64F", mbed_program.from_existing.return_value.mbed_os.targets_json_file
         )
         assemble_config.assert_called_once_with(
-            source.from_target.return_value,
+            get_target_by_name.return_value,
             mbed_program.from_existing.return_value.root,
             mbed_program.from_existing.return_value.files.app_config_file,
         )
