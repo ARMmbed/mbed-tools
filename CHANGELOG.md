@@ -12,6 +12,37 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"3.2.0" (2020-08-12)
+====================
+
+Features
+--------
+
+- Generate project startup files from init command (#20200810123455)
+
+
+Bugfixes
+--------
+
+- Return an exit code of 1 when a ToolsError is raised (#20200729210710)
+- Remove output path and use program root for configure command output (#20200805143228)
+- Remove mbed-tools/project's dependency on the legacy .mbed file (#20200805210417)
+- Process labels gathered from mbed_lib and mbed_app config files (#20200811095825)
+
+
+Improved Documentation
+----------------------
+
+- add user docs (#20200730153335)
+- Add install instructions and prerequisites (#20200811162038)
+
+
+Misc
+----
+
+- #20200727201841, #20200729200627, #20200730145703, #20200805134310, #20200805160557
+
+
 "3.1.2" (2020-07-29)
 ====================
 

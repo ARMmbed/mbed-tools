@@ -37,16 +37,18 @@
 #
 &#34;&#34;&#34;Main cli entry point.&#34;&#34;&#34;
 import logging
-from pkg_resources import get_distribution
+import sys
 
+from pkg_resources import get_distribution
 from typing import Union, Any
+
 import click
 
 from mbed_tools.lib.logging import set_log_level, MbedToolsHandler
 
 from mbed_tools.cli.configure import configure
-from mbed_tools.cli.list_connected_devices import list_connected_devices
 from mbed_tools.cli.env_cli import cli as env_cli
+from mbed_tools.cli.list_connected_devices import list_connected_devices
 from mbed_tools.cli.project_management import init, clone, checkout, libs
 
 
@@ -65,8 +67,10 @@ class GroupWithExceptionHandling(click.Group):
         &#34;&#34;&#34;
         # Use the context manager to ensure tools exceptions (expected behaviour) are shown as messages to the user,
         # but all other exceptions (unexpected behaviour) are shown as errors.
-        with MbedToolsHandler(LOGGER, context.params[&#34;traceback&#34;]):
+        with MbedToolsHandler(LOGGER, context.params[&#34;traceback&#34;]) as handler:
             super().invoke(context)
+
+        sys.exit(handler.exit_code)
 
 
 def print_version(context: click.Context, param: Union[click.Option, click.Parameter], value: bool) -&gt; Any:
@@ -162,8 +166,10 @@ cli.add_command(libs, &#34;libs&#34;)</code></pre>
         &#34;&#34;&#34;
         # Use the context manager to ensure tools exceptions (expected behaviour) are shown as messages to the user,
         # but all other exceptions (unexpected behaviour) are shown as errors.
-        with MbedToolsHandler(LOGGER, context.params[&#34;traceback&#34;]):
-            super().invoke(context)</code></pre>
+        with MbedToolsHandler(LOGGER, context.params[&#34;traceback&#34;]) as handler:
+            super().invoke(context)
+
+        sys.exit(handler.exit_code)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -196,8 +202,10 @@ cli.add_command(libs, &#34;libs&#34;)</code></pre>
     &#34;&#34;&#34;
     # Use the context manager to ensure tools exceptions (expected behaviour) are shown as messages to the user,
     # but all other exceptions (unexpected behaviour) are shown as errors.
-    with MbedToolsHandler(LOGGER, context.params[&#34;traceback&#34;]):
-        super().invoke(context)</code></pre>
+    with MbedToolsHandler(LOGGER, context.params[&#34;traceback&#34;]) as handler:
+        super().invoke(context)
+
+    sys.exit(handler.exit_code)</code></pre>
 </details>
 </dd>
 </dl>

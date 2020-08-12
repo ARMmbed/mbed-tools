@@ -27,7 +27,7 @@
 </header>
 <section id="section-intro">
 <p>Interface for accessing Targets from Mbed OS's targets.json.</p>
-<p>An instance of <code><a title="mbed_tools.targets.target.Target" href="target.html#mbed_tools.targets.target.Target">Target</a></code>
+<p>An instance of <code>mbed_tools.targets.target.Target</code>
 can be retrieved by calling one of the public functions.</p>
 <details class="source">
 <summary>
@@ -44,44 +44,41 @@ can be retrieved by calling one of the public functions.
 &#34;&#34;&#34;
 import pathlib
 
-from mbed_tools.targets.target import Target
-from mbed_tools.project import MbedProgram
+from mbed_tools.targets.exceptions import TargetError
+from mbed_tools.targets._internal import target_attributes
 
 
-def get_target_by_name(name: str, path_to_mbed_program: pathlib.Path) -&gt; Target:
-    &#34;&#34;&#34;Returns the Target whose name matches the name given.
+def get_target_by_name(name: str, path_to_targets_json: pathlib.Path) -&gt; dict:
+    &#34;&#34;&#34;Returns a dictionary of attributes for the target whose name matches the name given.
 
-    The Target is as defined in the targets.json file found in the Mbed OS library.
-    The program whose path is provided here will need a valid copy of the Mbed OS library
-    in order to access this file.
+    The target is as defined in the targets.json file found in the Mbed OS library.
 
     Args:
         name: the name of the Target to be returned
-        path_to_mbed_program: path to an Mbed OS program
+        path_to_targets_json: path to a targets.json file containing target definitions
 
     Raises:
         TargetError: an error has occurred while fetching target
     &#34;&#34;&#34;
-    mbed_program = MbedProgram.from_existing(pathlib.Path(path_to_mbed_program))
-    path_to_targets_json = mbed_program.mbed_os.targets_json_file
-    return Target.from_targets_json(name, path_to_targets_json)
+    try:
+        return target_attributes.get_target_attributes(path_to_targets_json, name)
+    except (FileNotFoundError, target_attributes.TargetAttributesError) as e:
+        raise TargetError(e) from e
 
 
-def get_target_by_board_type(board_type: str, path_to_mbed_program: pathlib.Path) -&gt; Target:
-    &#34;&#34;&#34;Returns the Target whose name matches a board&#39;s build_type.
+def get_target_by_board_type(board_type: str, path_to_targets_json: pathlib.Path) -&gt; dict:
+    &#34;&#34;&#34;Returns the target whose name matches a board&#39;s build_type.
 
-    The Target is as defined in the targets.json file found in the Mbed OS library.
-    The program whose path is provided here will need a valid copy of the Mbed OS library
-    in order to access this file.
+    The target is as defined in the targets.json file found in the Mbed OS library.
 
     Args:
         board_type: a board&#39;s board_type (see `mbed_tools.targets.board.Board`)
-        path_to_mbed_program: path to an Mbed OS program
+        path_to_targets_json: path to a targets.json file containing target definitions
 
     Raises:
         TargetError: an error has occurred while fetching target
     &#34;&#34;&#34;
-    return get_target_by_name(board_type, path_to_mbed_program)</code></pre>
+    return get_target_by_name(board_type, path_to_targets_json)</code></pre>
 </details>
 </section>
 <section>
@@ -92,19 +89,17 @@ def get_target_by_board_type(board_type: str, path_to_mbed_program: pathlib.Path
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="mbed_tools.targets.get_target.get_target_by_board_type"><code class="name flex">
-<span>def <span class="ident">get_target_by_board_type</span></span>(<span>board_type: str, path_to_mbed_program: pathlib.Path) ‑> <a title="mbed_tools.targets.target.Target" href="target.html#mbed_tools.targets.target.Target">Target</a></span>
+<span>def <span class="ident">get_target_by_board_type</span></span>(<span>board_type: str, path_to_targets_json: pathlib.Path) ‑> dict</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns the Target whose name matches a board's build_type.</p>
-<p>The Target is as defined in the targets.json file found in the Mbed OS library.
-The program whose path is provided here will need a valid copy of the Mbed OS library
-in order to access this file.</p>
+<div class="desc"><p>Returns the target whose name matches a board's build_type.</p>
+<p>The target is as defined in the targets.json file found in the Mbed OS library.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>board_type</code></strong></dt>
 <dd>a board's board_type (see <code><a title="mbed_tools.targets.board.Board" href="board.html#mbed_tools.targets.board.Board">Board</a></code>)</dd>
-<dt><strong><code>path_to_mbed_program</code></strong></dt>
-<dd>path to an Mbed OS program</dd>
+<dt><strong><code>path_to_targets_json</code></strong></dt>
+<dd>path to a targets.json file containing target definitions</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
@@ -115,37 +110,33 @@ in order to access this file.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_target_by_board_type(board_type: str, path_to_mbed_program: pathlib.Path) -&gt; Target:
-    &#34;&#34;&#34;Returns the Target whose name matches a board&#39;s build_type.
+<pre><code class="python">def get_target_by_board_type(board_type: str, path_to_targets_json: pathlib.Path) -&gt; dict:
+    &#34;&#34;&#34;Returns the target whose name matches a board&#39;s build_type.
 
-    The Target is as defined in the targets.json file found in the Mbed OS library.
-    The program whose path is provided here will need a valid copy of the Mbed OS library
-    in order to access this file.
+    The target is as defined in the targets.json file found in the Mbed OS library.
 
     Args:
         board_type: a board&#39;s board_type (see `mbed_tools.targets.board.Board`)
-        path_to_mbed_program: path to an Mbed OS program
+        path_to_targets_json: path to a targets.json file containing target definitions
 
     Raises:
         TargetError: an error has occurred while fetching target
     &#34;&#34;&#34;
-    return get_target_by_name(board_type, path_to_mbed_program)</code></pre>
+    return get_target_by_name(board_type, path_to_targets_json)</code></pre>
 </details>
 </dd>
 <dt id="mbed_tools.targets.get_target.get_target_by_name"><code class="name flex">
-<span>def <span class="ident">get_target_by_name</span></span>(<span>name: str, path_to_mbed_program: pathlib.Path) ‑> <a title="mbed_tools.targets.target.Target" href="target.html#mbed_tools.targets.target.Target">Target</a></span>
+<span>def <span class="ident">get_target_by_name</span></span>(<span>name: str, path_to_targets_json: pathlib.Path) ‑> dict</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns the Target whose name matches the name given.</p>
-<p>The Target is as defined in the targets.json file found in the Mbed OS library.
-The program whose path is provided here will need a valid copy of the Mbed OS library
-in order to access this file.</p>
+<div class="desc"><p>Returns a dictionary of attributes for the target whose name matches the name given.</p>
+<p>The target is as defined in the targets.json file found in the Mbed OS library.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>name</code></strong></dt>
 <dd>the name of the Target to be returned</dd>
-<dt><strong><code>path_to_mbed_program</code></strong></dt>
-<dd>path to an Mbed OS program</dd>
+<dt><strong><code>path_to_targets_json</code></strong></dt>
+<dd>path to a targets.json file containing target definitions</dd>
 </dl>
 <h2 id="raises">Raises</h2>
 <dl>
@@ -156,23 +147,22 @@ in order to access this file.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_target_by_name(name: str, path_to_mbed_program: pathlib.Path) -&gt; Target:
-    &#34;&#34;&#34;Returns the Target whose name matches the name given.
+<pre><code class="python">def get_target_by_name(name: str, path_to_targets_json: pathlib.Path) -&gt; dict:
+    &#34;&#34;&#34;Returns a dictionary of attributes for the target whose name matches the name given.
 
-    The Target is as defined in the targets.json file found in the Mbed OS library.
-    The program whose path is provided here will need a valid copy of the Mbed OS library
-    in order to access this file.
+    The target is as defined in the targets.json file found in the Mbed OS library.
 
     Args:
         name: the name of the Target to be returned
-        path_to_mbed_program: path to an Mbed OS program
+        path_to_targets_json: path to a targets.json file containing target definitions
 
     Raises:
         TargetError: an error has occurred while fetching target
     &#34;&#34;&#34;
-    mbed_program = MbedProgram.from_existing(pathlib.Path(path_to_mbed_program))
-    path_to_targets_json = mbed_program.mbed_os.targets_json_file
-    return Target.from_targets_json(name, path_to_targets_json)</code></pre>
+    try:
+        return target_attributes.get_target_attributes(path_to_targets_json, name)
+    except (FileNotFoundError, target_attributes.TargetAttributesError) as e:
+        raise TargetError(e) from e</code></pre>
 </details>
 </dd>
 </dl>

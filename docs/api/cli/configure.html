@@ -40,9 +40,10 @@ import pathlib
 
 import click
 
-from typing import Any
-
+from mbed_tools.project import MbedProgram
+from mbed_tools.targets import get_target_by_name
 from mbed_tools.build._internal.cmake_file import generate_mbed_config_cmake_file
+from mbed_tools.build._internal.config.assemble_build_config import assemble_config
 from mbed_tools.build._internal.write_files import write_file
 
 
@@ -50,19 +51,9 @@ from mbed_tools.build._internal.write_files import write_file
     help=&#34;Generate an Mbed OS config CMake file and write it to a .mbedbuild folder in the program directory.&#34;
 )
 @click.option(
-    &#34;-o&#34;,
-    &#34;--output-directory&#34;,
-    type=click.Path(),
-    default=&#34;.&#34;,
-    help=(
-        &#34;Destination for the generated .mbedbuild/mbed_config.cmake file containing configuration parameters to build &#34;
-        &#34;Mbed OS. The default is the current working directory.&#34;
-    ),
-)
-@click.option(
     &#34;-t&#34;,
     &#34;--toolchain&#34;,
-    type=click.Choice([&#34;ARM&#34;, &#34;GCC_ARM&#34;]),
+    type=click.Choice([&#34;ARM&#34;, &#34;GCC_ARM&#34;], case_sensitive=False),
     required=True,
     help=&#34;The toolchain you are using to build your app.&#34;,
 )
@@ -74,24 +65,27 @@ from mbed_tools.build._internal.write_files import write_file
     default=&#34;.&#34;,
     help=&#34;Path to local Mbed program. By default is the current working directory.&#34;,
 )
-def configure(output_directory: Any, toolchain: str, mbed_target: str, program_path: str) -&gt; None:
-    &#34;&#34;&#34;Exports a mbed_config.cmake file to a .mbedbuild directory in the output path.
+def configure(toolchain: str, mbed_target: str, program_path: str) -&gt; None:
+    &#34;&#34;&#34;Exports a mbed_config.cmake file to a .mbedbuild directory in the program root.
 
     The parameters set in the CMake file will be dependent on the combination of
     toolchain and Mbed target provided and these can then control which parts of
     Mbed OS are included in the build.
 
-    This command will create the .mbedbuild directory at the output path if it doesn&#39;t
+    This command will create the .mbedbuild directory at the program root if it doesn&#39;t
     exist.
 
     Args:
-        output_directory: the path where .mbedbuild/mbed_config.cmake will be written
         toolchain: the toolchain you are using (eg. GCC_ARM, ARM)
         mbed_target: the target you are building for (eg. K64F)
         program_path: the path to the local Mbed program
     &#34;&#34;&#34;
-    cmake_file_contents = generate_mbed_config_cmake_file(mbed_target.upper(), pathlib.Path(program_path), toolchain)
-    output_directory = pathlib.Path(output_directory, &#34;.mbedbuild&#34;)
+    program = MbedProgram.from_existing(pathlib.Path(program_path))
+    mbed_target = mbed_target.upper()
+    target_build_attributes = get_target_by_name(mbed_target, program.mbed_os.targets_json_file)
+    config = assemble_config(target_build_attributes, program.root, program.files.app_config_file)
+    cmake_file_contents = generate_mbed_config_cmake_file(mbed_target, target_build_attributes, config, toolchain)
+    output_directory = program.root / &#34;.mbedbuild&#34;
     write_file(output_directory, &#34;mbed_config.cmake&#34;, cmake_file_contents)
     click.echo(f&#34;mbed_config.cmake has been generated and written to &#39;{str(output_directory.resolve())}&#39;&#34;)</code></pre>
 </details>

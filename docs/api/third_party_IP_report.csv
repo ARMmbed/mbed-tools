@@ -1,7 +1,7 @@
 Compliance, Name,Is a dependency?,URL,Licence,Details
 True,certifi,True,https://certifiio.readthedocs.io/en/latest/,MPL-2.0,Licence is compliant.
 True,chardet,True,https://github.com/chardet/chardet,Unknown,Package's licence manually checked: LGPL-2.1 - Accepted temporarily
-True,Click,True,https://palletsprojects.com/p/click/,0BSD,Licence is compliant.
+True,click,True,https://palletsprojects.com/p/click/,BSD-3-Clause,Licence is compliant.
 True,gitdb,True,https://github.com/gitpython-developers/gitdb,0BSD,Licence is compliant.
 True,GitPython,True,https://github.com/gitpython-developers/GitPython,Unknown,Package's licence manually checked: BSD-3-Clause
 True,idna,True,https://github.com/kjd/idna,0BSD,Licence is compliant.
