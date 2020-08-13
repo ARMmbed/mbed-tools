@@ -7,7 +7,6 @@
 set(MBED_TOOLCHAIN "{{toolchain_name}}" CACHE STRING "")
 set(MBED_TARGET "{{target_name}}" CACHE STRING "")
 set(MBED_CPU_CORE "{{core}}" CACHE STRING "")
-set(MBED_PROFILE "develop" CACHE STRING "")
 
 list(APPEND MBED_TARGET_LABELS{% for label in labels %}
     {{label}}
