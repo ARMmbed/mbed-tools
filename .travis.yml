@@ -1,0 +1,103 @@
+# Copyright (c) 2020 Arm Limited. All rights reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the License); you may
+# not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an AS IS BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+language: sh
+os: linux
+dist: xenial
+
+cache:
+  pip: true
+  ccache: true
+  # It looks like ccache for arm-none-eabi is not yet supported by Travis.
+  # Therefore manually adding ccache directory to cache
+  directories:
+    - ${HOME}/.ccache
+
+addons:
+  apt:
+    packages:
+    - ninja-build
+
+matrix:
+  include:
+    - &mbed-tools-test
+      stage: "Mbed-Tools"
+      name: "Test blinky example - develop (K64F)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky TARGET_NAME=K64F PROFILE=develop CACHE_NAME=develop-K64F
+      language: python
+      python: 3.8
+      install:
+        # Setup ccache
+        - ccache -o compiler_check=content
+        - ccache -M 1G
+        - pushd /usr/lib/ccache
+        - sudo ln -s ../../bin/ccache arm-none-eabi-gcc
+        - sudo ln -s ../../bin/ccache arm-none-eabi-g++
+        - export PATH="$PATH:/usr/lib/ccache"
+        - popd
+        # Install arm-none-eabi-
+        - pushd /home/travis/build && mkdir gcc-arm && cd gcc-arm
+        - curl -L0 "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118&la=en&hash=D7C9D18FCA2DD9F894FD9F3C3DC9228498FA281A" --output gcc-arm-none-eabi-9-2020-q2-update.tar.bz2
+        - tar xf gcc-arm-none-eabi-9-2020-q2-update.tar.bz2
+        - export PATH="$PATH:${PWD}/gcc-arm-none-eabi-9-2020-q2-update/bin"
+        - popd
+        - arm-none-eabi-gcc --version
+        - pip install --upgrade cmake
+        # Install the changes added in the pull request
+        - pip install .
+        - mbedtools --version
+        # We use manual clone, with depth and single branch = the fastest
+        - cd ..
+        - git clone --depth=1 --single-branch --branch feature-cmake https://github.com/ARMmbed/${EXAMPLE_NAME}.git
+        - cd ${EXAMPLE_NAME}
+        - git clone --depth=1 --single-branch --branch feature-cmake https://github.com/ARMmbed/mbed-os.git
+      script:
+        - mbedtools configure -t GCC_ARM -m ${TARGET_NAME};
+        - mkdir -p build
+        - cd build && cmake .. -GNinja -DCMAKE_BUILD_TYPE=${PROFILE} && cmake --build .
+        - ccache -s
+
+    - <<: *mbed-tools-test
+      name: "Test blinky example - release (K64F)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky TARGET_NAME=K64F PROFILE=release CACHE_NAME=release-K64F
+
+    - <<: *mbed-tools-test
+      name: "Test blinky example - debug (K64F)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky TARGET_NAME=K64F PROFILE=debug CACHE_NAME=debug-K64F
+
+    - <<: *mbed-tools-test
+      name: "Test blinky example - develop (DISCO_L475VG_IOT01A)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky TARGET_NAME=DISCO_L475VG_IOT01A PROFILE=develop CACHE_NAME=develop-DISCO_L475VG_IOT01A
+
+    - <<: *mbed-tools-test
+      name: "Test blinky example - release (DISCO_L475VG_IOT01A)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky TARGET_NAME=DISCO_L475VG_IOT01A PROFILE=release CACHE_NAME=release-DISCO_L475VG_IOT01A
+
+    - <<: *mbed-tools-test
+      name: "Test blinky example - debug (DISCO_L475VG_IOT01A)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky TARGET_NAME=DISCO_L475VG_IOT01A PROFILE=debug CACHE_NAME=debug-DISCO_L475VG_IOT01A
+
+    - <<: *mbed-tools-test
+      name: "Test blinky example - develop (NRF52840_DK)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky TARGET_NAME=NRF52840_DK PROFILE=develop CACHE_NAME=develop-NRF52840_DK
+
+    - <<: *mbed-tools-test
+      name: "Test blinky example - release (NRF52840_DK)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky TARGET_NAME=NRF52840_DK PROFILE=release CACHE_NAME=release-NRF52840_DK
+
+    - <<: *mbed-tools-test
+      name: "Test blinky example - debug (NRF52840_DK)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky TARGET_NAME=NRF52840_DK PROFILE=debug CACHE_NAME=debug-NRF52840_DK
