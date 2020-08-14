@@ -123,10 +123,39 @@ class TestDetermineBoardDatabaseUpdateResult(TestCase):
         self.assertEqual(len(result.boards_removed), 0, "Returns an empty targets container when no targets removed.")
 
 
-class TestCreateNewsItemText(TestCase):
-    def test_text_formatting(self):
-        text = sync_board_database.create_news_item_text(
-            "New boards added:",
-            Boards([Board.from_online_board_entry(BOARD_1), Board.from_online_board_entry(BOARD_2)]),
+class TestCreateNewsFileTextFromResult(TestCase):
+    def test_text_formatting_for_boards_added(self):
+        mock_online_boards, mock_offline_boards = _make_mbed_boards_for_diff([BOARD_1, BOARD_2], [])
+        result = sync_board_database.determine_board_database_update_result(
+            online_boards=mock_online_boards, offline_boards=mock_offline_boards
         )
-        self.assertEqual(text, "New boards added: u-blox NINA-B1, Multitech xDOT", "Text is formatted correctly.")
+        text = sync_board_database.create_news_file_text_from_result(result)
+        self.assertEqual(
+            text,
+            f"Targets added: {BOARD_1['attributes']['name']}, {BOARD_2['attributes']['name']}.\n",
+            "Text is formatted correctly.",
+        )
+
+    def test_text_formatting_for_boards_removed(self):
+        mock_online_boards, mock_offline_boards = _make_mbed_boards_for_diff([], [BOARD_1, BOARD_2])
+        result = sync_board_database.determine_board_database_update_result(
+            online_boards=mock_online_boards, offline_boards=mock_offline_boards
+        )
+        text = sync_board_database.create_news_file_text_from_result(result)
+        self.assertEqual(
+            text,
+            f"Targets removed: {BOARD_1['attributes']['name']}, {BOARD_2['attributes']['name']}.\n",
+            "Text is formatted correctly.",
+        )
+
+    def test_text_formatting_for_boards_added_and_removed(self):
+        mock_online_boards, mock_offline_boards = _make_mbed_boards_for_diff([BOARD_1], [BOARD_2])
+        result = sync_board_database.determine_board_database_update_result(
+            online_boards=mock_online_boards, offline_boards=mock_offline_boards
+        )
+        text = sync_board_database.create_news_file_text_from_result(result)
+        self.assertEqual(
+            text,
+            f"Targets added: {BOARD_1['attributes']['name']}.\nTargets removed: {BOARD_2['attributes']['name']}.\n",
+            "Text is formatted correctly.",
+        )
