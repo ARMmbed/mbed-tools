@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Tests for sync_board_database.py."""
-from unittest import TestCase, mock
+from unittest import TestCase
 
 from ci_scripts import sync_board_database
 
@@ -98,30 +98,30 @@ def _make_mbed_boards_for_diff(boards_a, boards_b):
     )
 
 
-class TestSyncBoardDB(TestCase):
-    def test_get_boards_added_or_removed_detects_added(self):
+class TestDetermineBoardDatabaseUpdateResult(TestCase):
+    def test_detects_added(self):
         mock_online_boards, mock_offline_boards = _make_mbed_boards_for_diff([BOARD_1, BOARD_2], [BOARD_1])
-        result = sync_board_database.get_boards_added_or_removed(mock_offline_boards, mock_online_boards)
+        result = sync_board_database.determine_board_database_update_result(mock_offline_boards, mock_online_boards)
         self.assertEqual(len(result.boards_added), 1, "Expect one new board to be added to offline db.")
         self.assertEqual(len(result.boards_removed), 0, "Expect no boards to be removed from offline db.")
 
-    def test_get_boards_added_or_removed_detects_removed(self):
+    def test_detects_removed(self):
         mock_offline_boards, mock_online_boards = _make_mbed_boards_for_diff([BOARD_1, BOARD_2], [BOARD_1])
-        result = sync_board_database.get_boards_added_or_removed(mock_offline_boards, mock_online_boards)
+        result = sync_board_database.determine_board_database_update_result(mock_offline_boards, mock_online_boards)
         self.assertEqual(len(result.boards_added), 0, "Expect no boards to be added to offline db.")
         self.assertEqual(len(result.boards_removed), 1, "Expect one board to be removed from offline db.")
 
-    def test_get_boards_added_or_removed_returns_empty_containers_when_no_change(self):
+    def test_returns_empty_when_no_change(self):
         mock_offline_boards, mock_online_boards = _make_mbed_boards_for_diff([BOARD_1], [BOARD_1])
-        result = sync_board_database.get_boards_added_or_removed(mock_offline_boards, mock_online_boards)
+        result = sync_board_database.determine_board_database_update_result(mock_offline_boards, mock_online_boards)
         self.assertEqual(len(result.boards_added), 0, "Returns an empty targets container when no targets added")
         self.assertEqual(len(result.boards_removed), 0, "Returns an empty targets container when no targets removed.")
 
-    def test_news_file_item_text_formatting(self):
-        with mock.patch("ci_scripts.sync_board_database.Path", autospec=True) as mock_path:
-            mock_path().exists.return_value = False
-            text = sync_board_database.create_news_item_text(
-                "New boards added:",
-                Boards([Board.from_online_board_entry(BOARD_1), Board.from_online_board_entry(BOARD_2)]),
-            )
-            self.assertEqual(text, "New boards added: u-blox NINA-B1, Multitech xDOT", "Text is formatted correctly.")
+
+class TestCreateNewsItemText(TestCase):
+    def test_text_formatting(self):
+        text = sync_board_database.create_news_item_text(
+            "New boards added:",
+            Boards([Board.from_online_board_entry(BOARD_1), Board.from_online_board_entry(BOARD_2)]),
+        )
+        self.assertEqual(text, "New boards added: u-blox NINA-B1, Multitech xDOT", "Text is formatted correctly.")

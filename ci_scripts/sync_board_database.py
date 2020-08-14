@@ -65,7 +65,7 @@ def save_board_database(board_database_text: str, output_file_path: Path) -> Non
     output_file_path.write_text(board_database_text)
 
 
-def get_boards_added_or_removed(offline_boards: Boards, online_boards: Boards) -> DatabaseUpdateResult:
+def determine_board_database_update_result(offline_boards: Boards, online_boards: Boards) -> DatabaseUpdateResult:
     """Check boards added and removed in relation to the offline board database."""
     added = online_boards - offline_boards
     removed = offline_boards - online_boards
@@ -153,7 +153,7 @@ def main(args: argparse.Namespace) -> int:
         online_boards = Boards.from_online_database()
         if BOARD_DATABASE_PATH.exists():
             offline_boards = Boards.from_offline_database()
-            result = get_boards_added_or_removed(offline_boards, online_boards)
+            result = determine_board_database_update_result(offline_boards, online_boards)
             if not (result.boards_added or result.boards_removed):
                 logger.info("No changes to commit. Exiting.")
                 return 0
