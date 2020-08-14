@@ -70,22 +70,26 @@ def determine_board_database_update_result(offline_boards: Boards, online_boards
     return DatabaseUpdateResult(added, removed)
 
 
-def create_news_item_text(prefix: str, boards: Boards) -> str:
+def create_news_item_text_from_boards(prefix: str, boards: Boards) -> str:
     """Create a news item string from the list of boards."""
     board_names = ", ".join(board.board_name for board in boards)
-    return f"{prefix} {board_names}"
+    return f"{prefix} {board_names}.\n"
 
 
-def write_news_file_from_boards(result: DatabaseUpdateResult) -> Path:
-    """Creates and writes a news file from the added and removed boards.
+def create_news_file_text_from_result(result: DatabaseUpdateResult) -> str:
+    """Creates and writes a news file from the result of the database update.
 
     Args:
         result: Result of the database update
     """
-    news_item_text_added = create_news_item_text("Targets added: ", result.boards_added)
-    news_item_text_removed = create_news_item_text("Targets removed: ", result.boards_removed)
-    news_item_text = f"{news_item_text_added}. {news_item_text_removed}"
-    return create_news_file(news_item_text, NewsType.feature)
+    news_item_text = ""
+    if result.boards_added:
+        news_item_text = create_news_item_text_from_boards("Targets added:", result.boards_added)
+
+    if result.boards_removed:
+        news_item_text = create_news_item_text_from_boards(f"{news_item_text}Targets removed:", result.boards_removed)
+
+    return news_item_text
 
 
 def git_commit_and_push(files_to_commit: List[Path], branch_name: str, commit_msg: str) -> None:
@@ -156,10 +160,11 @@ def main(args: argparse.Namespace) -> int:
                 logger.info("No changes to commit. Exiting.")
                 return 0
 
-            news_file_path = write_news_file_from_boards(result)
+            news_file_text = create_news_file_text_from_result(result)
         else:
-            news_file_path = create_news_file("Offline board database updated.", NewsType.feature)
+            news_file_text = "Offline board database created."
 
+        news_file_path = create_news_file(news_file_text, NewsType.feature)
         save_board_database(online_boards.json_dump(), BOARD_DATABASE_PATH)
         git_commit_and_push([BOARD_DATABASE_PATH, news_file_path], pr_info.head_branch, pr_info.subject)
         raise_github_pr(pr_info)
