@@ -26,14 +26,12 @@ from mbed_tools_ci_scripts.utils.configuration import configuration, Configurati
 from mbed_tools.lib.exceptions import ToolsError
 from mbed_tools.lib.logging import log_exception, set_log_level
 
-from mbed_tools.targets._internal.board_database import SNAPSHOT_FILENAME
+from mbed_tools.targets._internal.board_database import get_board_database_path
 from mbed_tools.targets.boards import Boards
 
 logger = logging.getLogger()
 
-BOARD_DATABASE_PATH = Path(
-    configuration.get_value(ConfigurationVariable.PROJECT_ROOT), "mbed_targets", "_internal", "data", SNAPSHOT_FILENAME,
-)
+BOARD_DATABASE_PATH = get_board_database_path()
 
 
 class PullRequestInfo(NamedTuple):

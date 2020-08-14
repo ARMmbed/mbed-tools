@@ -98,6 +98,11 @@ def _make_mbed_boards_for_diff(boards_a, boards_b):
     )
 
 
+class TestBoardDatabasePath(TestCase):
+    def test_board_database_path_exists(self):
+        self.assertTrue(sync_board_database.BOARD_DATABASE_PATH.exists())
+
+
 class TestDetermineBoardDatabaseUpdateResult(TestCase):
     def test_detects_added(self):
         mock_online_boards, mock_offline_boards = _make_mbed_boards_for_diff([BOARD_1, BOARD_2], [BOARD_1])
