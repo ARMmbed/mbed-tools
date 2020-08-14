@@ -14,8 +14,9 @@ This utility performs the following actions:
 import argparse
 import logging
 import sys
+from dataclasses import dataclass
 from pathlib import Path
-from typing import NamedTuple, List, Tuple
+from typing import NamedTuple, List
 
 from github import Github, GithubException
 
@@ -45,6 +46,14 @@ class PullRequestInfo(NamedTuple):
     body: str
 
 
+@dataclass(frozen=True)
+class DatabaseUpdateResult:
+    """Object containing the result of the database update."""
+
+    boards_added: set
+    boards_removed: set
+
+
 def save_board_database(board_database_text: str, output_file_path: Path) -> None:
     """Save a snapshot of the board database to a local file.
 
@@ -56,11 +65,11 @@ def save_board_database(board_database_text: str, output_file_path: Path) -> Non
     output_file_path.write_text(board_database_text)
 
 
-def get_boards_added_or_removed(offline_boards: Boards, online_boards: Boards) -> Tuple[Boards, Boards]:
+def get_boards_added_or_removed(offline_boards: Boards, online_boards: Boards) -> DatabaseUpdateResult:
     """Check boards added and removed in relation to the offline board database."""
     added = online_boards - offline_boards
     removed = offline_boards - online_boards
-    return added, removed
+    return DatabaseUpdateResult(added, removed)
 
 
 def create_news_item_text(prefix: str, boards: Boards) -> str:
@@ -69,15 +78,14 @@ def create_news_item_text(prefix: str, boards: Boards) -> str:
     return f"{prefix} {board_names}"
 
 
-def write_news_file_from_boards(added: Boards, removed: Boards) -> Path:
+def write_news_file_from_boards(result: DatabaseUpdateResult) -> Path:
     """Creates and writes a news file from the added and removed boards.
 
     Args:
-        added: added Boards
-        removed: removed Boards
+        result: Result of the database update
     """
-    news_item_text_added = create_news_item_text("Targets added: ", added)
-    news_item_text_removed = create_news_item_text("Targets removed: ", removed)
+    news_item_text_added = create_news_item_text("Targets added: ", result.boards_added)
+    news_item_text_removed = create_news_item_text("Targets removed: ", result.boards_removed)
     news_item_text = f"{news_item_text_added}. {news_item_text_removed}"
     return create_news_file(news_item_text, NewsType.feature)
 
@@ -145,12 +153,12 @@ def main(args: argparse.Namespace) -> int:
         online_boards = Boards.from_online_database()
         if BOARD_DATABASE_PATH.exists():
             offline_boards = Boards.from_offline_database()
-            added, removed = get_boards_added_or_removed(offline_boards, online_boards)
-            if not (added or removed):
+            result = get_boards_added_or_removed(offline_boards, online_boards)
+            if not (result.boards_added or result.boards_removed):
                 logger.info("No changes to commit. Exiting.")
                 return 0
 
-            news_file_path = write_news_file_from_boards(added, removed)
+            news_file_path = write_news_file_from_boards(result)
         else:
             news_file_path = create_news_file("Offline board database updated.", NewsType.feature)
 
