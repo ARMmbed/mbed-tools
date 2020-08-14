@@ -101,21 +101,21 @@ def _make_mbed_boards_for_diff(boards_a, boards_b):
 class TestSyncBoardDB(TestCase):
     def test_get_boards_added_or_removed_detects_added(self):
         mock_online_boards, mock_offline_boards = _make_mbed_boards_for_diff([BOARD_1, BOARD_2], [BOARD_1])
-        added, removed = sync_board_database.get_boards_added_or_removed(mock_offline_boards, mock_online_boards)
-        self.assertEqual(len(added), 1, "Expect one new board to be added to offline db.")
-        self.assertEqual(len(removed), 0, "Expect no boards to be removed from offline db.")
+        result = sync_board_database.get_boards_added_or_removed(mock_offline_boards, mock_online_boards)
+        self.assertEqual(len(result.boards_added), 1, "Expect one new board to be added to offline db.")
+        self.assertEqual(len(result.boards_removed), 0, "Expect no boards to be removed from offline db.")
 
     def test_get_boards_added_or_removed_detects_removed(self):
         mock_offline_boards, mock_online_boards = _make_mbed_boards_for_diff([BOARD_1, BOARD_2], [BOARD_1])
-        added, removed = sync_board_database.get_boards_added_or_removed(mock_offline_boards, mock_online_boards)
-        self.assertEqual(len(added), 0, "Expect no boards to be added to offline db.")
-        self.assertEqual(len(removed), 1, "Expect one board to be removed from offline db.")
+        result = sync_board_database.get_boards_added_or_removed(mock_offline_boards, mock_online_boards)
+        self.assertEqual(len(result.boards_added), 0, "Expect no boards to be added to offline db.")
+        self.assertEqual(len(result.boards_removed), 1, "Expect one board to be removed from offline db.")
 
     def test_get_boards_added_or_removed_returns_empty_containers_when_no_change(self):
         mock_offline_boards, mock_online_boards = _make_mbed_boards_for_diff([BOARD_1], [BOARD_1])
-        added, removed = sync_board_database.get_boards_added_or_removed(mock_offline_boards, mock_online_boards)
-        self.assertEqual(len(added), 0, "Returns an empty targets container when no targets added")
-        self.assertEqual(len(removed), 0, "Returns an empty targets container when no targets removed.")
+        result = sync_board_database.get_boards_added_or_removed(mock_offline_boards, mock_online_boards)
+        self.assertEqual(len(result.boards_added), 0, "Returns an empty targets container when no targets added")
+        self.assertEqual(len(result.boards_removed), 0, "Returns an empty targets container when no targets removed.")
 
     def test_news_file_item_text_formatting(self):
         with mock.patch("ci_scripts.sync_board_database.Path", autospec=True) as mock_path:
