@@ -2,6 +2,7 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
+import os
 import pathlib
 
 from unittest import mock, TestCase
@@ -24,10 +25,36 @@ class TestInitialiseProgram(TestCase):
             MbedProgram.from_new(program_root)
 
     @patchfs
-    def test_from_new_local_dir_generates_valid_program(self, fs):
+    def test_from_new_local_dir_generates_valid_program_creating_directory(self, fs):
         fs_root = pathlib.Path(fs, "foo")
         fs_root.mkdir()
         program_root = fs_root / "programfoo"
+
+        program = MbedProgram.from_new(program_root)
+
+        self.assertEqual(program.files, MbedProgramFiles.from_existing(program_root))
+
+    @patchfs
+    def test_from_new_local_dir_generates_valid_program_creating_directory_in_cwd(self, fs):
+        old_cwd = os.getcwd()
+        try:
+            fs_root = pathlib.Path(fs, "foo")
+            fs_root.mkdir()
+            os.chdir(fs_root)
+            program_root = pathlib.Path("programfoo")
+
+            program = MbedProgram.from_new(program_root)
+
+            self.assertEqual(program.files, MbedProgramFiles.from_existing(program_root))
+        finally:
+            os.chdir(old_cwd)
+
+    @patchfs
+    def test_from_new_local_dir_generates_valid_program_existing_directory(self, fs):
+        fs_root = pathlib.Path(fs, "foo")
+        fs_root.mkdir()
+        program_root = fs_root / "programfoo"
+        program_root.mkdir()
 
         program = MbedProgram.from_new(program_root)
 

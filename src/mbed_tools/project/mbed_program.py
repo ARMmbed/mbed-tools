@@ -196,7 +196,7 @@ def _find_program_root(cwd: Path) -> Path:
     Returns:
         Path containing the mbed-os.lib file.
     """
-    potential_root = cwd.resolve()
+    potential_root = cwd.absolute().resolve()
     while str(potential_root) != str(potential_root.anchor):
         logger.debug(f"Searching for mbed-os.lib file at path {potential_root}")
         root_file = potential_root / MBED_OS_REFERENCE_FILE_NAME
