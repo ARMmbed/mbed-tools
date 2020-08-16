@@ -88,9 +88,6 @@ class MbedProgramFiles:
 
         Args:
             root_path: The path containing the MbedProgramFiles.
-
-        Raises:
-            ValueError: No MbedProgramFiles exist at this path.
         """
         app_config: Optional[Path]
         app_config = root_path / APP_CONFIG_FILE_NAME
