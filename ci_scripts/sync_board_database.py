@@ -50,6 +50,7 @@ class DatabaseUpdateResult:
 
     boards_added: set
     boards_removed: set
+    boards_modified: set
 
 
 def save_board_database(board_database_text: str, output_file_path: Path) -> None:
@@ -67,13 +68,17 @@ def determine_board_database_update_result(offline_boards: Boards, online_boards
     """Check boards added and removed in relation to the offline board database."""
     added = online_boards - offline_boards
     removed = offline_boards - online_boards
-    return DatabaseUpdateResult(added, removed)
+    added_board_names = set(b.board_name for b in added)
+    removed_board_names = set(b.board_name for b in removed)
+    modified_board_names = added_board_names & removed_board_names
+    added_board_names -= modified_board_names
+    removed_board_names -= modified_board_names
+    return DatabaseUpdateResult(added_board_names, removed_board_names, modified_board_names)
 
 
-def create_news_item_text_from_boards(prefix: str, boards: Boards) -> str:
+def create_news_item_text_from_boards(prefix: str, board_names: set) -> str:
     """Create a news item string from the list of boards."""
-    board_names = ", ".join(board.board_name for board in boards)
-    return f"{prefix} {board_names}.\n"
+    return f"{prefix} {', '.join(sorted(board_names))}.\n"
 
 
 def create_news_file_text_from_result(result: DatabaseUpdateResult) -> str:
@@ -88,6 +93,9 @@ def create_news_file_text_from_result(result: DatabaseUpdateResult) -> str:
 
     if result.boards_removed:
         news_item_text = create_news_item_text_from_boards(f"{news_item_text}Targets removed:", result.boards_removed)
+
+    if result.boards_modified:
+        news_item_text = create_news_item_text_from_boards(f"{news_item_text}Targets modified:", result.boards_modified)
 
     return news_item_text
 
@@ -156,7 +164,7 @@ def main(args: argparse.Namespace) -> int:
         if BOARD_DATABASE_PATH.exists():
             offline_boards = Boards.from_offline_database()
             result = determine_board_database_update_result(offline_boards, online_boards)
-            if not (result.boards_added or result.boards_removed):
+            if not (result.boards_added or result.boards_removed or result.boards_modified):
                 logger.info("No changes to commit. Exiting.")
                 return 0
 
