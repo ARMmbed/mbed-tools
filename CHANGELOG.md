@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"3.2.1" (2020-08-17)
+====================
+
+Bugfixes
+--------
+
+- Removing unused MBED_PROFILE, please use CMAKE_BUILD_TYPE to select a profile. (#20200813)
+- Ensure program path is always made absolute on Windows. (#20200816123120)
+
+
 "3.2.0" (2020-08-12)
 ====================
 

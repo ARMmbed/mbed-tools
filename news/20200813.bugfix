@@ -1,1 +1,0 @@
-Removing unused MBED_PROFILE, please use CMAKE_BUILD_TYPE to select a profile.
