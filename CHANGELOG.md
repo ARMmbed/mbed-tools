@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"3.2.2" (2020-08-19)
+====================
+
+Bugfixes
+--------
+
+- Remove MBED_BUILD_TIMESTAMP config option (#20200819144454)
+
+
+Misc
+----
+
+- #20200817142518
+
+
 "3.2.1" (2020-08-17)
 ====================
 
