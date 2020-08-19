@@ -3,7 +3,6 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Module in charge of CMake file generation."""
-import datetime
 import pathlib
 from typing import Iterable
 
@@ -60,7 +59,6 @@ def _render_mbed_config_cmake_template(
         "target_macros": target_build_attributes["macros"],
         "supported_form_factors": target_build_attributes["supported_form_factors"],
         "core": target_build_attributes["core"],
-        "timestamp": datetime.datetime.now().timestamp(),
         "target_name": target_name,
         "toolchain_name": toolchain_name,
         "options": sorted(options, key=lambda option: option.macro_name),
