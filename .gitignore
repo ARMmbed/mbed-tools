@@ -13,7 +13,7 @@ __pycache__/
 *.egg-info/
 
 # Coverage.py
-.coverage
+.coverage*
 coverage/
 junit/
 htmlcov/
@@ -27,3 +27,9 @@ dev-requirements.txt
 
 # Local docs output
 local_docs/
+
+# Tox envs
+.tox/
+
+# User envs
+.venv/
