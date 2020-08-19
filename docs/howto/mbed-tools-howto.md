@@ -12,7 +12,7 @@ Mbed Tools is Python based, so you can install it with pip.
 
 ## Prerequisite
 
-- Python 3. Install for [Windows](https://docs.python.org/3/using/windows.html), [Linux](https://docs.python.org/3/using/unix.html) or [macOS](https://docs.python.org/3/using/mac.html).
+- Python 3.6 or newer. Install for [Windows](https://docs.python.org/3/using/windows.html), [Linux](https://docs.python.org/3/using/unix.html) or [macOS](https://docs.python.org/3/using/mac.html).
 - Pip (if not included in your Python installation). [Install for all operating systems](https://pip.pypa.io/en/stable/installing/).
 - cmake. [Install version 3.18.1 or newer for all operating systems](https://cmake.org/install/).
 - Ninja [Install version 1.0 or newer for all operating systems](https://github.com/ninja-build/ninja/wiki/Pre-built-Ninja-packages).
@@ -39,6 +39,14 @@ Use pip to install:
     python -m pip install mbed-tools --pre
     ```
 
+## Use environment variables
+
+To display information on using environment variables to override defaults:
+
+```
+mbed-tools env
+```
+
 ## Upgrade
 
 Use pip to upgrade:
@@ -46,3 +54,116 @@ Use pip to upgrade:
 ```
 python -m pip install mbed-tools --upgrade
 ```
+
+# Use
+
+For help:
+
+- To get help for all commands, use:
+
+    ```
+    mbed-tools --help
+    ```
+
+- To get help for a specific command, use `mbed-tools <command> --help`. For example, for helping with listing connected devices (the `devices` command):
+
+    ```
+    mbed-tools devices --help
+    ```
+
+## Create a project
+
+You can create a new project or create a local copy of one of our example applications.
+
+### Create a new project
+
+To create a new Mbed OS project in a specified path:
+
+- To create the project and download a new copy of Mbed OS (latest official release):
+
+    ```
+    mbed-tools init <PATH>
+    ```
+
+- To create a project without downloading a copy of Mbed OS (reuse an existing copy):
+
+    ```
+    mbed-tools init -c <PATH>
+    ```
+
+### Use an example application
+
+To create a local copy of an example application, use the `clone` command with the full GitHub URL listed below:
+
+```
+mbed-tools clone <application-name> <PATH>
+````
+
+- Blinky: [mbed-os-example-blinky](https://github.com/ARMmbed/mbed-os-example-blinky)
+- BLE button: [mbed-os-example-ble](https://github.com/ARMmbed/mbed-os-example-ble) - use the BLE button example.
+- Cellular: [mbed-os-example-cellular](https://github.com/ARMmbed/mbed-os-example-cellular)
+- DeivceKey: [mbed-os-example-devicekey](https://github.com/ARMmbed/mbed-os-example-devicekey)
+- KVStore: [mbed-os-example-kvstore](https://github.com/ARMmbed/mbed-os-example-kvstore)
+- LoraWAN: [mbed-os-example-lorawan](https://github.com/ARMmbed/mbed-os-example-lorawan)
+- Mbed Crypto: [mbed-os-example-mbed-crypto](https://github.com/ARMmbed/mbed-os-example-mbed-crypto)
+- NFC: [mbed-os-example-nfc](https://github.com/ARMmbed/mbed-os-example-nfc)
+- Sockets: [mbed-os-example-sockets](https://github.com/ARMmbed/mbed-os-example-sockets)
+
+## Configure the project
+
+The Mbed OS configuration system parses the configuration files in your project (mbed_lib.json, mbed_app.json and targets.json) for a particular target and toolchain, and outputs a CMake script. The build system uses this script to build for your target, using your toolchain.
+
+**Tip:** If you're rebuilding for the same target and toolchain, you can keep using the same CMake script, so you won't have to use the `configure` command again for each build. If you change your target or toolchain, run the `configure` command again to generate a new CMake script.
+
+1. Check your board's build target name.
+
+    Connect your board over USB and run the `devices` command:
+
+    ```
+    mbed-tools devices
+    Board name    Serial number             Serial port             Mount point(s)    Build target(s)
+    ------------  ------------------------  ----------------------  ----------------  -----------------
+    FRDM-K64F     024002017BD34E0F862DB3B7  /dev/tty.usbmodem14402  /Volumes/MBED     K64F
+    ```
+1. To prepare the Mbed configuration information for use with a specific target and toolchain, navigate to the project's root folder and run:
+
+    ```
+    mbed-tools configure -m <target> -t <toolchain>
+    ```
+
+    - The supported targets are `K64F`, `DISCO_L475VG_IOT01A`, `NRF52840_DK`
+    - The supported toolchains are `GCC_ARM` and `ARM`.
+
+    Example for FRDM-K64F and GCC:
+
+    ```
+    mbed-tools configure -m K64F -t GCC_ARM
+    mbed_config.cmake has been generated and written to '/Users/UserName/Development/Blinky/.mbedbuild'
+    ```
+
+## Build the project
+
+Currently, the new Cmake system supports three boards: `K64F`, `DISCO_L475VG_IOT01A` and `NRF52840_DK`.
+
+Use CMake to build your application:
+
+1. Navigate to the project's root folder.
+1. Set the build parameters:
+
+    ```
+    cmake -S . -B cmake_build -GNinja -DCMAKE_BUILD_TYPE=<profile>
+    ```
+    - -S <path-to-source>: Path to the root directory of the CMake project. We use `.` to indicate we're building from the current directory.<!--at no point until now did we tell them to navigate to the directory, though-->
+    - -B <path-to-build>: Path to the build output directory. If the directory doesn't already exist, CMake will create it. We use `cmake_build` as the output directory name; you can use a different name.
+    - -GNinja: To use the Ninja tool.
+    - -DCMAKE_BUILD_TYPE: Build type. The value (`profile`) can be `release`, `debug` or `develop`.
+
+1. Build:
+
+    ```
+    cmake --build cmake_build
+    ```
+
+    This generates two files: BIN and HEX in the build output directory (`cmake_build` in this example).
+
+1. Drag and drop the generated file to your board.
