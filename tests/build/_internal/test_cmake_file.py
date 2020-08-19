@@ -2,15 +2,14 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-from unittest import TestCase, mock
+from unittest import TestCase
 
 from tests.build._internal.config.factories import ConfigFactory
 from mbed_tools.build._internal.cmake_file import generate_mbed_config_cmake_file, _render_mbed_config_cmake_template
 
 
 class TestGenerateCMakeListsFile(TestCase):
-    @mock.patch("mbed_tools.build._internal.cmake_file.datetime")
-    def test_correct_arguments_passed(self, datetime):
+    def test_correct_arguments_passed(self):
         target = dict()
         target["labels"] = ["foo"]
         target["extra_labels"] = ["morefoo"]
@@ -20,8 +19,6 @@ class TestGenerateCMakeListsFile(TestCase):
         target["device_has"] = ["stuff"]
         target["core"] = ["core"]
         target["supported_form_factors"] = ["arduino"]
-        datetime = mock.Mock()
-        datetime.datetime.now.return_value.timestamp.return_value = 2
         config = ConfigFactory()
         mbed_target = "K64F"
         toolchain_name = "GCC"

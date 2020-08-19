@@ -44,7 +44,6 @@ set(MBED_TARGET_DEFINITIONS{% for component in components %}
 {% for form_factor in supported_form_factors %}
     TARGET_FF_{{form_factor}}
 {%- endfor %}
-    MBED_BUILD_TIMESTAMP={{timestamp}}
     TARGET_LIKE_MBED
     __MBED__=1
 )
