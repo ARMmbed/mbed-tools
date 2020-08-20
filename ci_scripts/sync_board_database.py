@@ -152,13 +152,6 @@ def parse_args() -> argparse.Namespace:
 def main(args: argparse.Namespace) -> int:
     """Main entry point."""
     set_log_level(args.verbose)
-    pr_info = PullRequestInfo(
-        repo="ARMMbed/mbed-targets",
-        head_branch=args.head_branch,
-        base_branch=args.base_branch,
-        subject=args.pr_subject,
-        body=args.pr_description,
-    )
     try:
         online_boards = Boards.from_online_database()
         if BOARD_DATABASE_PATH.exists():
@@ -172,6 +165,13 @@ def main(args: argparse.Namespace) -> int:
         else:
             news_file_text = "Offline board database created."
 
+        pr_info = PullRequestInfo(
+            repo="ARMMbed/mbed-tools",
+            head_branch=args.head_branch,
+            base_branch=args.base_branch,
+            subject=args.pr_subject,
+            body=news_file_text,
+        )
         news_file_path = create_news_file(news_file_text, NewsType.feature)
         save_board_database(online_boards.json_dump(), BOARD_DATABASE_PATH)
         git_commit_and_push([BOARD_DATABASE_PATH, news_file_path], pr_info.head_branch, pr_info.subject)
