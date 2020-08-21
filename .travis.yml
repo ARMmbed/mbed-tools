@@ -18,13 +18,23 @@ language: sh
 os: linux
 dist: xenial
 
+env:
+  global:
+    - deps_url="https://mbed-os-ci.s3-eu-west-1.amazonaws.com/jenkins-ci/deps"
+    - deps_dir="${HOME}/.cache/deps"
+
 cache:
   pip: true
   ccache: true
-  # It looks like ccache for arm-none-eabi is not yet supported by Travis.
-  # Therefore manually adding ccache directory to cache
   directories:
+    # Cache arm-none-eabi compiler
+    - ${HOME}/.cache/deps
+    # It looks like ccache for arm-none-eabi is not yet supported by Travis.
+    # Therefore manually adding ccache directory to cache
     - ${HOME}/.ccache
+
+before_install:
+  - source travis-ci/functions.sh
 
 addons:
   apt:
@@ -40,20 +50,7 @@ matrix:
       language: python
       python: 3.8
       install:
-        # Setup ccache
-        - ccache -o compiler_check=content
-        - ccache -M 1G
-        - pushd /usr/lib/ccache
-        - sudo ln -s ../../bin/ccache arm-none-eabi-gcc
-        - sudo ln -s ../../bin/ccache arm-none-eabi-g++
-        - export PATH="$PATH:/usr/lib/ccache"
-        - popd
-        # Install arm-none-eabi-
-        - pushd /home/travis/build && mkdir gcc-arm && cd gcc-arm
-        - curl -L0 "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.bz2?revision=05382cca-1721-44e1-ae19-1e7c3dc96118&la=en&hash=D7C9D18FCA2DD9F894FD9F3C3DC9228498FA281A" --output gcc-arm-none-eabi-9-2020-q2-update.tar.bz2
-        - tar xf gcc-arm-none-eabi-9-2020-q2-update.tar.bz2
-        - export PATH="$PATH:${PWD}/gcc-arm-none-eabi-9-2020-q2-update/bin"
-        - popd
+        - _install_gcc_and_ccache
         - arm-none-eabi-gcc --version
         - pip install --upgrade cmake
         # Install the changes added in the pull request
