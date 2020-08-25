@@ -39,14 +39,6 @@ Use pip to install:
     python -m pip install mbed-tools --pre
     ```
 
-## Use environment variables
-
-To display information on using environment variables to override defaults:
-
-```
-mbed-tools env
-```
-
 ## Upgrade
 
 Use pip to upgrade:
@@ -85,6 +77,14 @@ To create a new Mbed OS project in a specified path:
     mbed-tools init <PATH>
     ```
 
+    The path can be:
+    - Absolute. `init` will create the folder if it doesn't exist.
+    - Relative.
+
+    If you have already created a project folder, you can use `.`
+
+    If you want the `init` command to create a project folder, use `.\<folder-name>`.
+
 - To create a project without downloading a copy of Mbed OS (reuse an existing copy):
 
     ```
@@ -93,27 +93,47 @@ To create a new Mbed OS project in a specified path:
 
 ### Use an example application
 
-To create a local copy of an example application, use the `clone` command with the full GitHub URL listed below:
+To create a local copy of an example application, use the `clone` command with the example name or full GitHub URL listed below:
 
 ```
-mbed-tools clone <application-name> <PATH>
+mbed-tools clone <example> <PATH>
 ````
 
-- Blinky: [mbed-os-example-blinky](https://github.com/ARMmbed/mbed-os-example-blinky)
-- BLE button: [mbed-os-example-ble](https://github.com/ARMmbed/mbed-os-example-ble) - use the BLE button example.
-- Cellular: [mbed-os-example-cellular](https://github.com/ARMmbed/mbed-os-example-cellular)
-- DeivceKey: [mbed-os-example-devicekey](https://github.com/ARMmbed/mbed-os-example-devicekey)
-- KVStore: [mbed-os-example-kvstore](https://github.com/ARMmbed/mbed-os-example-kvstore)
-- LoraWAN: [mbed-os-example-lorawan](https://github.com/ARMmbed/mbed-os-example-lorawan)
-- Mbed Crypto: [mbed-os-example-mbed-crypto](https://github.com/ARMmbed/mbed-os-example-mbed-crypto)
-- NFC: [mbed-os-example-nfc](https://github.com/ARMmbed/mbed-os-example-nfc)
-- Sockets: [mbed-os-example-sockets](https://github.com/ARMmbed/mbed-os-example-sockets)
+- [mbed-os-example-blinky](https://github.com/ARMmbed/mbed-os-example-blinky)
+- [mbed-os-example-ble](https://github.com/ARMmbed/mbed-os-example-ble) - use the BLE button example.
+- [mbed-os-example-cellular](https://github.com/ARMmbed/mbed-os-example-cellular)
+- [mbed-os-example-devicekey](https://github.com/ARMmbed/mbed-os-example-devicekey)
+- [mbed-os-example-kvstore](https://github.com/ARMmbed/mbed-os-example-kvstore)
+- [mbed-os-example-lorawan](https://github.com/ARMmbed/mbed-os-example-lorawan)
+- [mbed-os-example-mbed-crypto](https://github.com/ARMmbed/mbed-os-example-mbed-crypto)
+- [mbed-os-example-nfc](https://github.com/ARMmbed/mbed-os-example-nfc)
+- [mbed-os-example-sockets](https://github.com/ARMmbed/mbed-os-example-sockets)
 
 ## Configure the project
 
+### Project environment variables
+
+Mbed Tools has two environment variables that you can set for a project:
+
+- `MBED_API_AUTH_TOKEN`: Token to access private board information stored for a vendor team.
+- `MBED_DATABASE_MODE`: Use online or offline mode. Possible values:
+    - `AUTO`: Search the offline database first; search the online database only if the board wasn't found offline. This is the default value.
+    - `ONLINE`: Alway use the online database.
+    - `OFFLINE`: Always use the offline database.
+
+To set values, create an `.env` file in the root directory of the project. The file should contain definitions in the `<VARIABLE>=<value>` format.
+
+For more information on overriding defaults, use
+
+```
+mbed-tools env
+```
+
+### Mbed OS configuration
+
 The Mbed OS configuration system parses the configuration files in your project (mbed_lib.json, mbed_app.json and targets.json) for a particular target and toolchain, and outputs a CMake script. The build system uses this script to build for your target, using your toolchain.
 
-**Tip:** If you're rebuilding for the same target and toolchain, you can keep using the same CMake script, so you won't have to use the `configure` command again for each build. If you change your target or toolchain, run the `configure` command again to generate a new CMake script.
+**Tip:** If you're rebuilding for the same target and toolchain, you can keep using the same CMake script, so you won't have to use the `configure` command again for each build. If you change any of mbed_lib.json, mbed_app.json, targets.json, target or toolchain, run the `configure` command again to generate a new CMake script.
 
 1. Check your board's build target name.
 
@@ -164,6 +184,6 @@ Use CMake to build your application:
     cmake --build cmake_build
     ```
 
-    This generates two files: BIN and HEX in the build output directory (`cmake_build` in this example).
+    This generates two files in the build output directory (`cmake_build` in this example): HEX and BIN.
 
 1. Drag and drop the generated file to your board.
