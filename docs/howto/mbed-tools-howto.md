@@ -111,7 +111,12 @@ mbed-tools clone <example> <PATH>
 
 ## Configure the project
 
-### Project environment variables
+Each project depends on two sets of configurations:
+
+- The project's environment variables. You can use the default values.
+- The Mbed OS configuration system. You must set up your target and toolchain.
+
+### Project environment variables (Optional)
 
 Mbed Tools has two environment variables that you can set for a project:
 
@@ -187,3 +192,19 @@ Use CMake to build your application:
     This generates two files in the build output directory (`cmake_build` in this example): HEX and BIN.
 
 1. Drag and drop the generated file to your board.
+
+## Logging
+
+To specify the log level, use the verbose logging option (`-v`) before the first argument.
+
+If you don't use `-v`, by default the log will show only errors. These are the following log levels:
+
+- `-v`: Warning and errors.
+- `-vv`: Information, warning and errors.
+- `-vvv`: Debug, information, warning and errors.
+
+For example:
+
+```
+mbed-tools -vv configure -m <target> -t <toolchain>
+```
