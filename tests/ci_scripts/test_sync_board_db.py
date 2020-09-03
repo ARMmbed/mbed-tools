@@ -178,13 +178,13 @@ class TestBoardDatabasePath(TestCase):
 class TestDetermineBoardDatabaseUpdateResult(TestCase):
     def test_detects_added(self):
         mock_online_boards, mock_offline_boards = _make_mbed_boards_for_diff([BOARD_1, BOARD_2], [BOARD_1])
-        result = sync_board_database.determine_board_database_update_result(mock_offline_boards, mock_online_boards)
+        result = sync_board_database.compare_databases(mock_offline_boards, mock_online_boards)
         self.assertEqual(len(result.boards_added), 1, "Expect one new board to be added to offline db.")
         self.assertEqual(len(result.boards_removed), 0, "Expect no boards to be removed from offline db.")
 
     def test_detects_removed(self):
         mock_offline_boards, mock_online_boards = _make_mbed_boards_for_diff([BOARD_1, BOARD_2], [BOARD_1])
-        result = sync_board_database.determine_board_database_update_result(mock_offline_boards, mock_online_boards)
+        result = sync_board_database.compare_databases(mock_offline_boards, mock_online_boards)
         self.assertEqual(len(result.boards_added), 0, "Expect no boards to be added to offline db.")
         self.assertEqual(len(result.boards_removed), 1, "Expect one board to be removed from offline db.")
 
@@ -192,7 +192,7 @@ class TestDetermineBoardDatabaseUpdateResult(TestCase):
         mock_offline_boards, mock_online_boards = _make_mbed_boards_for_diff(
             [BOARD_1, BOARD_2], [BOARD_1, BOARD_2_MODIFIED]
         )
-        result = sync_board_database.determine_board_database_update_result(mock_offline_boards, mock_online_boards)
+        result = sync_board_database.compare_databases(mock_offline_boards, mock_online_boards)
         self.assertEqual(len(result.boards_modified), 1)
         self.assertEqual(len(result.boards_added), 0)
         self.assertEqual(len(result.boards_removed), 0)
@@ -201,14 +201,14 @@ class TestDetermineBoardDatabaseUpdateResult(TestCase):
         mock_online_boards, mock_offline_boards = _make_mbed_boards_for_diff(
             [BOARD_3, BOARD_2], [BOARD_1, BOARD_2_MODIFIED]
         )
-        result = sync_board_database.determine_board_database_update_result(mock_offline_boards, mock_online_boards)
+        result = sync_board_database.compare_databases(mock_offline_boards, mock_online_boards)
         self.assertEqual(len(result.boards_modified), 1)
         self.assertEqual(len(result.boards_added), 1)
         self.assertEqual(len(result.boards_removed), 1)
 
     def test_returns_empty_when_no_change(self):
         mock_offline_boards, mock_online_boards = _make_mbed_boards_for_diff([BOARD_1], [BOARD_1])
-        result = sync_board_database.determine_board_database_update_result(mock_offline_boards, mock_online_boards)
+        result = sync_board_database.compare_databases(mock_offline_boards, mock_online_boards)
         self.assertEqual(len(result.boards_added), 0, "Returns an empty targets container when no targets added")
         self.assertEqual(len(result.boards_removed), 0, "Returns an empty targets container when no targets removed.")
 
@@ -216,7 +216,7 @@ class TestDetermineBoardDatabaseUpdateResult(TestCase):
 class TestCreateNewsFileTextFromResult(TestCase):
     def test_text_formatting_for_boards_added(self):
         mock_online_boards, mock_offline_boards = _make_mbed_boards_for_diff([BOARD_1, BOARD_2], [])
-        result = sync_board_database.determine_board_database_update_result(
+        result = sync_board_database.compare_databases(
             online_boards=mock_online_boards, offline_boards=mock_offline_boards
         )
         text = sync_board_database.create_news_file_text_from_result(result)
@@ -228,7 +228,7 @@ class TestCreateNewsFileTextFromResult(TestCase):
 
     def test_text_formatting_for_boards_removed(self):
         mock_online_boards, mock_offline_boards = _make_mbed_boards_for_diff([], [BOARD_1, BOARD_2])
-        result = sync_board_database.determine_board_database_update_result(
+        result = sync_board_database.compare_databases(
             online_boards=mock_online_boards, offline_boards=mock_offline_boards
         )
         text = sync_board_database.create_news_file_text_from_result(result)
@@ -240,7 +240,7 @@ class TestCreateNewsFileTextFromResult(TestCase):
 
     def test_text_formatting_for_boards_modified(self):
         mock_online_boards, mock_offline_boards = _make_mbed_boards_for_diff([BOARD_2], [BOARD_2_MODIFIED])
-        result = sync_board_database.determine_board_database_update_result(
+        result = sync_board_database.compare_databases(
             online_boards=mock_online_boards, offline_boards=mock_offline_boards
         )
         text = sync_board_database.create_news_file_text_from_result(result)
@@ -252,7 +252,7 @@ class TestCreateNewsFileTextFromResult(TestCase):
         mock_online_boards, mock_offline_boards = _make_mbed_boards_for_diff(
             [BOARD_3, BOARD_2], [BOARD_1, BOARD_2_MODIFIED]
         )
-        result = sync_board_database.determine_board_database_update_result(
+        result = sync_board_database.compare_databases(
             online_boards=mock_online_boards, offline_boards=mock_offline_boards
         )
         text = sync_board_database.create_news_file_text_from_result(result)

@@ -6,23 +6,18 @@
 
 This utility performs the following actions:
 * Downloads the latest online target database
-* Saves the database to a local file in the mbed-targets repository
-* Creates a new branch and commits the new target database
-* Pushes the branch to the mbed-targets remote and raises a github PR as Monty Bot.
+* Saves the database to a local file in the mbed-tools repository
+* Writes a news file detailing any added, removed or modified boards
 """
 
 import argparse
 import logging
 import sys
+
 from dataclasses import dataclass
 from pathlib import Path
-from typing import NamedTuple, List
-
-from github import Github, GithubException
 
 from mbed_tools_ci_scripts.create_news_file import create_news_file, NewsType
-from mbed_tools_ci_scripts.utils import git_helpers
-from mbed_tools_ci_scripts.utils.configuration import configuration, ConfigurationVariable
 from mbed_tools.lib.exceptions import ToolsError
 from mbed_tools.lib.logging import log_exception, set_log_level
 
@@ -34,19 +29,9 @@ logger = logging.getLogger()
 BOARD_DATABASE_PATH = get_board_database_path()
 
 
-class PullRequestInfo(NamedTuple):
-    """Data structure containing info required to raise a Github PR."""
-
-    repo: str
-    head_branch: str
-    base_branch: str
-    subject: str
-    body: str
-
-
 @dataclass(frozen=True)
-class DatabaseUpdateResult:
-    """Object containing the result of the database update."""
+class DatabaseComparisonResult:
+    """Result of the database comparison."""
 
     boards_added: set
     boards_removed: set
@@ -64,8 +49,8 @@ def save_board_database(board_database_text: str, output_file_path: Path) -> Non
     output_file_path.write_text(board_database_text)
 
 
-def determine_board_database_update_result(offline_boards: Boards, online_boards: Boards) -> DatabaseUpdateResult:
-    """Check boards added and removed in relation to the offline board database."""
+def compare_databases(offline_boards: Boards, online_boards: Boards) -> DatabaseComparisonResult:
+    """Compare offline and online board databases."""
     added = online_boards - offline_boards
     removed = offline_boards - online_boards
     added_board_names = set(b.board_name for b in added)
@@ -73,7 +58,7 @@ def determine_board_database_update_result(offline_boards: Boards, online_boards
     modified_board_names = added_board_names & removed_board_names
     added_board_names -= modified_board_names
     removed_board_names -= modified_board_names
-    return DatabaseUpdateResult(added_board_names, removed_board_names, modified_board_names)
+    return DatabaseComparisonResult(added_board_names, removed_board_names, modified_board_names)
 
 
 def create_news_item_text_from_boards(prefix: str, board_names: set) -> str:
@@ -81,7 +66,7 @@ def create_news_item_text_from_boards(prefix: str, board_names: set) -> str:
     return f"{prefix} {', '.join(sorted(board_names))}.\n"
 
 
-def create_news_file_text_from_result(result: DatabaseUpdateResult) -> str:
+def create_news_file_text_from_result(result: DatabaseComparisonResult) -> str:
     """Creates and writes a news file from the result of the database update.
 
     Args:
@@ -100,52 +85,10 @@ def create_news_file_text_from_result(result: DatabaseUpdateResult) -> str:
     return news_item_text
 
 
-def git_commit_and_push(files_to_commit: List[Path], branch_name: str, commit_msg: str) -> None:
-    """Commit a file to the git remote, on a new branch, as Monty Bot.
-
-    If the given branch doesn't exist then a new branch will be created.
-
-    Args:
-        files_to_commit: list of paths to the files to commit.
-        branch_name: branch to add the commit to.
-        commit_msg: the commit message.
-    """
-    logger.info(f"Committing '{files_to_commit}' to branch '{branch_name}' with commit message '{commit_msg}'.")
-    with git_helpers.ProjectTempClone("master") as temp_clone:
-        temp_clone.configure_for_github()
-        temp_clone.fetch()
-        temp_clone.create_branch(branch_name)
-        temp_clone.checkout_branch(branch_name)
-        temp_clone.add(files_to_commit)
-        temp_clone.commit(commit_msg)
-        temp_clone.pull()
-        temp_clone.push()
-
-
-def raise_github_pr(pr_info: PullRequestInfo) -> None:
-    """Raise a PR on github using the GIT_TOKEN environment variable to authenticate.
-
-    Args:
-        pr_info: data structure containing information about the PR to raise.
-    """
-    logger.info(f"Raising PR {pr_info!r}")
-    git_token = configuration.get_value(ConfigurationVariable.GIT_TOKEN)
-    github_instance = Github(git_token)
-    repo = github_instance.get_repo(pr_info.repo)
-    try:
-        repo.create_pull(title=pr_info.subject, body=pr_info.body, head=pr_info.head_branch, base=pr_info.base_branch)
-    except GithubException as err:
-        logging.info(err.data["errors"][0]["message"])
-
-
 def parse_args() -> argparse.Namespace:
     """Parse the command line."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--verbose", "-v", action="count", default=0)
-    parser.add_argument("--head-branch", default="sync-target-db")
-    parser.add_argument("--base-branch", default="master")
-    parser.add_argument("--pr-subject", default="Update target database.")
-    parser.add_argument("--pr-description", default="")
     return parser.parse_args()
 
 
@@ -154,28 +97,15 @@ def main(args: argparse.Namespace) -> int:
     set_log_level(args.verbose)
     try:
         online_boards = Boards.from_online_database()
-        if BOARD_DATABASE_PATH.exists():
-            offline_boards = Boards.from_offline_database()
-            result = determine_board_database_update_result(offline_boards, online_boards)
-            if not (result.boards_added or result.boards_removed or result.boards_modified):
-                logger.info("No changes to commit. Exiting.")
-                return 0
+        offline_boards = Boards.from_offline_database()
+        result = compare_databases(offline_boards, online_boards)
+        if not (result.boards_added or result.boards_removed or result.boards_modified):
+            logger.info("No changes to commit. Exiting.")
+            return 0
 
-            news_file_text = create_news_file_text_from_result(result)
-        else:
-            news_file_text = "Offline board database created."
-
-        pr_info = PullRequestInfo(
-            repo="ARMMbed/mbed-tools",
-            head_branch=args.head_branch,
-            base_branch=args.base_branch,
-            subject=args.pr_subject,
-            body=news_file_text,
-        )
-        news_file_path = create_news_file(news_file_text, NewsType.feature)
+        news_file_text = create_news_file_text_from_result(result)
+        create_news_file(news_file_text, NewsType.feature)
         save_board_database(online_boards.json_dump(), BOARD_DATABASE_PATH)
-        git_commit_and_push([BOARD_DATABASE_PATH, news_file_path], pr_info.head_branch, pr_info.subject)
-        raise_github_pr(pr_info)
         return 0
     except ToolsError as tools_error:
         log_exception(logger, tools_error)
