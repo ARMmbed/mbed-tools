@@ -17,11 +17,14 @@ class TestGenerateCMakeListsFile(TestCase):
         target["components"] = ["baz"]
         target["macros"] = ["macbaz"]
         target["device_has"] = ["stuff"]
+        target["c_lib"] = ["c_lib"]
         target["core"] = ["core"]
+        target["printf_lib"] = ["printf_lib"]
         target["supported_form_factors"] = ["arduino"]
         config = ConfigFactory()
         mbed_target = "K64F"
         toolchain_name = "GCC"
+        target["supported_c_libs"] = { toolchain_name : ["small", "std"] }
 
         result = generate_mbed_config_cmake_file(mbed_target, target, config, toolchain_name)
 
@@ -40,13 +43,21 @@ class TestRendersCMakeListsFile(TestCase):
         target["macros"] = ["macbaz"]
         target["device_has"] = ["stuff"]
         target["core"] = ["core"]
+        target["c_lib"] = ["c_lib"]
+        target["printf_lib"] = ["printf_lib"]
+        target["supported_c_libs"] = ["supported_c_libs"]
         target["supported_form_factors"] = ["arduino"]
         config = ConfigFactory()
         toolchain_name = "baz"
+        target["supported_c_libs"] = { toolchain_name : ["small", "std"] }
         result = _render_mbed_config_cmake_template(target, config, toolchain_name, "target_name")
+        print(result)
 
         for label in target["labels"] + target["extra_labels"]:
             self.assertIn(label, result)
 
         for macro in target["features"] + target["components"] + [toolchain_name]:
             self.assertIn(macro, result)
+
+        for supported_c_lib in target["supported_c_libs"]:
+            self.assertIn(supported_c_lib, result)
