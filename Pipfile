@@ -7,7 +7,7 @@ verify_ssl = true
 mbed-tools = {editable = true, path = "."}
 
 [dev-packages]
-black = "*"
+black = "==19.10b0"
 coverage = "*"
 flake8 = "*"
 flake8-docstrings = "*"

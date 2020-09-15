@@ -49,6 +49,7 @@ def _render_mbed_config_cmake_template(
     template = env.get_template(TEMPLATE_NAME)
     options = list(config.options.values())
     macros = list(config.macros.values())
+    supported_c_libs = [x for x in target_build_attributes["supported_c_libs"][toolchain_name.lower()]]
 
     context = {
         "labels": target_build_attributes["labels"],
@@ -58,7 +59,10 @@ def _render_mbed_config_cmake_template(
         "device_has": target_build_attributes["device_has"],
         "target_macros": target_build_attributes["macros"],
         "supported_form_factors": target_build_attributes["supported_form_factors"],
+        "supported_c_libs": supported_c_libs,
+        "c_lib": target_build_attributes["c_lib"],
         "core": target_build_attributes["core"],
+        "printf_lib": target_build_attributes["printf_lib"],
         "target_name": target_name,
         "toolchain_name": toolchain_name,
         "options": sorted(options, key=lambda option: option.macro_name),
