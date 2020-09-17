@@ -1,6 +1,6 @@
                                 3rd party IP report for mbed-tools
 
-                                         2020-08-19 14:50:14.081700
+                                         2020-09-17 12:41:29.059484
 
 # Summary:
     Licence compliance: Compliant

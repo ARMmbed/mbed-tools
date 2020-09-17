@@ -12,6 +12,30 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"3.3.0" (2020-09-17)
+====================
+
+Features
+--------
+
+- Add CMake variables for the selected printf and C library to the generated CMake module (#20200915)
+- Add travis config file (#20200814183927)
+
+
+Improved Documentation
+----------------------
+
+- Add create project, config and build instructions. (#202008211200)
+- Update create project, example application and project environment instructions. (#202008251200)
+- Add logging info. (#202008261300)
+
+
+Misc
+----
+
+- #20200820131700, #20200820132210, #20200821142453
+
+
 "3.2.2" (2020-08-19)
 ====================
 
