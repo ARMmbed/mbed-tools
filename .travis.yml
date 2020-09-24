@@ -52,6 +52,7 @@ matrix:
       install:
         - _install_gcc_and_ccache
         - arm-none-eabi-gcc --version
+        - pip install mbed-cli
         - pip install --upgrade cmake
         # Install the changes added in the pull request
         - pip install .
@@ -63,8 +64,15 @@ matrix:
         - git clone --depth=1 --single-branch --branch feature-cmake https://github.com/ARMmbed/mbed-os.git
       script:
         - mbedtools configure -t GCC_ARM -m ${TARGET_NAME};
-        - mkdir -p build
-        - cd build && cmake .. -GNinja -DCMAKE_BUILD_TYPE=${PROFILE} && cmake --build .
+        - mkdir -p cmake_build
+        - cd cmake_build && cmake .. -GNinja -DCMAKE_BUILD_TYPE=${PROFILE} && cmake --build .
+        - sha256_new_bin=`sha256sum $EXAMPLE_NAME.bin | awk '{print $1}'`
+        - echo $sha256_new_bin
+        - cd .. && rm -rf cmake_build
+        - pip install -r mbed-os/requirements.txt
+        - mbed compile -t GCC_ARM -m ${TARGET_NAME}
+        - sha256_old_bin=`sha256sum BUILD/$TARGET_NAME/GCC_ARM/$EXAMPLE_NAME.bin | awk '{print $1}'`
+        - echo $sha256_old_bin
         - ccache -s
 
     - <<: *mbed-tools-test
