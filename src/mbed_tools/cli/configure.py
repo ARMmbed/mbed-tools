@@ -8,10 +8,7 @@ import pathlib
 import click
 
 from mbed_tools.project import MbedProgram
-from mbed_tools.targets import get_target_by_name
-from mbed_tools.build._internal.cmake_file import generate_mbed_config_cmake_file
-from mbed_tools.build._internal.config.assemble_build_config import assemble_config
-from mbed_tools.build._internal.write_files import write_file
+from mbed_tools.build import generate_config
 
 
 @click.command(
@@ -49,9 +46,5 @@ def configure(toolchain: str, mbed_target: str, program_path: str) -> None:
     """
     program = MbedProgram.from_existing(pathlib.Path(program_path))
     mbed_target = mbed_target.upper()
-    target_build_attributes = get_target_by_name(mbed_target, program.mbed_os.targets_json_file)
-    config = assemble_config(target_build_attributes, program.root, program.files.app_config_file)
-    cmake_file_contents = generate_mbed_config_cmake_file(mbed_target, target_build_attributes, config, toolchain)
-    output_directory = program.root / ".mbedbuild"
-    write_file(output_directory, "mbed_config.cmake", cmake_file_contents)
-    click.echo(f"mbed_config.cmake has been generated and written to '{str(output_directory.resolve())}'")
+    output_path = generate_config(mbed_target, toolchain, program)
+    click.echo(f"mbed_config.cmake has been generated and written to '{str(output_path.resolve())}'")
