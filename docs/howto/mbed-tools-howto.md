@@ -128,12 +128,6 @@ Mbed Tools has two environment variables that you can set for a project:
 
 To set values, create an `.env` file in the root directory of the project. The file should contain definitions in the `<VARIABLE>=<value>` format.
 
-For more information on overriding defaults, use
-
-```
-mbed-tools env
-```
-
 ### Mbed OS configuration
 
 The Mbed OS configuration system parses the configuration files in your project (mbed_lib.json, mbed_app.json and targets.json) for a particular target and toolchain, and outputs a CMake script. The build system uses this script to build for your target, using your toolchain.
