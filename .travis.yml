@@ -59,9 +59,17 @@ matrix:
         # We use manual clone, with depth and single branch = the fastest
         - cd ..
         - git clone --depth=1 --single-branch --branch feature-cmake https://github.com/ARMmbed/${EXAMPLE_NAME}.git
-        - cd ${EXAMPLE_NAME}
+        - >-
+          if [ -z ${SUBEXAMPLE_NAME} ]; then
+             cd ${EXAMPLE_NAME}
+           else
+             cd ${EXAMPLE_NAME}/${SUBEXAMPLE_NAME}
+          fi
         - git clone --depth=1 --single-branch --branch feature-cmake https://github.com/ARMmbed/mbed-os.git
       script:
+        # Replace the content of mbed-os.lib to stay on ${TRAVIS_PULL_REQUEST}
+        - echo “” > mbed-os.lib
+        - mbedtools checkout
         - mbedtools configure -t GCC_ARM -m ${TARGET_NAME}
         - mkdir -p build
         - cd build && cmake .. -GNinja -DCMAKE_BUILD_TYPE=${PROFILE} && cmake --build .
@@ -98,3 +106,35 @@ matrix:
     - <<: *mbed-tools-test
       name: "Test blinky example - debug (NRF52840_DK)"
       env: EXAMPLE_NAME=mbed-os-example-blinky TARGET_NAME=NRF52840_DK PROFILE=debug CACHE_NAME=debug-NRF52840_DK
+
+    - <<: *mbed-tools-test
+      name: "Test kvstore example (K64F)"
+      env: EXAMPLE_NAME=mbed-os-example-kvstore TARGET_NAME=K64F CACHE_NAME=kvstore-K64F
+
+    - <<: *mbed-tools-test
+      name: "Test ble example (NRF52840_DK)"
+      env: EXAMPLE_NAME=mbed-os-example-ble TARGET_NAME=NRF52840_DK SUBEXAMPLE_NAME=BLE_Button CACHE_NAME=ble-ble-button-NRF52840_DK
+
+    - <<: *mbed-tools-test
+      name: "Test cellular example (WIO_3G)"
+      env: EXAMPLE_NAME=mbed-os-example-cellular TARGET_NAME=WIO_3G CACHE_NAME=cellular-WIO_3G
+
+    - <<: *mbed-tools-test
+      name: "Test devicekey example (K66F)"
+      env: EXAMPLE_NAME=mbed-os-example-devicekey TARGET_NAME=K66F CACHE_NAME=devicekey-K66F
+
+    - <<: *mbed-tools-test
+      name: "Test lorawan example (K66F)"
+      env: EXAMPLE_NAME=mbed-os-example-lorawan TARGET_NAME=K66F CACHE_NAME=lorawan-K66F
+
+    - <<: *mbed-tools-test
+      name: "Test crypto example (K64F)"
+      env: EXAMPLE_NAME=mbed-os-example-mbed-crypto TARGET_NAME=K64F SUBEXAMPLE_NAME=getting-started CACHE_NAME=crypto-getting-started-K64F
+ 
+    - <<: *mbed-tools-test
+      name: "Test nfc example (DISCO_L475VG_IOT01A)"
+      env: EXAMPLE_NAME=mbed-os-example-nfc TARGET_NAME=DISCO_L475VG_IOT01A SUBEXAMPLE_NAME=NFC_EEPROM CACHE_NAME=nfc-DISCO_L475VG_IOT01A
+
+    - <<: *mbed-tools-test
+      name: "Test sockets example (K64F)"
+      env: EXAMPLE_NAME=mbed-os-example-sockets TARGET_NAME=K64F CACHE_NAME=sockets-K64F
