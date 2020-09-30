@@ -10,7 +10,7 @@ from unittest import mock, TestCase
 from mbed_tools.project import MbedProgram
 from mbed_tools.project.exceptions import ExistingProgram, ProgramNotFound, MbedOSNotFound
 from mbed_tools.project.mbed_program import _find_program_root, parse_url
-from mbed_tools.project._internal.project_data import MbedProgramFiles, MbedOS
+from mbed_tools.project._internal.project_data import MbedProgramFiles
 from tests.project.factories import make_mbed_program_files, make_mbed_os_files, make_mbed_lib_reference, patchfs
 
 
@@ -132,47 +132,47 @@ class TestInitialiseProgram(TestCase):
 
 class TestLibReferenceHandling(TestCase):
     @mock.patch("mbed_tools.project.mbed_program.LibraryReferences", autospec=True)
-    def test_resolve_libraries_delegation(self, mock_lib_refs):
-        program = MbedProgram(MbedProgramFiles(None, pathlib.Path(), pathlib.Path()), MbedOS(pathlib.Path(), None))
+    @mock.patch("mbed_tools.project.mbed_program.MbedProgramFiles")
+    @mock.patch("mbed_tools.project.mbed_program.MbedOS")
+    def test_resolve_libraries_delegation(self, mbed_os, mbed_program_files, mock_lib_refs):
+        program = MbedProgram(mbed_program_files(), mbed_os())
         program.resolve_libraries()
 
         program.lib_references.resolve.assert_called_once()
 
     @mock.patch("mbed_tools.project.mbed_program.LibraryReferences", autospec=True)
-    def test_checkout_libraries_delegation(self, mock_lib_refs):
-        program = MbedProgram(MbedProgramFiles(None, pathlib.Path(), pathlib.Path()), MbedOS(pathlib.Path(), None))
+    @mock.patch("mbed_tools.project.mbed_program.MbedProgramFiles")
+    @mock.patch("mbed_tools.project.mbed_program.MbedOS")
+    def test_checkout_libraries_delegation(self, mbed_os, mbed_program_files, mock_lib_refs):
+        program = MbedProgram(mbed_program_files(), mbed_os())
         program.checkout_libraries()
 
         program.lib_references.checkout.assert_called_once()
 
     @patchfs
     def test_lists_all_known_libraries(self, fs):
-        root = pathlib.Path(fs, "root")
+        root = pathlib.Path(fs, "root").absolute().resolve()
+        make_mbed_program_files(root)
         lib_ref = make_mbed_lib_reference(root, resolved=True, ref_url="https://blah")
         lib_ref_unresolved = make_mbed_lib_reference(
             root, name="my-unresolved-lib.lib", resolved=False, ref_url="https://blah"
         )
-        mbed_os_root = root / "mbed-os"
-        mbed_os_root.mkdir()
 
-        program = MbedProgram(
-            MbedProgramFiles(None, pathlib.Path(root, "mbed-os.lib"), pathlib.Path()), MbedOS(mbed_os_root, None),
-        )
+        program = MbedProgram.from_existing(root, check_mbed_os=False)
         libs = program.list_known_library_dependencies()
-        self.assertEqual(str(lib_ref_unresolved), str(libs[0]))
-        self.assertEqual(str(lib_ref), str(libs[1]))
+
+        self.assertEqual(str(lib_ref_unresolved), str(libs[1]))
+        self.assertEqual(str(lib_ref), str(libs[2]))
 
     @patchfs
     def test_checks_for_unresolved_libraries(self, fs):
-        root = pathlib.Path(fs, "root")
+        root = pathlib.Path(fs, "root").absolute().resolve()
+        make_mbed_program_files(root)
         make_mbed_lib_reference(root, resolved=True, ref_url="https://blah")
         make_mbed_lib_reference(root, name="my-unresolved-lib.lib", resolved=False, ref_url="https://blah")
-        mbed_os_root = root / "mbed-os"
-        mbed_os_root.mkdir()
 
-        program = MbedProgram(
-            MbedProgramFiles(None, pathlib.Path(root / "mbed-os.lib"), pathlib.Path()), MbedOS(mbed_os_root, None),
-        )
+        program = MbedProgram.from_existing(root, check_mbed_os=False)
+
         self.assertTrue(program.has_unresolved_libraries())
 
 
