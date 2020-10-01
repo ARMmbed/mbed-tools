@@ -116,12 +116,10 @@ stages:
             inputs:
               versionSpec: '3.7'
 
-          - template: steps/determine-current-branch.yml
-
           - template: steps/install-development-dependencies.yml
 
           - script: |
-              assert-news -b $(current_branch)
+              tox -e checknews
             displayName: 'Run check'
 
   - stage: DocBuild
