@@ -62,14 +62,6 @@ _setup_build_env()
   pip install --upgrade cmake
 }
 
-_config_and_build()
-{
-    mbedtools configure -t GCC_ARM -m ${TARGET_NAME}
-
-    cmake -S . -B build -GNinja -DCMAKE_BUILD_TYPE=${PROFILE}
-    cmake --build build
-}
-
 _clone_dependencies()
 {
   # We use manual clone, with depth and single branch = the fastest

@@ -58,7 +58,7 @@ matrix:
         - cd ..
         - _clone_dependencies
       script:
-        - _config_and_build
+        - mbedtools build -t GCC_ARM -m ${TARGET_NAME}
         - ccache -s
 
     - <<: *mbed-tools-test
