@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 # Mbed program file names and constants.
 APP_CONFIG_FILE_NAME = "mbed_app.json"
 CMAKE_CONFIG_FILE_PATH = Path(".mbedbuild", "mbed_config.cmake")
+CMAKE_BUILD_DIR = "cmake_build"
 CMAKELISTS_FILE_NAME = "CMakeLists.txt"
 MAIN_CPP_FILE_NAME = "main.cpp"
 MBED_OS_REFERENCE_FILE_NAME = "mbed-os.lib"
@@ -50,12 +51,14 @@ class MbedProgramFiles:
         mbed_os_ref: Library reference file for MbedOS. All programs require this file.
         cmakelists_file: A top-level CMakeLists.txt containing build definitions for the application.
         cmake_config_file: Path to the CMake configuration script.
+        cmake_build_dir: The CMake build tree.
     """
 
     app_config_file: Optional[Path]
     mbed_os_ref: Path
     cmakelists_file: Path
-    cmake_config_file: Optional[Path]
+    cmake_config_file: Path
+    cmake_build_dir: Path
 
     @classmethod
     def from_new(cls, root_path: Path) -> "MbedProgramFiles":
@@ -75,6 +78,7 @@ class MbedProgramFiles:
         main_cpp = root_path / MAIN_CPP_FILE_NAME
         gitignore = root_path / ".gitignore"
         cmake_config = root_path / CMAKE_CONFIG_FILE_PATH
+        cmake_build_dir = root_path / CMAKE_BUILD_DIR
 
         if mbed_os_ref.exists():
             raise ValueError(f"Program already exists at path {root_path}.")
@@ -89,6 +93,7 @@ class MbedProgramFiles:
             mbed_os_ref=mbed_os_ref,
             cmakelists_file=cmakelists_file,
             cmake_config_file=cmake_config,
+            cmake_build_dir=cmake_build_dir,
         )
 
     @classmethod
@@ -116,6 +121,7 @@ class MbedProgramFiles:
             mbed_os_ref=mbed_os_file,
             cmakelists_file=cmakelists_file,
             cmake_config_file=root_path / CMAKE_CONFIG_FILE_PATH,
+            cmake_build_dir=root_path / CMAKE_BUILD_DIR,
         )
 
 
