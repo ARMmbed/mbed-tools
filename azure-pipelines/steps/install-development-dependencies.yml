@@ -12,6 +12,7 @@ steps:
       python -m pipenv lock --dev-only -r --pre > dev-requirements.txt
       pip install -r dev-requirements.txt
       pip install pytest-azurepipelines
+      pip install tox
       pip install .
       pip list
     displayName: 'Install development dependencies'
