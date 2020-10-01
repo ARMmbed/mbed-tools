@@ -32,7 +32,7 @@ info() { echo -e "I: ${1}"; }
 #
 # Note: Expects 'deps_url' and 'deps_dir' to already be defined.
 #
-_install_gcc_and_ccache()
+_setup_build_env()
 {
   # Enable Ccache in Travis
   ccache -o compiler_check=content
@@ -69,4 +69,33 @@ _install_gcc_and_ccache()
 
   info "Installing 'gcc'"
   export "PATH=${PATH}:${gcc_path}/bin"
+
+  arm-none-eabi-gcc --version
+  pip install --upgrade cmake
+}
+
+_config_and_build()
+{
+    mbedtools configure -t GCC_ARM -m ${TARGET_NAME}
+
+    cmake -S . -B build -GNinja -DCMAKE_BUILD_TYPE=${PROFILE}
+    cmake --build build
+}
+
+_clone_dependencies()
+{
+  # We use manual clone, with depth and single branch = the fastest
+  git clone --depth=1 --single-branch --branch feature-cmake https://github.com/ARMmbed/${EXAMPLE_NAME}.git
+
+  if [ -z ${SUBEXAMPLE_NAME} ]; then
+      cd ${EXAMPLE_NAME}
+  else
+      cd ${EXAMPLE_NAME}/${SUBEXAMPLE_NAME}
+  fi
+
+  git clone --depth=1 --single-branch --branch feature-cmake https://github.com/ARMmbed/mbed-os.git
+
+  echo “” > mbed-os.lib
+
+  mbedtools checkout
 }
