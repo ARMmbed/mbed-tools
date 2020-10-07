@@ -62,7 +62,7 @@ class TestBuildCommand(TestCase):
         program = mbed_program.from_existing()
         with mock_project_directory(program, mbed_config_exists=True, build_tree_exists=False):
             runner = CliRunner()
-            runner.invoke(build)
+            runner.invoke(build, ["-m", "k64f", "-t", "gcc_arm"])
 
             generate_build_system.assert_called_once_with(program.root, program.files.cmake_build_dir, "develop")
 
@@ -115,7 +115,7 @@ class TestBuildCommand(TestCase):
             self.assertIsNotNone(result.exception)
             self.assertRegex(result.output, "--mbed-target")
 
-    def test_clean_forces_regeneration_of_config_and_build_system(
+    def test_build_system_regenerated_when_target_and_toolchain_passed(
         self, generate_config, mbed_program, build_project, generate_build_system
     ):
         program = mbed_program.from_existing()
@@ -124,7 +124,7 @@ class TestBuildCommand(TestCase):
             target = "k64f"
 
             runner = CliRunner()
-            runner.invoke(build, ["-t", toolchain, "-m", target, "--clean"])
+            runner.invoke(build, ["-t", toolchain, "-m", target])
 
             generate_config.assert_called_once_with(target.upper(), toolchain.upper(), program)
             generate_build_system.assert_called_once_with(program.root, program.files.cmake_build_dir, "develop")
