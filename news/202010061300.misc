@@ -1,0 +1,1 @@
+Replace pipenv with tox to run linting and pytest
