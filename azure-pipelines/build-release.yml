@@ -150,11 +150,12 @@ stages:
             inputs:
               versionSpec: '3.7'
 
-          - template: steps/install-development-dependencies.yml
+          - script: |
+              python -m pip install --upgrade tox
+              tox -e generatedocs -- $(Build.Repository.LocalPath)/docs/api
+            displayName: run tox -e generatedocs -- $(Build.Repository.LocalPath)/docs/api
 
-          - template: steps/generate-documentation.yml
-
-          - publish: $(temp_docs_path)
+          - publish: $(Build.Repository.LocalPath)/docs/api
             artifact: Documentation
             displayName: 'Publish documentation'
 
