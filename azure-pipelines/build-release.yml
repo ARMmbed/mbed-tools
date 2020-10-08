@@ -26,6 +26,12 @@ stages:
         strategy:
           maxParallel: 10
           matrix:
+            Assert_news:
+              python.version: '3.7'
+              vmImageName: ubuntu-latest
+              uploadCoverage: "false"
+              tox.env: checknews
+
             Linting_Py_3_6:
               python.version: '3.6'
               vmImageName: ubuntu-latest
@@ -114,26 +120,6 @@ stages:
   
           - template: steps/publish-code-coverage-results.yml
 
-  - stage: AssertNews
-    displayName: 'Checks news files'
-    dependsOn: []
-    jobs:
-      - job: News
-        displayName: 'Assert news files'
-        pool:
-          vmImage: 'ubuntu-latest'
-
-        steps:
-          - task: UsePythonVersion@0
-            displayName: 'Use Python 3.7'
-            inputs:
-              versionSpec: '3.7'
-
-          - script: |
-              python -m pip install --upgrade tox
-              tox -e checknews
-            displayName: 'Run check'
-
   - stage: DocBuild
     displayName: 'Build Documentation'
     dependsOn: []
@@ -183,7 +169,6 @@ stages:
     displayName: 'CI Checkpoint'
     dependsOn:
       - AnalyseTest
-      - AssertNews
       - DocBuild
       - Licensing
     jobs:
