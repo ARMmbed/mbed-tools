@@ -174,7 +174,8 @@ stages:
             inputs:
               versionSpec: '3.7'
 
-          - template: steps/install-development-dependencies.yml
+          - script: |
+              python -m pip install --upgrade tox
 
           - template: steps/generate-spdx-documents.yml
 
