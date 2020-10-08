@@ -26,50 +26,77 @@ stages:
         strategy:
           maxParallel: 10
           matrix:
+            Linting_Py_3_6:
+              python.version: '3.6'
+              vmImageName: ubuntu-latest
+              uploadCoverage: "false"
+              tox.env: linting
+
+            Linting_Py_3_7:
+              python.version: '3.7'
+              vmImageName: ubuntu-latest
+              uploadCoverage: "false"
+              tox.env: linting
+
+            Linting_Py_3_8:
+              python.version: '3.8'
+              vmImageName: ubuntu-latest
+              uploadCoverage: "false"
+              tox.env: linting
+
             Linux_Py_3_6:
               python.version: '3.6'
               vmImageName: ubuntu-latest
               uploadCoverage: "false"
+              tox.env: py36
 
             Linux_Py_3_7:
               python.version: '3.7'
               vmImageName: ubuntu-latest
               uploadCoverage: "false"
+              tox.env: py37
 
             Linux_Py_3_8:
               python.version: '3.8'
               vmImageName: ubuntu-latest
               uploadCoverage: "true"
+              tox.env: py38
 
             Windows_Py_3_6:
               python.version: '3.6'
               vmImageName: windows-latest
               uploadCoverage: "false"
+              tox.env: py36
 
             Windows_Py_3_7:
               python.version: '3.7'
               vmImageName: windows-latest
               uploadCoverage: "false"
+              tox.env: py37
 
             Windows_Py_3_8:
               python.version: '3.8'
               vmImageName: windows-latest
               uploadCoverage: "true"
+              tox.env: py38
 
             macOS_Py_3_6:
               python.version: '3.6'
               vmImageName: macOS-latest
               uploadCoverage: "false"
+              tox.env: py36
 
             macOS_Py_3_7:
               python.version: '3.7'
               vmImageName: macOS-latest
               uploadCoverage: "false"
+              tox.env: py37
 
             macOS_Py_3_8:
               python.version: '3.8'
               vmImageName: macOS-latest
               uploadCoverage: "true"
+              tox.env: py38
 
         pool:
           vmImage: $(vmImageName)
@@ -80,25 +107,11 @@ stages:
               versionSpec: '$(python.version)'
             displayName: 'Use Python $(python.version)'
 
-          - template: steps/install-development-dependencies.yml
-
-          # Static analysis is different for Python versions so should be run in each environment.
           - script: |
-              flake8
-            displayName: 'Static Analysis - general (flake8)'
-
-          - script: |
-              mypy src/mbed_tools
-            displayName: 'Static Analysis - type checks (mypy)'
-
-          - script: |
-              pip install pytest-azurepipelines
-            displayName: 'Add pytest plugin to upload test results to Azure UI'
-
-          - script: |
-              pytest
-            displayName: 'Run unit tests (pytest)'
-
+              python -m pip install --upgrade tox
+              tox -e $(tox.env)
+            displayName: run tox -e $(tox.env)
+  
           - template: steps/publish-code-coverage-results.yml
 
   - stage: AssertNews
