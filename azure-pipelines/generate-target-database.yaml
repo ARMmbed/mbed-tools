@@ -32,10 +32,7 @@ jobs:
 
       - script: |
           python -m pip install --upgrade pip wheel setuptools
-          pip install pipenv
-          python -m pipenv lock --dev-only -r --pre > dev-requirements.txt
-          pip install -r dev-requirements.txt
-          pip install pytest-azurepipelines
+          pip install -r requirements-test.txt
           pip install -e .
 
       - script: python ci_scripts/sync_board_database.py
