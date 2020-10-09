@@ -1,8 +1,8 @@
 # Development and Testing
 
-For development and testing purposes, it is essential to use a virtual environment. It is recommended that `pipenv >= 2018.11.26` is used.
+For development and testing purposes, it is essential to use a virtual environment.
 
-## Setup Python and Pipenv
+## Setup Python and tox
 
 `mbed-tools` is compatible with Python 3.6 or later.
 
@@ -16,16 +16,16 @@ Below are links to guides for correctly setting up a development ready version o
 
 On Windows we have also found the [Python Launcher for Windows](https://docs.python.org/3/using/windows.html) to be a reasonable alternative.
 
-After you have set up your Python 3 installation, install pipenv (the `--user` flag is important **never use `sudo` to install Python packages!**)
+After you have set up your Python 3 installation, install tox (the `--user` flag is important **never use `sudo` to install Python packages!**)
 
 ```bash
-pip install --user pipenv
+python(3) -m pip install --user tox
 ```
 
-Check that pipenv is in the binary path
+Check that tox is in the binary path
 
 ```bash
-pipenv --version
+tox --version
 ```
 
 If not, find the user base binary directory
@@ -49,25 +49,17 @@ Clone the `mbed-tools` GitHub repository
 git clone git@github.com:ARMmbed/mbed-tools.git
 ```
 
-Setup Pipenv to use Python 3 and install package development dependencies:
+Set up the development environment using tox (tox will create a development environment at mbed-tools/.venv):
 
 ```bash
 cd mbed-tools/
-pipenv --three
-pipenv install --dev --skip-lock
+tox -e dev
+source .venv/bin/activate
 ```
-
-You may omit the `--skip-lock` flag. Note creating the `Pipfile.lock` can take a long time!
 
 ## Unit Tests, Code Formatting and Static Analysis
 
-Shell into the virtual environment you have just created:
-
-```bash
-pipenv shell
-```
-
-Run `pre-commit` to run unit tests and static code analysis checks:
+After you have activated your development environment, run `pre-commit` to run unit tests and static code analysis checks:
 
 ```bash
 pre-commit run --all-files

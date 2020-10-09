@@ -8,7 +8,7 @@ You'll still need Mbed CLI for older versions of Mbed OS. You can install both t
 
 Mbed Tools is Python based, so you can install it with pip.
 
-**Tip:** We recommend using a virtual environment such as [Pipenv](https://github.com/pypa/pipenv/blob/master/README.md) to avoid Python dependency conflicts.
+**Tip:** We recommend using a virtual environment to avoid Python dependency conflicts.
 
 ## Prerequisite
 

@@ -1,6 +1,6 @@
 # Contribution Guide
 
-Mbed OS is an open source project and we really appreciate your contributions to the tools. We are committed to 
+Mbed OS is an open source project and we really appreciate your contributions to the tools. We are committed to
 fostering a welcoming community, please see our Code of Conduct, which can be found here:
 
 - [Code of Conduct](./CODE_OF_CONDUCT.md)
@@ -63,13 +63,13 @@ The `pre-commit` tool allows developers to easily install git hook scripts which
 must pass in our CI before a PR is merged. Using commit hooks ensures you can't commit code which violates our style
 and maintainability requirements.
 
-To install the commit hooks for the repository, run:
+To install the commit hooks for the repository (assuming you have activated your development environment as described in [the development guide](./DEVELOPMENT.md)), run:
+
 ```bash
-$ pipenv install --dev
-$ pipenv shell
 $ pre-commit install
 ```
-Our code checks and unit tests will now run automatically every time you try to `git commit` to the repository.
+Our code checks will now run automatically every time you try to `git commit` to the repository.
+
 If you prefer not to install the hook scripts, you can use
 ```bash
 $ pre-commit run
