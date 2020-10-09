@@ -241,7 +241,8 @@ stages:
 
                 - template: steps/override-checkout.yml
 
-                - template: steps/install-development-dependencies.yml
+                - script: |
+                    python -m pip install --upgrade tox
 
                 - template: steps/tag-and-release.yml
                   parameters:
