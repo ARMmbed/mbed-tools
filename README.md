@@ -39,7 +39,7 @@ The version scheme used follows [PEP440](https://www.python.org/dev/peps/pep-044
 
 - `<major>.<minor>.<patch>`
 
-Beta releases are used to give early access to new functionality, for testing and to get feedback on experimental 
+Beta releases are used to give early access to new functionality, for testing and to get feedback on experimental
 features. As such these releases may not be stable and should not be used for production. Additionally any interfaces
 introduced in a beta release may be removed or changed without notice. For **beta** releases the version will look as
 follows:
@@ -48,8 +48,7 @@ follows:
 
 ## Installation
 
-It is recommended that a virtual environment such as [Pipenv](https://github.com/pypa/pipenv/blob/master/README.md) is
-used for all installations to avoid Python dependency conflicts.
+We recommend installing `mbed-tools` in a Python virtual environment to avoid dependency conflicts.
 
 To install the most recent production quality release use:
 
