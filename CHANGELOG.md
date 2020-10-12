@@ -12,6 +12,37 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+"3.4.0" (2020-10-12)
+====================
+
+Features
+--------
+
+- Add build command porcelain to build an Mbed project using CMake and Ninja. (#20200929104817)
+- Replace assert-news with towncrier.check (#20201001170005)
+
+
+Improved Documentation
+----------------------
+
+- Advise on using Tox rather than pipenv virtual environment (#202010091700)
+
+
+Deprecations and Removals
+-------------------------
+
+- Remove consistency report checks (#202010091202)
+- Remove install-development-dependencies.yml (#202010091203)
+- Remove Pipfile (#202010091204)
+- Remove pipenv from generate-target-database.yaml (#2020100812003)
+
+
+Misc
+----
+
+- #202009291300, #202010061300, #202010091200, #202010091201, #2020100812000, #2020100812001, #2020100812002, #2020100812004, #20200925151500, #20200929160957
+
+
 "3.3.0" (2020-09-17)
 ====================
 

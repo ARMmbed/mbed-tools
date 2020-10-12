@@ -1,1 +1,0 @@
-Don't emit _PRESENT macros. Depend on Mbed OS to define these from CMake.

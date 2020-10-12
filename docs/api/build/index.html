@@ -48,12 +48,22 @@ The functionality covered in this package includes the following:
 - Execution of Mbed Pre-Build stages to determine appropriate configuration for Mbed OS and the build process.
 - Invocation of the build process for the command line tools and online build service.
 - Export of build instructions to third party command line tools and IDEs.
-&#34;&#34;&#34;</code></pre>
+&#34;&#34;&#34;
+from mbed_tools.build.build import build_project, generate_build_system
+from mbed_tools.build.config import generate_config</code></pre>
 </details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
+<dt><code class="name"><a title="mbed_tools.build.build" href="build.html">mbed_tools.build.build</a></code></dt>
+<dd>
+<div class="desc"><p>Configure and build a CMake project.</p></div>
+</dd>
+<dt><code class="name"><a title="mbed_tools.build.config" href="config.html">mbed_tools.build.config</a></code></dt>
+<dd>
+<div class="desc"><p>Parses the Mbed configuration system and generates a CMake config script.</p></div>
+</dd>
 <dt><code class="name"><a title="mbed_tools.build.exceptions" href="exceptions.html">mbed_tools.build.exceptions</a></code></dt>
 <dd>
 <div class="desc"><p>Public exceptions raised by the package.</p></div>
@@ -80,6 +90,8 @@ The functionality covered in this package includes the following:
 </li>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
+<li><code><a title="mbed_tools.build.build" href="build.html">mbed_tools.build.build</a></code></li>
+<li><code><a title="mbed_tools.build.config" href="config.html">mbed_tools.build.config</a></code></li>
 <li><code><a title="mbed_tools.build.exceptions" href="exceptions.html">mbed_tools.build.exceptions</a></code></li>
 </ul>
 </li>

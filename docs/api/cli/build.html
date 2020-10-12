@@ -8,8 +8,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
-<title>mbed_tools.cli.configure API documentation</title>
-<meta name="description" content="Command to generate the application CMake configuration script used by the build system." />
+<title>mbed_tools.cli.build API documentation</title>
+<meta name="description" content="Command to build an Mbed project using CMake." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,10 +23,10 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>mbed_tools.cli.configure</code></h1>
+<h1 class="title">Module <code>mbed_tools.cli.build</code></h1>
 </header>
 <section id="section-intro">
-<p>Command to generate the application CMake configuration script used by the build system.</p>
+<p>Command to build an Mbed project using CMake.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -35,52 +35,65 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-&#34;&#34;&#34;Command to generate the application CMake configuration script used by the build system.&#34;&#34;&#34;
+&#34;&#34;&#34;Command to build an Mbed project using CMake.&#34;&#34;&#34;
+import os
 import pathlib
 
 import click
 
+from mbed_tools.build import build_project, generate_build_system, generate_config
 from mbed_tools.project import MbedProgram
-from mbed_tools.build import generate_config
 
 
-@click.command(
-    help=&#34;Generate an Mbed OS config CMake file and write it to a .mbedbuild folder in the program directory.&#34;
-)
+@click.command(name=&#34;build&#34;, help=&#34;Build an Mbed project.&#34;)
 @click.option(
     &#34;-t&#34;,
     &#34;--toolchain&#34;,
     type=click.Choice([&#34;ARM&#34;, &#34;GCC_ARM&#34;], case_sensitive=False),
-    required=True,
     help=&#34;The toolchain you are using to build your app.&#34;,
 )
-@click.option(&#34;-m&#34;, &#34;--mbed-target&#34;, required=True, help=&#34;A build target for an Mbed-enabled device, eg. K64F&#34;)
+@click.option(&#34;-m&#34;, &#34;--mbed-target&#34;, help=&#34;A build target for an Mbed-enabled device, e.g. K64F.&#34;)
+@click.option(&#34;-b&#34;, &#34;--build-type&#34;, default=&#34;develop&#34;, help=&#34;The build type (release, develop or debug).&#34;)
+@click.option(&#34;-c&#34;, &#34;--clean&#34;, is_flag=True, default=False, help=&#34;Perform a &#39;clean&#39; build.&#34;)
 @click.option(
     &#34;-p&#34;,
     &#34;--program-path&#34;,
-    type=click.Path(),
-    default=&#34;.&#34;,
-    help=&#34;Path to local Mbed program. By default is the current working directory.&#34;,
+    default=os.getcwd(),
+    help=&#34;Path to local Mbed program. By default it is the current working directory.&#34;,
 )
-def configure(toolchain: str, mbed_target: str, program_path: str) -&gt; None:
-    &#34;&#34;&#34;Exports a mbed_config.cmake file to a .mbedbuild directory in the program root.
+def build(program_path: str, build_type: str, toolchain: str = &#34;&#34;, mbed_target: str = &#34;&#34;, clean: bool = False) -&gt; None:
+    &#34;&#34;&#34;Configure and build an Mbed project using CMake and Ninja.
 
-    The parameters set in the CMake file will be dependent on the combination of
-    toolchain and Mbed target provided and these can then control which parts of
-    Mbed OS are included in the build.
+    If the project has already been configured and contains &#39;.mbedbuild/mbed_config.cmake&#39;, this command will skip the
+    Mbed configuration step and invoke CMake.
 
-    This command will create the .mbedbuild directory at the program root if it doesn&#39;t
-    exist.
+    If the CMake configuration step has already been run previously (i.e a CMake build tree exists), then just try to
+    build the project immediately using Ninja.
 
     Args:
-        toolchain: the toolchain you are using (eg. GCC_ARM, ARM)
-        mbed_target: the target you are building for (eg. K64F)
-        program_path: the path to the local Mbed program
+       program_path: Path to the Mbed project.
+       build_type: The Mbed build profile (debug, develop or release).
+       toolchain: The toolchain to use for the build.
+       mbed_target: The name of the Mbed target to build for.
+       clean: Force regeneration of config and build system before building.
     &#34;&#34;&#34;
     program = MbedProgram.from_existing(pathlib.Path(program_path))
-    mbed_target = mbed_target.upper()
-    output_path = generate_config(mbed_target, toolchain, program)
-    click.echo(f&#34;mbed_config.cmake has been generated and written to &#39;{str(output_path.resolve())}&#39;&#34;)</code></pre>
+    mbed_config_file = program.files.cmake_config_file
+    if not mbed_config_file.exists() or clean:
+        click.echo(&#34;Generating Mbed config...&#34;)
+        if not toolchain:
+            raise click.UsageError(&#34;--toolchain argument is required when generating Mbed config!&#34;)
+
+        if not mbed_target:
+            raise click.UsageError(&#34;--mbed-target argument is required when generating Mbed config!&#34;)
+
+        generate_config(mbed_target.upper(), toolchain, program)
+
+    build_tree = program.files.cmake_build_dir
+    if not build_tree.exists() or clean:
+        generate_build_system(program.root, build_tree, build_type)
+
+    build_project(build_tree)</code></pre>
 </details>
 </section>
 <section>

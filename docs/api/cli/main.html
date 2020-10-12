@@ -47,10 +47,9 @@ import click
 from mbed_tools.lib.logging import set_log_level, MbedToolsHandler
 
 from mbed_tools.cli.configure import configure
-from mbed_tools.cli.env_cli import cli as env_cli
 from mbed_tools.cli.list_connected_devices import list_connected_devices
 from mbed_tools.cli.project_management import init, clone, checkout, libs
-
+from mbed_tools.cli.build import build
 
 CONTEXT_SETTINGS = dict(help_option_names=[&#34;-h&#34;, &#34;--help&#34;])
 LOGGER = logging.getLogger(__name__)
@@ -110,7 +109,8 @@ cli.add_command(list_connected_devices, &#34;devices&#34;)
 cli.add_command(init, &#34;init&#34;)
 cli.add_command(checkout, &#34;checkout&#34;)
 cli.add_command(clone, &#34;clone&#34;)
-cli.add_command(libs, &#34;libs&#34;)</code></pre>
+cli.add_command(libs, &#34;libs&#34;)
+cli.add_command(build, &#34;build&#34;)</code></pre>
 </details>
 </section>
 <section>
