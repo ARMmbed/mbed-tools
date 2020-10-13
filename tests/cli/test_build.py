@@ -128,3 +128,18 @@ class TestBuildCommand(TestCase):
 
             generate_config.assert_called_once_with(target.upper(), toolchain.upper(), program)
             generate_build_system.assert_called_once_with(program.root, program.files.cmake_build_dir, "develop")
+
+    def test_build_folder_removed_when_clean_flag_passed(
+        self, generate_config, mbed_program, build_project, generate_build_system
+    ):
+        program = mbed_program.from_existing()
+        with mock_project_directory(program, mbed_config_exists=True, build_tree_exists=True):
+            toolchain = "gcc_arm"
+            target = "k64f"
+
+            runner = CliRunner()
+            runner.invoke(build, ["-t", toolchain, "-m", target, "-c"])
+
+            generate_config.assert_called_once_with(target.upper(), toolchain.upper(), program)
+            generate_build_system.assert_called_once_with(program.root, program.files.cmake_build_dir, "develop")
+            self.assertFalse(program.files.cmake_build_dir.exists())

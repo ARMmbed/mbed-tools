@@ -5,6 +5,7 @@
 """Command to build an Mbed project using CMake."""
 import os
 import pathlib
+import shutil
 
 import click
 
@@ -21,13 +22,14 @@ from mbed_tools.project import MbedProgram
 )
 @click.option("-m", "--mbed-target", help="A build target for an Mbed-enabled device, e.g. K64F.")
 @click.option("-b", "--build-type", default="develop", help="The build type (release, develop or debug).")
+@click.option("-c", "--clean", is_flag=True, default=False, help="Perform a clean build.")
 @click.option(
     "-p",
     "--program-path",
     default=os.getcwd(),
     help="Path to local Mbed program. By default it is the current working directory.",
 )
-def build(program_path: str, build_type: str, toolchain: str = "", mbed_target: str = "") -> None:
+def build(program_path: str, build_type: str, toolchain: str = "", mbed_target: str = "", clean: bool = False) -> None:
     """Configure and build an Mbed project using CMake and Ninja.
 
     If the project has already been configured and contains '.mbedbuild/mbed_config.cmake', this command will skip the
@@ -41,15 +43,20 @@ def build(program_path: str, build_type: str, toolchain: str = "", mbed_target: 
        build_type: The Mbed build profile (debug, develop or release).
        toolchain: The toolchain to use for the build.
        mbed_target: The name of the Mbed target to build for.
+       clean: Perform a clean build.
     """
     program = MbedProgram.from_existing(pathlib.Path(program_path))
     mbed_config_file = program.files.cmake_config_file
     build_tree = program.files.cmake_build_dir
+    if clean and build_tree.exists():
+        shutil.rmtree(build_tree)
+
     if any([not mbed_config_file.exists(), not build_tree.exists(), mbed_target, toolchain]):
         click.echo("Configuring project and generating build system...")
         _validate_target_and_toolchain_args(mbed_target, toolchain)
         generate_config(mbed_target.upper(), toolchain, program)
         generate_build_system(program.root, build_tree, build_type)
+
     click.echo("Building Mbed project...")
     build_project(build_tree)
 
