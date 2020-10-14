@@ -3,12 +3,16 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Configure and build a CMake project."""
+import logging
 import pathlib
 import subprocess
 
 from typing import Optional
 
 from mbed_tools.build.exceptions import MbedBuildError
+
+
+logger = logging.getLogger(__name__)
 
 
 def build_project(build_dir: pathlib.Path, target: Optional[str] = None) -> None:
@@ -35,6 +39,7 @@ def generate_build_system(source_dir: pathlib.Path, build_dir: pathlib.Path, pro
 
 def _cmake_wrapper(*cmake_args: str) -> None:
     try:
+        logger.debug("Running CMake with args: %s", cmake_args)
         subprocess.run(["cmake", *cmake_args], check=True)
     except subprocess.CalledProcessError:
         raise MbedBuildError("CMake invocation failed!")
