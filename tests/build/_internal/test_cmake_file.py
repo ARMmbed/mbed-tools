@@ -25,6 +25,7 @@ class TestGenerateCMakeListsFile(TestCase):
         mbed_target = "K64F"
         toolchain_name = "GCC"
         target["supported_c_libs"] = {toolchain_name.lower(): ["small", "std"]}
+        target["supported_application_profiles"] = ["full", "bare-metal"]
 
         result = generate_mbed_config_cmake_file(mbed_target, target, config, toolchain_name)
 
@@ -49,6 +50,7 @@ class TestRendersCMakeListsFile(TestCase):
         config = ConfigFactory()
         toolchain_name = "baz"
         target["supported_c_libs"] = {toolchain_name.lower(): ["small", "std"]}
+        target["supported_application_profiles"] = ["full", "bare-metal"]
         result = _render_mbed_config_cmake_template(target, config, toolchain_name, "target_name")
 
         for label in target["labels"] + target["extra_labels"]:
@@ -61,3 +63,6 @@ class TestRendersCMakeListsFile(TestCase):
             self.assertIn(toolchain, result)
             for supported_c_libs in toolchain:
                 self.assertIn(supported_c_libs, result)
+
+        for supported_application_profiles in target["supported_application_profiles"]:
+            self.assertIn(supported_application_profiles, result)
