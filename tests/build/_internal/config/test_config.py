@@ -60,6 +60,13 @@ class TestConfigFromSources(TestCase):
                 source_b = SourceFactory(overrides={key: "boom?"})
                 Config.from_sources([source_a, source_b])
 
+    def test_ignores_present_option(self):
+        source = SourceFactory(config={"mbed_component.present": {"help": "Mbed Component", "value": True}})
+
+        config = Config.from_sources([source])
+
+        self.assertFalse(config.options)
+
 
 class TestOptionBuild(TestCase):
     def test_builds_option_from_config_data(self):
