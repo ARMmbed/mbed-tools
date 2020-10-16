@@ -60,6 +60,7 @@ def _render_mbed_config_cmake_template(
         "target_macros": target_build_attributes["macros"],
         "supported_form_factors": target_build_attributes["supported_form_factors"],
         "supported_c_libs": supported_c_libs,
+        "supported_application_profiles": target_build_attributes["supported_application_profiles"],
         "c_lib": target_build_attributes["c_lib"],
         "core": target_build_attributes["core"],
         "printf_lib": target_build_attributes["printf_lib"],
