@@ -5,7 +5,8 @@ parameters:
 
 steps:
   - script: |
-      tox -e release -- -b ${{ parameters.currentBranch }} --release-type=${{ parameters.releaseType }} -vv
+      git switch -c ${{ parameters.currentBranch }} --track origin/${{ parameters.currentBranch }}
+      tox -e release -- --release-type=${{ parameters.releaseType }} -vv
     displayName: ${{ parameters.message }}
     env:
       GIT_TOKEN: $(GIT_TOKEN)
