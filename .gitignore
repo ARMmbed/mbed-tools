@@ -11,6 +11,7 @@ Pipfile.lock
 *.pyc
 __pycache__/
 *.egg-info/
+build/
 
 # Coverage.py
 .coverage*
