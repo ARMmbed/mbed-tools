@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -e
+
+# Update the target database snapshot with the latest targets
+python ci_scripts/sync_board_database.py -vvv
+git add src/mbed_tools/targets/_internal/data/board_database_snapshot.json
+
+# Generate API docs and add license headers to them
+generate-docs --output_dir docs/api
+license-files
+git add docs/api
+
+NEW_VERSION=$(python ci_scripts/bump_version.py -vvv -n news/)
+
+# Generate changelog from news fragments
+towncrier --yes --version "${NEW_VERSION}"
+git add ./CHANGELOG.md
+
+# Commit and tag new version
+git commit -m "Prepare mbed-tools release"
+git tag "${NEW_VERSION}"
