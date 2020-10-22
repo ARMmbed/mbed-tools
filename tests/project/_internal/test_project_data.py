@@ -108,13 +108,15 @@ class TestMbedLibReference(TestCase):
         root = pathlib.Path(fs, "foo")
         url = "https://github.com/mylibrepo"
         ref = "latest"
-        full_ref = f"{url}#{ref}"
-        lib = make_mbed_lib_reference(root, ref_url=full_ref)
+        references = [f"{url}#{ref}", f"{url}/#{ref}"]
 
-        reference = lib.get_git_reference()
+        for full_ref in references:
+            lib = make_mbed_lib_reference(root, ref_url=full_ref)
 
-        self.assertEqual(reference.repo_url, url)
-        self.assertEqual(reference.ref, ref)
+            reference = lib.get_git_reference()
+
+            self.assertEqual(reference.repo_url, url)
+            self.assertEqual(reference.ref, ref)
 
 
 class TestMbedOS(TestCase):
