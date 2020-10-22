@@ -9,13 +9,8 @@ from setuptools import setup, find_packages
 
 PROJECT_SLUG = "mbed-tools"
 SOURCE_DIR = "src/mbed_tools"
-__version__ = None
 
 repository_dir = os.path.dirname(__file__)
-
-# Read package version, this will set the variable `__version__` to the current version.
-with open(os.path.join(repository_dir, SOURCE_DIR, "_version.py"), encoding="utf8") as fh:
-    exec(fh.read())
 
 # Use readme needed as long description in PyPI
 with open(os.path.join(repository_dir, "README.md"), encoding="utf8") as fh:
@@ -62,7 +57,6 @@ setup(
     packages=find_packages(where="src"),
     python_requires=">=3.6,<4",
     url=f"https://github.com/ARMmbed/{PROJECT_SLUG}",
-    version=__version__,
     entry_points={
         "console_scripts": [
             "mbedtools=mbed_tools.cli.main:cli",
