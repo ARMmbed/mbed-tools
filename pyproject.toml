@@ -4,7 +4,7 @@
 #
 
 [build-system]
-requires = ["setuptools>=40.8.0", "wheel"]
+requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
 build-backend = "setuptools.build_meta"
 
 [ProjectConfig]
@@ -51,6 +51,9 @@ COMMIT = "COMMIT"
 major = "news/*.major"
 minor = "news/*.feature"
 patch = "news/*.bugfix"
+
+[tool.setuptools_scm]
+local_scheme = "no-local-version"
 
 [tool.towncrier]
 directory = "news"
