@@ -42,6 +42,10 @@ class MbedLibReference:
         """
         raw_ref = self.reference_file.read_text().strip()
         url, sep, ref = raw_ref.partition("#")
+
+        if url.endswith("/"):
+            url = url[:-1]
+
         return git_utils.GitReference(repo_url=url, ref=ref)
 
 
