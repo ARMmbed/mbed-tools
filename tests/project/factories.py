@@ -5,6 +5,11 @@
 from functools import wraps
 from tempfile import TemporaryDirectory
 from mbed_tools.project._internal.libraries import MbedLibReference
+from mbed_tools.project._internal.project_data import (
+    CMAKELISTS_FILE_NAME,
+    APP_CONFIG_FILE_NAME,
+    MBED_OS_REFERENCE_FILE_NAME,
+)
 
 
 def patchfs(func):
@@ -16,12 +21,13 @@ def patchfs(func):
     return wrapper
 
 
-def make_mbed_program_files(root, config_file_name="mbed_app.json"):
+def make_mbed_program_files(root, config_file_name=APP_CONFIG_FILE_NAME):
     if not root.exists():
         root.mkdir()
 
-    (root / "mbed-os.lib").touch()
+    (root / MBED_OS_REFERENCE_FILE_NAME).touch()
     (root / config_file_name).touch()
+    (root / CMAKELISTS_FILE_NAME).touch()
 
 
 def make_mbed_lib_reference(root, name="mylib.lib", resolved=False, ref_url=None):
