@@ -50,7 +50,7 @@ class LibraryReferences:
     """Manages library references in an MbedProgram."""
 
     root: Path
-    ignore_paths: List[Path]
+    ignore_paths: List[str]
 
     def resolve(self) -> None:
         """Recursively clone all dependencies defined in .lib files."""
@@ -106,4 +106,4 @@ class LibraryReferences:
 
     def _in_ignore_path(self, lib_reference_path: Path) -> bool:
         """Check if a library reference is in a path we want to ignore."""
-        return any(p in lib_reference_path.parents for p in self.ignore_paths)
+        return any(p in lib_reference_path.parts for p in self.ignore_paths)

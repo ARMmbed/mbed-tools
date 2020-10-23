@@ -18,7 +18,7 @@ class TestLibraryReferences(TestCase):
         lib = make_mbed_lib_reference(fs_root, ref_url="https://git")
         mock_clone.side_effect = lambda url, dst_dir: dst_dir.mkdir()
 
-        lib_refs = LibraryReferences(fs_root, ignore_paths=[fs_root / "mbed-os"])
+        lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
         lib_refs.resolve()
 
         mock_clone.assert_called_once_with(lib.get_git_reference().repo_url, lib.source_code_path)
@@ -40,7 +40,7 @@ class TestLibraryReferences(TestCase):
             lib2.source_code_path.mkdir(),
         )
 
-        lib_refs = LibraryReferences(fs_root, ignore_paths=[fs_root / "mbed-os"])
+        lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
         lib_refs.resolve()
 
         self.assertTrue(lib.is_resolved())
@@ -53,7 +53,7 @@ class TestLibraryReferences(TestCase):
         fs_root = pathlib.Path(fs, "foo")
         make_mbed_lib_reference(fs_root, ref_url="https://git", resolved=True)
 
-        lib_refs = LibraryReferences(fs_root, ignore_paths=[fs_root / "mbed-os"])
+        lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
         lib_refs.checkout(force=False)
 
         mock_checkout.assert_not_called()
@@ -65,7 +65,7 @@ class TestLibraryReferences(TestCase):
         fs_root = pathlib.Path(fs, "foo")
         lib = make_mbed_lib_reference(fs_root, ref_url="https://git#lajdhalk234", resolved=True)
 
-        lib_refs = LibraryReferences(fs_root, ignore_paths=[fs_root / "mbed-os"])
+        lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
         lib_refs.checkout(force=False)
 
         mock_checkout.assert_called_once_with(mock_init.return_value, lib.get_git_reference().ref, force=False)
@@ -78,7 +78,7 @@ class TestLibraryReferences(TestCase):
         make_mbed_lib_reference(fs_root, ref_url="https://git")
         mock_clone.side_effect = lambda url, dst_dir: dst_dir.mkdir()
 
-        lib_refs = LibraryReferences(fs_root, ignore_paths=[fs_root / "mbed-os"])
+        lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
         lib_refs.resolve()
 
         mock_checkout.assert_not_called()
@@ -91,7 +91,19 @@ class TestLibraryReferences(TestCase):
         lib = make_mbed_lib_reference(fs_root, ref_url="https://git#lajdhalk234")
         mock_clone.side_effect = lambda url, dst_dir: dst_dir.mkdir()
 
-        lib_refs = LibraryReferences(fs_root, ignore_paths=[fs_root / "mbed-os"])
+        lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
         lib_refs.resolve()
 
         mock_checkout.assert_called_once_with(None, lib.get_git_reference().ref)
+
+    @patchfs
+    @mock.patch("mbed_tools.project._internal.git_utils.checkout", autospec=True)
+    @mock.patch("mbed_tools.project._internal.git_utils.init", autospec=True)
+    def test_does_not_resolve_references_in_ignore_paths(self, mock_init, mock_checkout, mock_clone, fs):
+        fs_root = pathlib.Path(fs, "mbed-os")
+        make_mbed_lib_reference(fs_root, ref_url="https://git#lajdhalk234")
+
+        lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
+        lib_refs.resolve()
+
+        mock_clone.assert_not_called()
