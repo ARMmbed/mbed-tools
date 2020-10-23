@@ -61,22 +61,12 @@ class TestInitialiseProgram(TestCase):
         self.assertEqual(program.files, MbedProgramFiles.from_existing(program_root))
 
     @patchfs
-    @mock.patch("mbed_tools.project._internal.git_utils.clone", autospec=True)
-    def test_from_url_raises_if_check_mbed_os_is_true_and_mbed_os_dir_nonexistent(self, mock_clone, fs):
-        fs_root = pathlib.Path(fs, "foo")
-        url = "https://validrepo.com"
-        mock_clone.side_effect = lambda *args: make_mbed_program_files(fs_root)
-
-        with self.assertRaises(MbedOSNotFound):
-            MbedProgram.from_url(url, fs_root, check_mbed_os=True)
-
-    @patchfs
     @mock.patch("mbed_tools.project.mbed_program.git_utils.clone", autospec=True)
     def test_from_url_returns_valid_program(self, mock_clone, fs):
         fs_root = pathlib.Path(fs, "foo")
         url = "https://valid"
         mock_clone.side_effect = lambda *args: make_mbed_program_files(fs_root)
-        program = MbedProgram.from_url(url, fs_root, False)
+        program = MbedProgram.from_url(url, fs_root)
 
         self.assertEqual(program.files, MbedProgramFiles.from_existing(fs_root))
         mock_clone.assert_called_once_with(url, fs_root)

@@ -44,7 +44,7 @@ class MbedProgram:
         self.lib_references = LibraryReferences(root=self.root, ignore_paths=[self.mbed_os.root.name])
 
     @classmethod
-    def from_url(cls, url: str, dst_path: Path, check_mbed_os: bool = True) -> "MbedProgram":
+    def from_url(cls, url: str, dst_path: Path) -> "MbedProgram":
         """Fetch an Mbed program from a remote URL.
 
         Args:
@@ -55,7 +55,7 @@ class MbedProgram:
         git_utils.clone(url, dst_path)
         program_files = MbedProgramFiles.from_existing(dst_path)
         try:
-            mbed_os = MbedOS.from_existing(dst_path / MBED_OS_DIR_NAME, check_mbed_os)
+            mbed_os = MbedOS.from_existing(dst_path / MBED_OS_DIR_NAME, False)
         except ValueError as mbed_err:
             raise MbedOSNotFound(f"{mbed_err}")
 

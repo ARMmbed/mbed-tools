@@ -26,7 +26,7 @@ def clone_project(url: str, dst_path: Any = None, recursive: bool = False) -> No
     if not dst_path:
         dst_path = pathlib.Path(git_data["dst_path"])
 
-    program = MbedProgram.from_url(url, dst_path, check_mbed_os=False)
+    program = MbedProgram.from_url(url, dst_path)
     if recursive:
         program.resolve_libraries()
 

@@ -32,13 +32,13 @@ class TestCloneProject(TestCase):
         url = "https://git.com/gitorg/repo"
         clone_project(url, recursive=False)
 
-        mock_program.from_url.assert_called_once_with(url, pathlib.Path(url.rsplit("/", maxsplit=1)[-1]), False)
+        mock_program.from_url.assert_called_once_with(url, pathlib.Path(url.rsplit("/", maxsplit=1)[-1]))
 
     def test_resolves_libs_when_recursive_is_true(self, mock_program):
         url = "https://git.com/gitorg/repo"
         clone_project(url, recursive=True)
 
-        mock_program.from_url.assert_called_once_with(url, pathlib.Path(url.rsplit("/", maxsplit=1)[-1]), False)
+        mock_program.from_url.assert_called_once_with(url, pathlib.Path(url.rsplit("/", maxsplit=1)[-1]))
         mock_program.from_url.return_value.resolve_libraries.assert_called_once()
 
 
