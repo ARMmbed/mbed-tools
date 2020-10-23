@@ -26,7 +26,6 @@ class MbedProgram:
     """Represents an Mbed program.
 
     An `MbedProgram` consists of:
-        * A git repository
         * A copy of, or reference to, `MbedOS`
         * A set of `MbedProgramFiles`
         * A collection of references to external libraries, defined in .lib files located in the program source tree
