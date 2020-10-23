@@ -113,8 +113,7 @@ class MbedProgramFiles:
 
         cmakelists_file = root_path / CMAKELISTS_FILE_NAME
         if not cmakelists_file.exists():
-            logger.warning("No CMakeLists.txt found in the program root. Creating it...")
-            render_cmakelists_template(cmakelists_file, root_path.stem)
+            logger.warning("No CMakeLists.txt found in the program root.")
 
         return cls(
             app_config_file=app_config,
