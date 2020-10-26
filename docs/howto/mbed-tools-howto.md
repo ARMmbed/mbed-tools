@@ -207,7 +207,7 @@ Use CMake to build your application:
 
 We can use a single command which will configure (set up your target and toolchain) and build the project.
 
-    1. To build and configure:
+1. To build and configure:
 
     ```
     mbed-tools build -m <target> -t <toolchain>
@@ -221,7 +221,7 @@ We can use a single command which will configure (set up your target and toolcha
     mbed-tools build -m K64F -t GCC_ARM
     ```
 
-    1. To perform an iterative build on previously configured target:
+1. To perform an iterative build on previously configured target:
 
     ```
     mbed-tools build
