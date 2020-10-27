@@ -1,0 +1,44 @@
+trigger:
+  branches:
+    include:
+    - master
+  tags:
+    include:
+    - '*'
+
+pr:
+  - none
+
+stages:
+  - stage: ReleaseToPyPI
+    displayName: 'Production Release'
+    jobs:
+      - deployment: PyPIRelease
+        displayName: 'PyPI Release'
+        environment: 'pypi-release'
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: 'ubuntu-latest'
+              steps:
+                - task: UsePythonVersion@0
+                  inputs:
+                    versionSpec: '3.7'
+
+                - template: steps/determine-current-branch.yml
+
+                - template: steps/override-checkout.yml
+
+                - script: |
+                    python -m pip install --upgrade tox
+                    tox -e py37
+                  displayName: "Run pytests"
+
+                - script: |
+                    python -m pip install --upgrade tox
+                    tox -e pypirelease -- -p $TWINE_PASSWORD -u $TWINE_USERNAME
+                  displayName: "PyPI release"
+                  env:
+                    TWINE_USERNAME: $(TWINE_USERNAME)
+                    TWINE_PASSWORD: $(TWINE_PASSWORD)

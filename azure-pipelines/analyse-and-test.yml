@@ -4,15 +4,8 @@
 # - Performs static analysis and runs test on multiple Python versions and host platforms.
 # - Uploads test coverage to Code Climate
 # - Generates reference documentation
-# - Optionally releases the software on PyPI
 
-# Rebuild after commits to master for GA releases, beta for pre-release and release branches for patches.
-trigger:
-  - master
-  - beta
-  - releases/*
-
-# Trigger on a PR to master, beta or releases branches (this includes PRs from forks but secrets are not exposed).
+# Trigger on a PR to master, beta or releases branches.
 pr:
   - master
   - beta
@@ -117,7 +110,7 @@ stages:
               python -m pip install --upgrade tox
               tox -e $(tox.env)
             displayName: run tox -e $(tox.env)
-  
+
           - template: steps/publish-code-coverage-results.yml
 
   - stage: DocBuild
@@ -163,89 +156,3 @@ stages:
               python -m pip install --upgrade tox
 
           - template: steps/generate-spdx-documents.yml
-
-  # Collect test and build stages together before the release stages to provide a pass/fail point for the status badge.
-  - stage: CiCheckpoint
-    displayName: 'CI Checkpoint'
-    dependsOn:
-      - AnalyseTest
-      - DocBuild
-      - Licensing
-    jobs:
-      - job: ChecksPassing
-        displayName: 'Checks Passing'
-        # A dummy job is required due to a bug in Azure which runs the previous job if nothing is defined.
-        steps:
-          - bash: echo "All prerequisite stages have passed and the package should be suitable for release."
-
-  - stage: BetaRelease
-    displayName: 'Beta Release'
-    # Only allow beta releases if the tests pass and we are on the beta branch.
-    dependsOn:
-      - CiCheckpoint
-    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/beta'))
-    jobs:
-      - deployment: PyPIBetaRelease
-        displayName: 'PyPI Beta Release'
-        # The following environment has a manual approval step to gate releases.
-        # This can only be created and configured within the Environment section of Pipelines.
-        # The release can be approved from the Azure pipeline run.
-        environment: 'PyPI Release'
-        strategy:
-          runOnce:
-            deploy:
-              pool:
-                vmImage: 'ubuntu-latest'
-              steps:
-                - task: UsePythonVersion@0
-                  inputs:
-                    versionSpec: '3.7'
-
-                - template: steps/determine-current-branch.yml
-
-                - template: steps/override-checkout.yml
-
-                - script: |
-                    python -m pip install --upgrade tox
-
-                - template: steps/tag-and-release.yml
-                  parameters:
-                    message: 'Beta Release'
-                    releaseType: 'beta'
-                    currentBranch: $(current_branch)
-
-  - stage: ProductionReleasePyPI
-    displayName: 'Production Release'
-    # Only allow production releases if the tests pass and we are on the master branch.
-    dependsOn:
-      - CiCheckpoint
-    condition: and(succeeded(), eq(variables['build.sourceBranch'], 'refs/heads/master'))
-    jobs:
-      - deployment: PyPIProductionRelease
-        displayName: 'PyPI Production Release'
-        # The following environment has a manual approval step to gate releases.
-        # This can only be created and configured within the Environment section of Pipelines.
-        # The release can be approved from the Azure pipeline run.
-        environment: 'PyPI Release'
-        strategy:
-          runOnce:
-            deploy:
-              pool:
-                vmImage: 'ubuntu-latest'
-              steps:
-                - task: UsePythonVersion@0
-                  inputs:
-                    versionSpec: '3.7'
-
-                - template: steps/determine-current-branch.yml
-
-                - template: steps/override-checkout.yml
-
-                - script: |
-                    python -m pip install --upgrade tox
-
-                - template: steps/tag-and-release.yml
-                  parameters:
-                    message: 'Production Release'
-                    releaseType: 'release'
-                    currentBranch: $(current_branch)
