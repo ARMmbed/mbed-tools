@@ -1,12 +1,14 @@
-# Mbed Tools
+# Mbed CLI 2
 
-Starting with version 6.x, Mbed OS is moving from Mbed CLI to a new build tool: it's cmake-based,
-You'll still need Mbed CLI for older versions of Mbed OS. You can install both tools side by side.
+Starting with version 6.x, Mbed OS is moving to Mbed CLI 2. It uses Ninja as a build system, and CMake to generate the build environment and manage the build process in a compiler-independent manner.
 
+Mbed CLI 2 parses the Mbed OS build configuration and outputs it to a format CMake can read. It also provides a user friendly interface to CMake and Ninja so you can configure, generate and execute builds with a single command.
+
+**Note:** You'll still need Mbed CLI 1 for older versions of Mbed OS (6.x and older). You can install both tools side by side.
 
 # Install or upgrade
 
-Mbed Tools is Python based, so you can install it with pip.
+Mbed CLI 2 is a Python package called `mbed-tools`, so you can install it with pip.
 
 **Tip:** We recommend using a virtual environment to avoid Python dependency conflicts.
 
@@ -14,7 +16,7 @@ Mbed Tools is Python based, so you can install it with pip.
 
 - Python 3.6 or newer. Install for [Windows](https://docs.python.org/3/using/windows.html), [Linux](https://docs.python.org/3/using/unix.html) or [macOS](https://docs.python.org/3/using/mac.html).
 - Pip (if not included in your Python installation). [Install for all operating systems](https://pip.pypa.io/en/stable/installing/).
-- cmake. [Install version 3.18.1 or newer for all operating systems](https://cmake.org/install/).
+- CMake. [Install version 3.18.1 or newer for all operating systems](https://cmake.org/install/).
 - Ninja [Install version 1.0 or newer for all operating systems](https://github.com/ninja-build/ninja/wiki/Pre-built-Ninja-packages).
 
 ## Install
@@ -100,7 +102,7 @@ mbed-tools clone <example> <PATH>
 ````
 
 - [mbed-os-example-blinky](https://github.com/ARMmbed/mbed-os-example-blinky)
-- [mbed-os-example-ble](https://github.com/ARMmbed/mbed-os-example-ble) - use the BLE button example.
+- [mbed-os-example-ble](https://github.com/ARMmbed/mbed-os-example-ble) - use the BLE LED example.
 - [mbed-os-example-cellular](https://github.com/ARMmbed/mbed-os-example-cellular)
 - [mbed-os-example-devicekey](https://github.com/ARMmbed/mbed-os-example-devicekey)
 - [mbed-os-example-kvstore](https://github.com/ARMmbed/mbed-os-example-kvstore)
@@ -118,7 +120,7 @@ Each project depends on two sets of configurations:
 
 ### Project environment variables (Optional)
 
-Mbed Tools has two environment variables that you can set for a project:
+Mbed CLI 2 has two environment variables that you can set for a project:
 
 - `MBED_API_AUTH_TOKEN`: Token to access private board information stored for a vendor team.
 - `MBED_DATABASE_MODE`: Use online or offline mode. Possible values:
@@ -203,9 +205,9 @@ Use CMake to build your application:
 1. Drag and drop the generated file to your board.
 
 
-## Mbed OS Configuration and building the project
+## Configure and build in a single step
 
-We can use a single command which will configure (set up your target and toolchain) and build the project.
+You can use a single command to configure (select your target and toolchain) and build the project at once:
 
 1. To build and configure:
 
