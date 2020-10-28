@@ -14,52 +14,21 @@ set -o pipefail
 info() { echo -e "I: ${1}"; }
 
 #
-# Sources a pre-compiled GCC installation from AWS, installing the archive by
-#  extracting and prepending the executable directory to PATH.
-# Ccache is enabled for `arm-none-eabi-`.
-#
-# Note: Expects 'deps_url' and 'deps_dir' to already be defined.
+# Set up a development environment suitable for running our tests
 #
 _setup_build_env()
 {
-  # Enable Ccache in Travis
+  # Enable ccache for `arm-none-eabi-` and all other default toolchains.
   ccache -o compiler_check=content
   ccache -M 1G
-  pushd /usr/lib/ccache
-  sudo ln -s ../../bin/ccache arm-none-eabi-gcc
-  sudo ln -s ../../bin/ccache arm-none-eabi-g++
-  export "PATH=/usr/lib/ccache:${PATH}"
+  pushd /usr/local/opt/ccache/libexec
+  sudo ln -s ../bin/ccache arm-none-eabi-gcc
+  sudo ln -s ../bin/ccache arm-none-eabi-g++
+  export "PATH=/usr/local/opt/ccache/libexec:${PATH}:"
   popd
 
-  # Ignore shellcheck warnings: Variables defined in .travis.yml
-  # shellcheck disable=SC2154
-  local url="${deps_url}/gcc9-linux.tar.bz2"
-
-  # shellcheck disable=SC2154
-  local gcc_path="${deps_dir}/gcc/gcc-arm-none-eabi-9-2019-q4-major"
-
-  local archive="gcc.tar.bz2"
-
-  info "URL: ${url}"
-
-  if [ ! -d "${deps_dir}/gcc" ]; then
-
-    info "Downloading archive"
-    curl --location "${url}" --output "${deps_dir}/${archive}"
-    ls -al "${deps_dir}"
-
-    info "Extracting 'gcc'"
-    mkdir -p "${deps_dir}/gcc"
-    tar -xf "${deps_dir}/${archive}" -C "${deps_dir}/gcc"
-    rm "${deps_dir}/${archive}"
-
-  fi
-
-  info "Installing 'gcc'"
-  export "PATH=${PATH}:${gcc_path}/bin"
-
   arm-none-eabi-gcc --version
-  pip install --upgrade cmake
+  cmake --version
 }
 
 _clone_dependencies()

@@ -15,20 +15,12 @@
 # limitations under the License.
 
 language: sh
-os: linux
-dist: xenial
-
-env:
-  global:
-    - deps_url="https://mbed-os-ci.s3-eu-west-1.amazonaws.com/jenkins-ci/deps"
-    - deps_dir="${HOME}/.cache/deps"
+os: osx
 
 cache:
   pip: true
   ccache: true
   directories:
-    # Cache arm-none-eabi compiler
-    - ${HOME}/.cache/deps
     # It looks like ccache for arm-none-eabi is not yet supported by Travis.
     # Therefore manually adding ccache directory to cache
     - ${HOME}/.ccache
@@ -37,9 +29,14 @@ before_install:
   - source travis-ci/functions.sh
 
 addons:
-  apt:
+  homebrew:
+    taps:
+    - ARMmbed/homebrew-formulae
     packages:
-    - ninja-build
+    - cmake
+    - ccache
+    - ninja
+    - arm-none-eabi-gcc
 
 matrix:
   include:
