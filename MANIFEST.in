@@ -1,3 +1,13 @@
-graft src
 global-exclude *.py[cod] __pycache__ *.so
-global-include *.spdx
+prune .git
+prune .github
+prune news
+prune docs
+prune azure-pipelines
+prune travis-ci
+exclude .pre-commit-config.yaml
+exclude .travis.yml
+exclude .coverage.yaml
+exclude codecov.yml
+exclude .codeclimate.yml
+exclude .adr-dir
