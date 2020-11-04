@@ -41,6 +41,7 @@ addons:
     sources:
       - sourceline: 'deb https://apt.kitware.com/ubuntu/ xenial main'
         key_url: 'https://apt.kitware.com/keys/kitware-archive-latest.asc'
+      - sourceline: 'deb https://apt.kitware.com/ubuntu/ xenial-rc main'
     packages:
       - cmake
       - ninja-build
