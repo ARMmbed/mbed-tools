@@ -64,6 +64,7 @@ matrix:
         - cd ..
         - _clone_dependencies
       script:
+        - echo mbedtools build -t GCC_ARM -m ${TARGET_NAME} -b ${PROFILE}
         - mbedtools build -t GCC_ARM -m ${TARGET_NAME} -b ${PROFILE}
         - ccache -s
 
