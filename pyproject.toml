@@ -20,7 +20,6 @@ RELEASE_BRANCH_PATTERN = "^release.*$"
 MODULE_TO_DOCUMENT = "mbed_tools"
 DOCUMENTATION_DEFAULT_OUTPUT_PATH = "local_docs"
 DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs/api"
-VERSION_FILE_PATH = "src/mbed_tools/_version.py"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 
 [ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE]
@@ -32,25 +31,6 @@ chardet = "LGPL-2.1 - Accepted temporarily"
 pyudev = "LGPL-2.1 - Accepted temporarily"
 pdoc3 = "AGPL-3.0 - Accepted temporarily"
 zipp = "MIT"
-
-[AutoVersionConfig]
-CONFIG_NAME = "DEFAULT"
-PRERELEASE_TOKEN = "beta"
-BUILD_TOKEN = "dev"
-TAG_TEMPLATE = "release/{version}"
-targets = [ "src/mbed_tools/_version.py",]
-
-[AutoVersionConfig.key_aliases]
-__version__ = "VERSION_KEY"
-MAJOR = "major"
-MINOR = "minor"
-PATCH = "patch"
-COMMIT = "COMMIT"
-
-[AutoVersionConfig.trigger_patterns]
-major = "news/*.major"
-minor = "news/*.feature"
-patch = "news/*.bugfix"
 
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
