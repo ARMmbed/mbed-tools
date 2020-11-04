@@ -22,6 +22,7 @@ env:
   global:
     - deps_url="https://mbed-os-ci.s3-eu-west-1.amazonaws.com/jenkins-ci/deps"
     - deps_dir="${HOME}/.cache/deps"
+    - PROFILE=develop
 
 cache:
   pip: true
