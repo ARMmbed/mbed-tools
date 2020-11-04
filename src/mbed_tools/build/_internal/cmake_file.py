@@ -15,24 +15,27 @@ TEMPLATE_NAME = "mbed_config.tmpl"
 
 
 def generate_mbed_config_cmake_file(
-    mbed_target_name: str, target_build_attributes: dict, config: Config, toolchain_name: str
+    mbed_target_name: str, target_build_attributes: dict, config: Config, toolchain_name: str, mbed_os_path: pathlib.Path
 ) -> str:
     """Generate the top-level CMakeLists.txt file containing the correct definitions for a build.
 
     Args:
-        mbed_target: the target the application is being built for
-        target_build_attributes: map of target attributes
-        program_path: the path to the local Mbed program
-        toolchain_name: the toolchain to be used to build the application
+        mbed_target_name: the target the application is being built for.
+        target_build_attributes: map of target attributes.
+        config: Config object holding information parsed from the mbed config system.
+        toolchain_name: the toolchain to be used to build the application.
+        mbed_os_path: the path to the local Mbed OS program.
 
     Returns:
         A string of rendered contents for the file.
     """
-    return _render_mbed_config_cmake_template(target_build_attributes, config, toolchain_name, mbed_target_name,)
+    return _render_mbed_config_cmake_template(
+        target_build_attributes, config, toolchain_name, mbed_target_name, mbed_os_path,
+    )
 
 
 def _render_mbed_config_cmake_template(
-    target_build_attributes: dict, config: Config, toolchain_name: str, target_name: str
+    target_build_attributes: dict, config: Config, toolchain_name: str, target_name: str, mbed_os_path: pathlib.Path
 ) -> str:
     """Renders the mbed_config template with the relevant information.
 
@@ -41,6 +44,7 @@ def _render_mbed_config_cmake_template(
         config: Config object holding information parsed from the mbed config system.
         toolchain_name: Name of the toolchain being used.
         target_name: Name of the target.
+        mbed_os_path: the path to the local Mbed OS program.
 
     Returns:
         The contents of the rendered CMake file.
@@ -70,6 +74,7 @@ def _render_mbed_config_cmake_template(
         "macros": sorted(macros, key=lambda macro: macro.name),
         "max_name_length": max(_max_attribute_length(options, "macro_name"), _max_attribute_length(macros, "name")),
         "max_value_length": max(_max_attribute_length(options, "value"), _max_attribute_length(macros, "value")),
+        "mbed_os_path": mbed_os_path,
     }
     return template.render(context)
 

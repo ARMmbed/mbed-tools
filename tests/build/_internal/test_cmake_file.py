@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 from unittest import TestCase
+from pathlib import Path
 
 from tests.build._internal.config.factories import ConfigFactory
 from mbed_tools.build._internal.cmake_file import generate_mbed_config_cmake_file, _render_mbed_config_cmake_template
@@ -26,11 +27,12 @@ class TestGenerateCMakeListsFile(TestCase):
         toolchain_name = "GCC"
         target["supported_c_libs"] = {toolchain_name.lower(): ["small", "std"]}
         target["supported_application_profiles"] = ["full", "bare-metal"]
+        mbed_os_path = Path("path", "mbed_os")
 
-        result = generate_mbed_config_cmake_file(mbed_target, target, config, toolchain_name)
+        result = generate_mbed_config_cmake_file(mbed_target, target, config, toolchain_name, mbed_os_path)
 
         self.assertEqual(
-            result, _render_mbed_config_cmake_template(target, config, toolchain_name, mbed_target,),
+            result, _render_mbed_config_cmake_template(target, config, toolchain_name, mbed_target, mbed_os_path),
         )
 
 
@@ -51,7 +53,7 @@ class TestRendersCMakeListsFile(TestCase):
         toolchain_name = "baz"
         target["supported_c_libs"] = {toolchain_name.lower(): ["small", "std"]}
         target["supported_application_profiles"] = ["full", "bare-metal"]
-        result = _render_mbed_config_cmake_template(target, config, toolchain_name, "target_name")
+        result = _render_mbed_config_cmake_template(target, config, toolchain_name, "target_name", Path("path", "mbed_os"))
 
         for label in target["labels"] + target["extra_labels"]:
             self.assertIn(label, result)
