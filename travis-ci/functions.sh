@@ -59,7 +59,15 @@ _setup_build_env()
   export "PATH=${PATH}:${gcc_path}/bin"
 
   arm-none-eabi-gcc --version
-  pip install --upgrade cmake
+
+  # Hide Travis-preinstalled CMake
+  # The Travis-preinstalled CMake is unfortunately not installed via apt, so we
+  # can't replace it with an apt-supplied version very easily. Additionally, we
+  # can't permit the Travis-preinstalled copy to survive, as the Travis default
+  # path lists the Travis CMake install location ahead of any place where apt
+  # would install CMake to. Instead of apt removing or upgrading to a new CMake
+  # version, we must instead delete the Travis copy of CMake.
+  sudo rm -rf /usr/local/cmake*
 }
 
 _clone_dependencies()
