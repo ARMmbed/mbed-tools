@@ -34,17 +34,17 @@ For a the list of all available versions please, please see the:
 
 ## Versioning
 
-The version scheme used follows [PEP440](https://www.python.org/dev/peps/pep-0440/) and 
+The version scheme used follows [PEP440](https://www.python.org/dev/peps/pep-0440/) and
 [Semantic Versioning](https://semver.org/). For production quality releases the version will look as follows:
 
 - `<major>.<minor>.<patch>`
 
-Beta releases are used to give early access to new functionality, for testing and to get feedback on experimental
+Pre releases are used to give early access to new functionality, for testing and to get feedback on experimental
 features. As such these releases may not be stable and should not be used for production. Additionally any interfaces
-introduced in a beta release may be removed or changed without notice. For **beta** releases the version will look as
+introduced in a pre release may be removed or changed without notice. For pre releases the version will look as
 follows:
 
-- `<major>.<minor>.<patch>-beta.<pre-release-number>`
+- `<major>.<minor>.<patch>.dev<pre-release-number>`
 
 ## Installation
 
