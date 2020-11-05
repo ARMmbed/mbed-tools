@@ -90,6 +90,19 @@ We recommend the following commit structure in the following order:
 
 Follow [this guide](https://chris.beams.io/posts/git-commit/) to ensure you're writing good commit messages.
 
+## Creating a Release
+
+To create a production release of mbed-tools, perform the following steps:
+
+1. Check out the `master` branch; ensure it is clean and up to date.
+1. Run `tox -e preprelease`, this will update the necessary files, create a commit and tag it with the new release version number.
+1. Push the commit to `master`.
+1. Push the tag.
+
+The CI will detect a new tag has been created and run the "Build and Deploy" pipeline, which then pushes the release to pyPI.
+
+> **_NOTE:_**  The release process relies on a shell script `ci_scripts/prep-release`, so will not work on Windows systems.
+
 ## Contribution Agreement
 
 For us to accept your code contributions, we will need you to agree to our
