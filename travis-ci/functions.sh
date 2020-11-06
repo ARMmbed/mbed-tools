@@ -73,7 +73,7 @@ _setup_build_env()
 _clone_dependencies()
 {
   # We use manual clone, with depth and single branch = the fastest
-  git clone --depth=1 --single-branch --branch feature-cmake https://github.com/ARMmbed/${EXAMPLE_NAME}.git
+  git clone --depth=1 --single-branch --branch development https://github.com/ARMmbed/${EXAMPLE_NAME}.git
 
   if [ -z ${SUBEXAMPLE_NAME} ]; then
       cd ${EXAMPLE_NAME}
@@ -81,7 +81,7 @@ _clone_dependencies()
       cd ${EXAMPLE_NAME}/${SUBEXAMPLE_NAME}
   fi
 
-  git clone --depth=1 --single-branch --branch feature-cmake https://github.com/ARMmbed/mbed-os.git
+  git clone --depth=1 --single-branch https://github.com/ARMmbed/mbed-os.git
 
   echo “” > mbed-os.lib
 

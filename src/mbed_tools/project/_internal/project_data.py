@@ -30,7 +30,7 @@ TARGETS_JSON_FILE_PATH = Path("targets", "targets.json")
 
 # Information written to mbed-os.lib
 MBED_OS_REFERENCE_URL = "https://github.com/ARMmbed/mbed-os"
-MBED_OS_REFERENCE_ID = "feature-cmake"
+MBED_OS_REFERENCE_ID = "master"
 
 # For some reason Mbed OS expects the default mbed_app.json to contain some target_overrides
 # for the K64F target. TODO: Find out why this wouldn't be defined in targets.json.
