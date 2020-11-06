@@ -59,7 +59,7 @@ def clone_project(url: str, dst_path: Any = None, recursive: bool = False) -&gt;
     if not dst_path:
         dst_path = pathlib.Path(git_data[&#34;dst_path&#34;])
 
-    program = MbedProgram.from_url(url, dst_path, check_mbed_os=False)
+    program = MbedProgram.from_url(url, dst_path)
     if recursive:
         program.resolve_libraries()
 
@@ -190,7 +190,7 @@ changes.</dd>
     if not dst_path:
         dst_path = pathlib.Path(git_data[&#34;dst_path&#34;])
 
-    program = MbedProgram.from_url(url, dst_path, check_mbed_os=False)
+    program = MbedProgram.from_url(url, dst_path)
     if recursive:
         program.resolve_libraries()</code></pre>
 </details>

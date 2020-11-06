@@ -59,7 +59,6 @@ class MbedProgram:
     &#34;&#34;&#34;Represents an Mbed program.
 
     An `MbedProgram` consists of:
-        * A git repository
         * A copy of, or reference to, `MbedOS`
         * A set of `MbedProgramFiles`
         * A collection of references to external libraries, defined in .lib files located in the program source tree
@@ -75,38 +74,21 @@ class MbedProgram:
         self.files = program_files
         self.root = self.files.mbed_os_ref.parent
         self.mbed_os = mbed_os
-        self.lib_references = LibraryReferences(root=self.root, ignore_paths=[self.mbed_os.root])
+        self.lib_references = LibraryReferences(root=self.root, ignore_paths=[self.mbed_os.root.name])
 
     @classmethod
-    def from_url(cls, url: str, dst_path: Path, check_mbed_os: bool = True) -&gt; &#34;MbedProgram&#34;:
+    def from_url(cls, url: str, dst_path: Path) -&gt; &#34;MbedProgram&#34;:
         &#34;&#34;&#34;Fetch an Mbed program from a remote URL.
 
         Args:
             url: URL of the remote program repository.
             dst_path: Destination path for the cloned program.
-
-        Raises:
-            ExistingProgram: `dst_path` already contains an Mbed program.
         &#34;&#34;&#34;
-        if _tree_contains_program(dst_path):
-            raise ExistingProgram(
-                f&#34;The destination path &#39;{dst_path}&#39; already contains an Mbed program. Please set the destination path &#34;
-                &#34;to an empty directory.&#34;
-            )
         logger.info(f&#34;Cloning Mbed program from URL &#39;{url}&#39;.&#34;)
         git_utils.clone(url, dst_path)
-
         program_files = MbedProgramFiles.from_existing(dst_path)
-        if not program_files.mbed_os_ref.exists():
-            raise ProgramNotFound(
-                &#34;This repository does not contain a valid Mbed program at the top level. &#34;
-                &#34;Cloned programs must contain an mbed-os.lib file containing the URL to the Mbed OS repository. It is &#34;
-                &#34;possible you have cloned a repository containing multiple mbed-programs. If this is the case, you &#34;
-                &#34;should cd to a directory containing a program before performing any other operations.&#34;
-            )
-
         try:
-            mbed_os = MbedOS.from_existing(dst_path / MBED_OS_DIR_NAME, check_mbed_os)
+            mbed_os = MbedOS.from_existing(dst_path / MBED_OS_DIR_NAME, False)
         except ValueError as mbed_err:
             raise MbedOSNotFound(f&#34;{mbed_err}&#34;)
 
@@ -300,7 +282,6 @@ def _find_program_root(cwd: Path) -&gt; Path:
 <dd>
 <div class="desc"><p>Represents an Mbed program.</p>
 <p>An <code><a title="mbed_tools.project.mbed_program.MbedProgram" href="#mbed_tools.project.mbed_program.MbedProgram">MbedProgram</a></code> consists of:
-* A git repository
 * A copy of, or reference to, <code>MbedOS</code>
 * A set of <code>MbedProgramFiles</code>
 * A collection of references to external libraries, defined in .lib files located in the program source tree</p>
@@ -320,7 +301,6 @@ def _find_program_root(cwd: Path) -&gt; Path:
     &#34;&#34;&#34;Represents an Mbed program.
 
     An `MbedProgram` consists of:
-        * A git repository
         * A copy of, or reference to, `MbedOS`
         * A set of `MbedProgramFiles`
         * A collection of references to external libraries, defined in .lib files located in the program source tree
@@ -336,38 +316,21 @@ def _find_program_root(cwd: Path) -&gt; Path:
         self.files = program_files
         self.root = self.files.mbed_os_ref.parent
         self.mbed_os = mbed_os
-        self.lib_references = LibraryReferences(root=self.root, ignore_paths=[self.mbed_os.root])
+        self.lib_references = LibraryReferences(root=self.root, ignore_paths=[self.mbed_os.root.name])
 
     @classmethod
-    def from_url(cls, url: str, dst_path: Path, check_mbed_os: bool = True) -&gt; &#34;MbedProgram&#34;:
+    def from_url(cls, url: str, dst_path: Path) -&gt; &#34;MbedProgram&#34;:
         &#34;&#34;&#34;Fetch an Mbed program from a remote URL.
 
         Args:
             url: URL of the remote program repository.
             dst_path: Destination path for the cloned program.
-
-        Raises:
-            ExistingProgram: `dst_path` already contains an Mbed program.
         &#34;&#34;&#34;
-        if _tree_contains_program(dst_path):
-            raise ExistingProgram(
-                f&#34;The destination path &#39;{dst_path}&#39; already contains an Mbed program. Please set the destination path &#34;
-                &#34;to an empty directory.&#34;
-            )
         logger.info(f&#34;Cloning Mbed program from URL &#39;{url}&#39;.&#34;)
         git_utils.clone(url, dst_path)
-
         program_files = MbedProgramFiles.from_existing(dst_path)
-        if not program_files.mbed_os_ref.exists():
-            raise ProgramNotFound(
-                &#34;This repository does not contain a valid Mbed program at the top level. &#34;
-                &#34;Cloned programs must contain an mbed-os.lib file containing the URL to the Mbed OS repository. It is &#34;
-                &#34;possible you have cloned a repository containing multiple mbed-programs. If this is the case, you &#34;
-                &#34;should cd to a directory containing a program before performing any other operations.&#34;
-            )
-
         try:
-            mbed_os = MbedOS.from_existing(dst_path / MBED_OS_DIR_NAME, check_mbed_os)
+            mbed_os = MbedOS.from_existing(dst_path / MBED_OS_DIR_NAME, False)
         except ValueError as mbed_err:
             raise MbedOSNotFound(f&#34;{mbed_err}&#34;)
 
@@ -538,7 +501,7 @@ def from_new(cls, dir_path: Path) -&gt; &#34;MbedProgram&#34;:
 </details>
 </dd>
 <dt id="mbed_tools.project.mbed_program.MbedProgram.from_url"><code class="name flex">
-<span>def <span class="ident">from_url</span></span>(<span>url: str, dst_path: pathlib.Path, check_mbed_os: bool = True) ‑> <a title="mbed_tools.project.mbed_program.MbedProgram" href="#mbed_tools.project.mbed_program.MbedProgram">MbedProgram</a></span>
+<span>def <span class="ident">from_url</span></span>(<span>url: str, dst_path: pathlib.Path) ‑> <a title="mbed_tools.project.mbed_program.MbedProgram" href="#mbed_tools.project.mbed_program.MbedProgram">MbedProgram</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Fetch an Mbed program from a remote URL.</p>
@@ -548,46 +511,24 @@ def from_new(cls, dir_path: Path) -&gt; &#34;MbedProgram&#34;:
 <dd>URL of the remote program repository.</dd>
 <dt><strong><code>dst_path</code></strong></dt>
 <dd>Destination path for the cloned program.</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>ExistingProgram</code></dt>
-<dd><code>dst_path</code> already contains an Mbed program.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@classmethod
-def from_url(cls, url: str, dst_path: Path, check_mbed_os: bool = True) -&gt; &#34;MbedProgram&#34;:
+def from_url(cls, url: str, dst_path: Path) -&gt; &#34;MbedProgram&#34;:
     &#34;&#34;&#34;Fetch an Mbed program from a remote URL.
 
     Args:
         url: URL of the remote program repository.
         dst_path: Destination path for the cloned program.
-
-    Raises:
-        ExistingProgram: `dst_path` already contains an Mbed program.
     &#34;&#34;&#34;
-    if _tree_contains_program(dst_path):
-        raise ExistingProgram(
-            f&#34;The destination path &#39;{dst_path}&#39; already contains an Mbed program. Please set the destination path &#34;
-            &#34;to an empty directory.&#34;
-        )
     logger.info(f&#34;Cloning Mbed program from URL &#39;{url}&#39;.&#34;)
     git_utils.clone(url, dst_path)
-
     program_files = MbedProgramFiles.from_existing(dst_path)
-    if not program_files.mbed_os_ref.exists():
-        raise ProgramNotFound(
-            &#34;This repository does not contain a valid Mbed program at the top level. &#34;
-            &#34;Cloned programs must contain an mbed-os.lib file containing the URL to the Mbed OS repository. It is &#34;
-            &#34;possible you have cloned a repository containing multiple mbed-programs. If this is the case, you &#34;
-            &#34;should cd to a directory containing a program before performing any other operations.&#34;
-        )
-
     try:
-        mbed_os = MbedOS.from_existing(dst_path / MBED_OS_DIR_NAME, check_mbed_os)
+        mbed_os = MbedOS.from_existing(dst_path / MBED_OS_DIR_NAME, False)
     except ValueError as mbed_err:
         raise MbedOSNotFound(f&#34;{mbed_err}&#34;)
 

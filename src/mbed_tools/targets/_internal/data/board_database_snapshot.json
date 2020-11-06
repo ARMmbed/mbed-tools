@@ -188,11 +188,41 @@
         "mbed_enabled": []
     },
     {
-        "board_type": "S1SBP6A",
-        "board_name": "S1SBP6A",
-        "product_code": "3703",
+        "board_type": "PLACEHOLDER",
+        "board_name": "MCB4300",
+        "product_code": "0",
         "target_type": "platform",
-        "slug": "S1SBP6A",
+        "slug": "MCB4300",
+        "build_variant": [],
+        "mbed_os_support": [],
+        "mbed_enabled": []
+    },
+    {
+        "board_type": "MIMXRT1180_EVK",
+        "board_name": "MIMXRT1180-EVK",
+        "product_code": "0239",
+        "target_type": "platform",
+        "slug": "MIMXRT1180-EVK",
+        "build_variant": [],
+        "mbed_os_support": [],
+        "mbed_enabled": []
+    },
+    {
+        "board_type": "MIMXRT1024_EVK",
+        "board_name": "MIMXRT1024-EVK",
+        "product_code": "0238",
+        "target_type": "platform",
+        "slug": "MIMXRT1024-EVK",
+        "build_variant": [],
+        "mbed_os_support": [],
+        "mbed_enabled": []
+    },
+    {
+        "board_type": "B_U585I_IOT02A",
+        "board_name": "DISCO-B-U585I-IOT02A",
+        "product_code": "0887",
+        "target_type": "platform",
+        "slug": "ST-Discovery-B-U585I-IOT02A",
         "build_variant": [],
         "mbed_os_support": [],
         "mbed_enabled": []
@@ -219,13 +249,20 @@
     },
     {
         "board_type": "B_L4S5I_IOT01A",
-        "board_name": "B-L4S5I-IOT01A",
+        "board_name": "B-L4S5I-IOT01A Discovery kit",
         "product_code": "0885",
         "target_type": "platform",
         "slug": "B-L4S5I-IOT01A",
         "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
+        "mbed_os_support": [
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
+        ],
+        "mbed_enabled": [
+            "Advanced",
+            "Baseline"
+        ]
     },
     {
         "board_type": "NU_M2354",
@@ -288,6 +325,23 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "CY8CKIT064B0S2_4343W",
+        "board_name": "PSoC 64 Secure Boot WiFi/BLE Pioneer Kit",
+        "product_code": "1910",
+        "target_type": "platform",
+        "slug": "CY8CKIT-064B0S2-4343W",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
+        ],
+        "mbed_enabled": [
+            "Advanced",
+            "Baseline",
+            "Pelion Device Ready"
+        ]
+    },
+    {
         "board_type": "HANI_IOT",
         "board_name": "HANI-IOT",
         "product_code": "0360",
@@ -338,18 +392,14 @@
         "target_type": "platform",
         "slug": "Renesas-GR-MANGO",
         "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "PLACEHOLDER",
-        "board_name": "Seeed Wio W600",
-        "product_code": "9018",
-        "target_type": "platform",
-        "slug": "Seeed-Wio-W600",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
+        "mbed_os_support": [
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
+        ],
+        "mbed_enabled": [
+            "Advanced",
+            "Baseline"
+        ]
     },
     {
         "board_type": "EP_AGORA",
@@ -360,7 +410,12 @@
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -407,7 +462,12 @@
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -417,13 +477,21 @@
     },
     {
         "board_type": "NUMAKER_IOT_M252",
-        "board_name": "NUMAKER-IOT-M252",
+        "board_name": "NuMaker-LoRaD-M252",
         "product_code": "1309",
         "target_type": "platform",
-        "slug": "NUMAKER-IOT-M252",
+        "slug": "NuMaker-LoRaD-M252",
         "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
+        "mbed_os_support": [
+            "Mbed OS 5.15",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
+        ],
+        "mbed_enabled": [
+            "Advanced",
+            "Baseline"
+        ]
     },
     {
         "board_type": "NUCLEO_WL55JC",
@@ -476,6 +544,21 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "ARM_MUSCA_S1",
+        "board_name": "Arm V2M-Musca-S1",
+        "product_code": "5009",
+        "target_type": "platform",
+        "slug": "Arm-Musca_S1",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
+        ],
+        "mbed_enabled": [
+            "Baseline"
+        ]
+    },
+    {
         "board_type": "NUCLEO_H743ZI2",
         "board_name": "NUCLEO-H743ZI2",
         "product_code": "0836",
@@ -484,7 +567,12 @@
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -504,7 +592,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -522,10 +615,15 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
-            "Baseline"
+            "Pelion Device Ready"
         ]
     },
     {
@@ -540,10 +638,16 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
-            "Pelion Device Ready"
+            "Advanced",
+            "Baseline"
         ]
     },
     {
@@ -558,7 +662,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -603,46 +712,6 @@
         "mbed_enabled": []
     },
     {
-        "board_type": "GENERIC_MODULE22",
-        "board_name": "Reserved-0450-0490-for-MODULE",
-        "product_code": "0471",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE22",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "GENERIC_MODULE21",
-        "board_name": "Reserved-0450-0490-for-MODULE",
-        "product_code": "0470",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE21",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "MTB_STM32_F439",
-        "board_name": "MTB_STM32_F439",
-        "product_code": "0469",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE20",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "MTB_STM_L475",
-        "board_name": "MTB_STM_L475",
-        "product_code": "0468",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE19",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
         "board_type": "LPC55S69_NS",
         "board_name": "LPCXpresso55S69",
         "product_code": "0236",
@@ -658,16 +727,6 @@
         ]
     },
     {
-        "board_type": "MTB_STM_S2LP",
-        "board_name": "MTB_STM_S2LP",
-        "product_code": "0467",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE18",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
         "board_type": "GD32_F450ZI",
         "board_name": "GD32-F450ZI",
         "product_code": "1702",
@@ -679,7 +738,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -699,7 +763,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -717,21 +786,16 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
         ]
-    },
-    {
-        "board_type": "MTB_MURATA_WSM_BL241",
-        "board_name": "MTB_MURATA_WSM_BL241",
-        "product_code": "0466",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE17",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
     },
     {
         "board_type": "NUCLEO_H7B3ZI",
@@ -836,7 +900,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -855,6 +924,16 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "MIMXRT1064-EVK",
+        "board_name": "MIMXRT1064-EVK",
+        "product_code": "0232",
+        "target_type": "platform",
+        "slug": "MIMXRT1064-EVK",
+        "build_variant": [],
+        "mbed_os_support": [],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "DISCO_L562QE",
         "board_name": "DISCO-L562QE (STM32L562E-DK)",
         "product_code": "0855",
@@ -862,7 +941,9 @@
         "slug": "ST-Discovery-L562QE",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 5.15"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2"
         ],
         "mbed_enabled": []
     },
@@ -895,7 +976,9 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-G031K8",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 6.2"
+        ],
         "mbed_enabled": []
     },
     {
@@ -941,7 +1024,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -963,7 +1051,13 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.9"
+            "Mbed OS 5.8",
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -983,7 +1077,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -1004,7 +1103,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1042,7 +1146,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1091,23 +1200,18 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
             "Baseline",
             "Pelion Device Ready"
         ]
-    },
-    {
-        "board_type": "MTB_LAIRD_BL654",
-        "board_name": "MTB_LAIRD_BL654",
-        "product_code": "0465",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE16",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
     },
     {
         "board_type": "MAX32625PICO",
@@ -1129,7 +1233,12 @@
         "mbed_os_support": [
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -1150,7 +1259,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -1235,7 +1349,10 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-G474RE",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 6.1",
+            "Mbed OS 6.2"
+        ],
         "mbed_enabled": []
     },
     {
@@ -1244,16 +1361,6 @@
         "product_code": "0420",
         "target_type": "platform",
         "slug": "max32630_micro_board",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "PLACEHOLDER",
-        "board_name": "Rohm_RoKiX",
-        "product_code": "1150",
-        "target_type": "platform",
-        "slug": "Rohm_RoKiX",
         "build_variant": [],
         "mbed_os_support": [],
         "mbed_enabled": []
@@ -1271,16 +1378,6 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13"
         ],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "MTB_MXCHIP_EMW3166",
-        "board_name": "Mbed WiFi BLE",
-        "product_code": "0463",
-        "target_type": "platform",
-        "slug": "Mbed-WiFi-BLE",
-        "build_variant": [],
-        "mbed_os_support": [],
         "mbed_enabled": []
     },
     {
@@ -1344,76 +1441,6 @@
         "mbed_enabled": []
     },
     {
-        "board_type": "MTB_MURATA_ABZ",
-        "board_name": "MTB_MURATA_ABZ",
-        "product_code": "0456",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE7",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "MTB_UBLOX_NINA_B1",
-        "board_name": "MTB_UBLOX_NINA_B1",
-        "product_code": "0455",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE6",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "MTB_MTS_DRAGONFLY",
-        "board_name": "MTB_MTS_DRAGONFLY",
-        "product_code": "0454",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE5",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "MTB_MTS_XDOT",
-        "board_name": "MTB_MTS_XDOT",
-        "product_code": "0453",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE4",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "MTB_LAIRD_BL600",
-        "board_name": "MTB_LAIRD_BL600",
-        "product_code": "0452",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE3",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "MTB_MXCHIP_EMW3166",
-        "board_name": "MTB_MXCHIP_EMW3166",
-        "product_code": "0451",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE2",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "MTB_UBLOX_ODIN_W2",
-        "board_name": "MTB_UBLOX_ODIN_W2",
-        "product_code": "0450",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE1",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
         "board_type": "TMPM3HQ",
         "board_name": "AdBun-M3HQ",
         "product_code": "7014",
@@ -1470,7 +1497,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1491,7 +1523,12 @@
             "Mbed OS 5.14",
             "Mbed OS 5.15",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1509,7 +1546,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1528,7 +1570,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -1589,7 +1636,12 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1611,7 +1663,12 @@
             "Mbed OS 5.15",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1690,7 +1747,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1713,7 +1775,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1747,9 +1814,7 @@
             "Mbed OS 5.8",
             "Mbed OS 5.9"
         ],
-        "mbed_enabled": [
-            "Baseline"
-        ]
+        "mbed_enabled": []
     },
     {
         "board_type": "LPC546XX",
@@ -1768,7 +1833,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1814,7 +1884,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1829,7 +1904,12 @@
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1849,7 +1929,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -1869,7 +1954,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1904,7 +1994,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1977,12 +2072,16 @@
             "Mbed OS 5.14",
             "Mbed OS 5.15",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -2175,7 +2274,12 @@
             "Mbed OS 5.15",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2220,7 +2324,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2246,7 +2355,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2366,7 +2480,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2379,7 +2498,17 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-L486RG",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2"
+        ],
         "mbed_enabled": []
     },
     {
@@ -2389,7 +2518,17 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-F756ZG",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2"
+        ],
         "mbed_enabled": []
     },
     {
@@ -2399,7 +2538,17 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-F439ZI",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2"
+        ],
         "mbed_enabled": []
     },
     {
@@ -2481,7 +2630,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2499,7 +2653,7 @@
     },
     {
         "board_type": "DISCO_L475VG_IOT01A",
-        "board_name": "DISCO-L475VG-IOT01A",
+        "board_name": "DISCO-L475VG-IOT01A (B-L475E-IOT01A)",
         "product_code": "0764",
         "target_type": "platform",
         "slug": "ST-Discovery-L475E-IOT01A",
@@ -2512,11 +2666,11 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2539,16 +2693,15 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -2576,7 +2729,11 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2602,7 +2759,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2621,7 +2783,12 @@
             "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
-            "Mbed OS 5.6"
+            "Mbed OS 5.6",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2712,7 +2879,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2726,7 +2898,14 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-F413ZH",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15"
+        ],
         "mbed_enabled": []
     },
     {
@@ -2759,7 +2938,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2795,7 +2979,12 @@
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2925,7 +3114,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2950,7 +3144,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2975,7 +3174,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -3002,7 +3206,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3080,12 +3289,11 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.4",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -3166,16 +3374,6 @@
         "mbed_enabled": []
     },
     {
-        "board_type": "CM0_ARM",
-        "board_name": "IoT-Board",
-        "product_code": "5003",
-        "target_type": "platform",
-        "slug": "IoT-Board",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
         "board_type": "NUC472-NUTINY",
         "board_name": "NUC472-NUTINY",
         "product_code": "1300",
@@ -3226,12 +3424,11 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.4",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -3254,14 +3451,14 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.4",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
+            "Advanced",
             "Baseline",
             "Pelion Device Ready"
         ]
@@ -3281,12 +3478,11 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.4",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3312,7 +3508,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3333,17 +3534,15 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.4",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -3521,17 +3720,15 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.4",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -3543,8 +3740,20 @@
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 2",
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15",
+            "Mbed OS 5.4",
             "Mbed OS 5.5",
-            "Mbed OS 5.6"
+            "Mbed OS 5.6",
+            "Mbed OS 5.7",
+            "Mbed OS 5.8",
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1"
         ],
         "mbed_enabled": []
     },
@@ -3563,12 +3772,11 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.4",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -3591,15 +3799,13 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.4",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
-            "Advanced",
             "Baseline"
         ]
     },
@@ -3635,7 +3841,13 @@
         "slug": "ST-Nucleo-F031K6",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 2"
+            "Mbed OS 2",
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3670,17 +3882,15 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.4",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -3729,7 +3939,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3802,12 +4017,11 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.4",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3831,7 +4045,13 @@
         "slug": "ST-Discovery-L053C8",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 2"
+            "Mbed OS 2",
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3845,7 +4065,13 @@
         "slug": "ST-Discovery-F334C8",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 2"
+            "Mbed OS 2",
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3952,7 +4178,12 @@
             "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
-            "Mbed OS 5.6"
+            "Mbed OS 5.6",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3993,7 +4224,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4021,7 +4257,13 @@
         "slug": "ST-Nucleo-F042K6",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 2"
+            "Mbed OS 2",
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4049,7 +4291,18 @@
         "slug": "ST-Nucleo-F303K8",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 2"
+            "Mbed OS 2",
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4070,12 +4323,11 @@
             "Mbed OS 5.13",
             "Mbed OS 5.14",
             "Mbed OS 5.15",
-            "Mbed OS 5.4",
-            "Mbed OS 5.5",
-            "Mbed OS 5.6",
-            "Mbed OS 5.7",
-            "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4138,7 +4390,12 @@
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 2",
-            "Mbed OS 5.4"
+            "Mbed OS 5.4",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4207,11 +4464,24 @@
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 2",
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
-            "Mbed OS 5.6"
+            "Mbed OS 5.6",
+            "Mbed OS 5.7",
+            "Mbed OS 5.8",
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1"
         ],
-        "mbed_enabled": []
+        "mbed_enabled": [
+            "Baseline"
+        ]
     },
     {
         "board_type": "NUCLEO_L476RG",
@@ -4233,7 +4503,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -4260,7 +4535,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4286,7 +4566,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4303,7 +4588,12 @@
             "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
-            "Mbed OS 5.6"
+            "Mbed OS 5.6",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4444,7 +4734,12 @@
             "Mbed OS 5.4",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -4518,7 +4813,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4566,7 +4866,12 @@
             "Mbed OS 5.12",
             "Mbed OS 5.13",
             "Mbed OS 5.14",
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4642,7 +4947,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4752,7 +5062,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4778,7 +5093,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4818,7 +5138,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4972,7 +5297,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -4988,7 +5318,13 @@
         "slug": "ST-Nucleo-F334R8",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 2"
+            "Mbed OS 2",
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5014,7 +5350,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5054,7 +5395,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5094,7 +5440,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5134,7 +5485,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5151,7 +5507,12 @@
             "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
-            "Mbed OS 5.6"
+            "Mbed OS 5.6",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5165,7 +5526,18 @@
         "slug": "ST-Nucleo-F103RB",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 2"
+            "Mbed OS 2",
+            "Mbed OS 5.10",
+            "Mbed OS 5.11",
+            "Mbed OS 5.12",
+            "Mbed OS 5.13",
+            "Mbed OS 5.14",
+            "Mbed OS 5.15",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5227,7 +5599,12 @@
         "slug": "LPC1114FN28",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 2"
+            "Mbed OS 2",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5325,7 +5702,12 @@
             "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
-            "Mbed OS 5.6"
+            "Mbed OS 5.6",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5365,7 +5747,12 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4"
         ],
         "mbed_enabled": [
             "Baseline"

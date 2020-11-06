@@ -36,12 +36,16 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Configure and build a CMake project.&#34;&#34;&#34;
+import logging
 import pathlib
 import subprocess
 
 from typing import Optional
 
 from mbed_tools.build.exceptions import MbedBuildError
+
+
+logger = logging.getLogger(__name__)
 
 
 def build_project(build_dir: pathlib.Path, target: Optional[str] = None) -&gt; None:
@@ -68,6 +72,7 @@ def generate_build_system(source_dir: pathlib.Path, build_dir: pathlib.Path, pro
 
 def _cmake_wrapper(*cmake_args: str) -&gt; None:
     try:
+        logger.debug(&#34;Running CMake with args: %s&#34;, cmake_args)
         subprocess.run([&#34;cmake&#34;, *cmake_args], check=True)
     except subprocess.CalledProcessError:
         raise MbedBuildError(&#34;CMake invocation failed!&#34;)</code></pre>
@@ -81,7 +86,7 @@ def _cmake_wrapper(*cmake_args: str) -&gt; None:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="mbed_tools.build.build.build_project"><code class="name flex">
-<span>def <span class="ident">build_project</span></span>(<span>build_dir: pathlib.Path, target: Union[str, NoneType] = None) ‑> NoneType</span>
+<span>def <span class="ident">build_project</span></span>(<span>build_dir: pathlib.Path, target: Optional[str] = None) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Build a project using CMake to invoke Ninja.</p>

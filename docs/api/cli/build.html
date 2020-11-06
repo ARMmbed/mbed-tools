@@ -38,6 +38,7 @@
 &#34;&#34;&#34;Command to build an Mbed project using CMake.&#34;&#34;&#34;
 import os
 import pathlib
+import shutil
 
 import click
 
@@ -54,7 +55,7 @@ from mbed_tools.project import MbedProgram
 )
 @click.option(&#34;-m&#34;, &#34;--mbed-target&#34;, help=&#34;A build target for an Mbed-enabled device, e.g. K64F.&#34;)
 @click.option(&#34;-b&#34;, &#34;--build-type&#34;, default=&#34;develop&#34;, help=&#34;The build type (release, develop or debug).&#34;)
-@click.option(&#34;-c&#34;, &#34;--clean&#34;, is_flag=True, default=False, help=&#34;Perform a &#39;clean&#39; build.&#34;)
+@click.option(&#34;-c&#34;, &#34;--clean&#34;, is_flag=True, default=False, help=&#34;Perform a clean build.&#34;)
 @click.option(
     &#34;-p&#34;,
     &#34;--program-path&#34;,
@@ -75,25 +76,27 @@ def build(program_path: str, build_type: str, toolchain: str = &#34;&#34;, mbed_
        build_type: The Mbed build profile (debug, develop or release).
        toolchain: The toolchain to use for the build.
        mbed_target: The name of the Mbed target to build for.
-       clean: Force regeneration of config and build system before building.
+       clean: Perform a clean build.
     &#34;&#34;&#34;
     program = MbedProgram.from_existing(pathlib.Path(program_path))
     mbed_config_file = program.files.cmake_config_file
-    if not mbed_config_file.exists() or clean:
-        click.echo(&#34;Generating Mbed config...&#34;)
-        if not toolchain:
-            raise click.UsageError(&#34;--toolchain argument is required when generating Mbed config!&#34;)
-
-        if not mbed_target:
-            raise click.UsageError(&#34;--mbed-target argument is required when generating Mbed config!&#34;)
-
-        generate_config(mbed_target.upper(), toolchain, program)
-
     build_tree = program.files.cmake_build_dir
-    if not build_tree.exists() or clean:
+    if clean and build_tree.exists():
+        shutil.rmtree(build_tree)
+
+    if any([not mbed_config_file.exists(), not build_tree.exists(), mbed_target, toolchain]):
+        click.echo(&#34;Configuring project and generating build system...&#34;)
+        _validate_target_and_toolchain_args(mbed_target, toolchain)
+        generate_config(mbed_target.upper(), toolchain, program)
         generate_build_system(program.root, build_tree, build_type)
 
-    build_project(build_tree)</code></pre>
+    click.echo(&#34;Building Mbed project...&#34;)
+    build_project(build_tree)
+
+
+def _validate_target_and_toolchain_args(target: str, toolchain: str) -&gt; None:
+    if not all([toolchain, target]):
+        raise click.UsageError(&#34;--toolchain and --mbed-target arguments are required when generating Mbed config!&#34;)</code></pre>
 </details>
 </section>
 <section>

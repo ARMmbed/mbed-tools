@@ -134,7 +134,8 @@ entry in the database then it will be included in the <code>unidentified_devices
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class ConnectedDevices:
+<pre><code class="python">@dataclass(order=True)
+class ConnectedDevices:
     &#34;&#34;&#34;Definition of connected devices which may be Mbed Boards.
 
     If a connected device is identified as an Mbed Board by using the HTM file on the USB mass storage device (or
@@ -187,7 +188,7 @@ entry in the database then it will be included in the <code>unidentified_devices
 <h3>Methods</h3>
 <dl>
 <dt id="mbed_tools.devices.device.ConnectedDevices.add_device"><code class="name flex">
-<span>def <span class="ident">add_device</span></span>(<span>self, candidate_device: mbed_tools.devices._internal.candidate_device.CandidateDevice, mbed_board: Union[<a title="mbed_tools.targets.board.Board" href="../targets/board.html#mbed_tools.targets.board.Board">Board</a>, NoneType] = None) ‑> NoneType</span>
+<span>def <span class="ident">add_device</span></span>(<span>self, candidate_device: mbed_tools.devices._internal.candidate_device.CandidateDevice, mbed_board: Optional[<a title="mbed_tools.targets.board.Board" href="../targets/board.html#mbed_tools.targets.board.Board">Board</a>] = None) ‑> NoneType</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Add a candidate device and optionally an Mbed Target to the connected devices.</p>
@@ -229,7 +230,7 @@ entry in the database then it will be included in the <code>unidentified_devices
 </dd>
 <dt id="mbed_tools.devices.device.Device"><code class="flex name class">
 <span>class <span class="ident">Device</span></span>
-<span>(</span><span>mbed_board: <a title="mbed_tools.targets.board.Board" href="../targets/board.html#mbed_tools.targets.board.Board">Board</a>, serial_number: str, serial_port: Union[str, NoneType], mount_points: Tuple[pathlib.Path, ...])</span>
+<span>(</span><span>mbed_board: <a title="mbed_tools.targets.board.Board" href="../targets/board.html#mbed_tools.targets.board.Board">Board</a>, serial_number: str, serial_port: Optional[str], mount_points: Tuple[pathlib.Path, ...])</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Definition of an Mbed Enabled Device.</p>
@@ -250,7 +251,8 @@ A valid Mbed Device must have a Board associated with it.</p>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class Device:
+<pre><code class="python">@dataclass(frozen=True, order=True)
+class Device:
     &#34;&#34;&#34;Definition of an Mbed Enabled Device.
 
     An Mbed Device is always a USB mass storage device, which sometimes also presents a USB serial port.
@@ -282,7 +284,7 @@ A valid Mbed Device must have a Board associated with it.</p>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="mbed_tools.devices.device.Device.serial_port"><code class="name">var <span class="ident">serial_port</span> : Union[str, NoneType]</code></dt>
+<dt id="mbed_tools.devices.device.Device.serial_port"><code class="name">var <span class="ident">serial_port</span> : Optional[str]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>

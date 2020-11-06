@@ -12,6 +12,41 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+3.5.0 (2020-11-06)
+==================
+
+Features
+--------
+
+- Add CMake variables for the supported application profiles to the generated CMake module (#20201023)
+- Always regenerate build configuration when target and toolchain arguments are passed to the build subcommand. (#20201012141322)
+- Targets added: Arm V2M-Musca-S1, B-L4S5I-IOT01A Discovery kit, DISCO-B-U585I-IOT02A, DISCO-L475VG-IOT01A (B-L475E-IOT01A), MCB4300, MIMXRT1024-EVK, MIMXRT1064-EVK, MIMXRT1180-EVK, NuMaker-LoRaD-M252, PSoC 64 Secure Boot WiFi/BLE Pioneer Kit.
+  Targets removed: B-L4S5I-IOT01A, DISCO-L475VG-IOT01A, IoT-Board, MTB_LAIRD_BL600, MTB_LAIRD_BL654, MTB_MTS_DRAGONFLY, MTB_MTS_XDOT, MTB_MURATA_ABZ, MTB_MURATA_WSM_BL241, MTB_MXCHIP_EMW3166, MTB_STM32_F439, MTB_STM_L475, MTB_STM_S2LP, MTB_UBLOX_NINA_B1, MTB_UBLOX_ODIN_W2, Mbed WiFi BLE, NUMAKER-IOT-M252, Reserved-0450-0490-for-MODULE, Rohm_RoKiX, S1SBP6A, Seeed Wio W600.
+  Targets modified: ARM Cortex-M3 DesignStart, AdBun-M46B, AdBun-M4G9, Agora Product Development Kit, DISCO-F334C8, DISCO-F413ZH, DISCO-F429ZI, DISCO-F469NI, DISCO-F746NG, DISCO-F769NI, DISCO-H747I, DISCO-L053C8, DISCO-L072CZ-LRWAN1, DISCO-L476VG, DISCO-L496AG, DISCO-L4R9I, DISCO-L562QE (STM32L562E-DK), EFM32 Giant Gecko, EV-COG-AD3029LZ, EV-COG-AD4050LZ, FRDM-K22F, FRDM-K64F, FRDM-K66F, FRDM-K82F, FRDM-KL25Z, FRDM-KL43Z, FRDM-KL46Z, FRDM-KW41Z, GD32-F307VG, GD32-F450ZI, GR-LYCHEE, GR-MANGO, GR-PEACH, Hexiwear, IMXRT1050-EVKB, L-Tek FF-LPC546XX, MAX32600MBED, MultiTech Dragonfly, MultiTech Dragonfly Nano, MultiTech mDot, MultiTech mDot Box/EVB, MultiTech xDot, NAMote72, NUCLEO-F031K6, NUCLEO-F042K6, NUCLEO-F070RB, NUCLEO-F072RB, NUCLEO-F091RC, NUCLEO-F103RB, NUCLEO-F207ZG, NUCLEO-F303K8, NUCLEO-F303RE, NUCLEO-F303ZE, NUCLEO-F334R8, NUCLEO-F401RE, NUCLEO-F411RE, NUCLEO-F412ZG, NUCLEO-F413ZH, NUCLEO-F429ZI, NUCLEO-F439ZI, NUCLEO-F446RE, NUCLEO-F446ZE, NUCLEO-F746ZG, NUCLEO-F756ZG, NUCLEO-F767ZI, NUCLEO-G031K8, NUCLEO-G474RE, NUCLEO-H743ZI2, NUCLEO-L073RZ, NUCLEO-L152RE, NUCLEO-L432KC, NUCLEO-L433RC-P, NUCLEO-L476RG, NUCLEO-L486RG, NUCLEO-L496ZG, NUCLEO-L4R5ZI, NUCLEO-L4R5ZI-P, NUCLEO-WB55RG, NXP LPCXpresso54114, NXP LPCXpresso54608, NXP LPCXpresso54628, NuMaker-IoT-M263A, NuMaker-IoT-M487, NuMaker-PFM-M453, NuMaker-PFM-M487, NuMaker-PFM-NANO130, NuMaker-PFM-NUC472, PSoC 6 BLE Pioneer Kit, PSoC 6 Wi-Fi BT Prototyping Kit, PSoC 6 WiFi-BT Pioneer Kit, RHOMBIO L476DMW1K, SDP-K1, SDT32620B, SDT32625B, SDT52832B, SDT64B, Seeed Arch Max, Seeed Wio 3G, Seeed Wio LTE M1/NB1(BG96), Seeeduino-Arch-Pro, Thunderboard Sense 2, Uhuru RAVEN, mbed LPC1114FN28, mbed LPC1768. (#20201106090030, #20201106090321)
+
+
+Bugfixes
+--------
+
+- Do not check for mbed-os.lib in MbedProgram::from_url as it was making clone fail on examples containing multiple programs. (#62)
+- Fix https to ssh redirection (#66)
+
+
+Improved Documentation
+----------------------
+
+- Document build command (#202010131300)
+- Document libs command (#202010211355)
+- Fix formatting issue in docs (#202010261000)
+- Update documentation for Mbed CLI 2 (#202010281400)
+
+
+Misc
+----
+
+- #202010261100, #202011041130, #20201016135546, #20201021132447
+
+
 "3.4.0" (2020-10-12)
 ====================
 
