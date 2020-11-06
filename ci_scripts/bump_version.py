@@ -110,7 +110,7 @@ def set_log_level(verbosity: int) -> None:
 def get_current_version():
     """Get the current version using git describe to check the latest tag."""
     with git.Repo() as repo:
-        return repo.git.describe()
+        return repo.git.describe("--tags")
 
 
 def main(args: argparse.Namespace) -> int:
