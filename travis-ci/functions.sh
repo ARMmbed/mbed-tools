@@ -85,5 +85,5 @@ _clone_dependencies()
 
   echo “” > mbed-os.lib
 
-  mbedtools checkout
+  mbedtools deploy
 }

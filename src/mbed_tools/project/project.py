@@ -43,8 +43,8 @@ def initialise_project(path: pathlib.Path, create_only: bool) -> None:
         program.resolve_libraries()
 
 
-def checkout_project_revision(path: pathlib.Path, force: bool = False) -> None:
-    """Checkout a specific revision of the current Mbed project.
+def deploy_project(path: pathlib.Path, force: bool = False) -> None:
+    """Deploy a specific revision of the current Mbed project.
 
     This function also resolves and syncs all library dependencies to the revision specified in the library reference
     files.
@@ -52,11 +52,11 @@ def checkout_project_revision(path: pathlib.Path, force: bool = False) -> None:
     Args:
         path: Path to the Mbed project.
         project_revision: Revision of the Mbed project to check out.
-        force: Force overwrite uncommitted changes. If False, the checkout will fail if there are uncommitted local
+        force: Force overwrite uncommitted changes. If False, the deploy will fail if there are uncommitted local
                changes.
     """
     program = MbedProgram.from_existing(path, check_mbed_os=False)
-    program.checkout_libraries(force=force)
+    program.deploy_libraries(force=force)
     if program.has_unresolved_libraries():
         logger.info("Unresolved libraries detected, downloading library source code.")
         program.resolve_libraries()

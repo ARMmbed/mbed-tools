@@ -107,7 +107,7 @@ class MbedProgram:
         except ValueError as mbed_os_err:
             raise MbedOSNotFound(
                 f"Mbed OS was not found due to the following error: {mbed_os_err}"
-                "\nYou may need to resolve the mbed-os.lib reference. You can do this by performing a `checkout`."
+                "\nYou may need to resolve the mbed-os.lib reference. You can do this by performing a `deploy`."
             )
 
         return cls(program, mbed_os)
@@ -116,9 +116,9 @@ class MbedProgram:
         """Resolve all external dependencies defined in .lib files."""
         self.lib_references.resolve()
 
-    def checkout_libraries(self, force: bool = False) -> None:
+    def deploy_libraries(self, force: bool = False) -> None:
         """Check out all resolved libraries to revisions specified in .lib files."""
-        self.lib_references.checkout(force)
+        self.lib_references.deploy(force)
 
     def list_known_library_dependencies(self) -> List[MbedLibReference]:
         """Returns a list of all known library dependencies."""

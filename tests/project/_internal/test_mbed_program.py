@@ -124,11 +124,11 @@ class TestLibReferenceHandling(TestCase):
     @mock.patch("mbed_tools.project.mbed_program.LibraryReferences", autospec=True)
     @mock.patch("mbed_tools.project.mbed_program.MbedProgramFiles")
     @mock.patch("mbed_tools.project.mbed_program.MbedOS")
-    def test_checkout_libraries_delegation(self, mbed_os, mbed_program_files, mock_lib_refs):
+    def test_deploy_libraries_delegation(self, mbed_os, mbed_program_files, mock_lib_refs):
         program = MbedProgram(mbed_program_files(), mbed_os())
-        program.checkout_libraries()
+        program.deploy_libraries()
 
-        program.lib_references.checkout.assert_called_once()
+        program.lib_references.deploy.assert_called_once()
 
     @patchfs
     def test_lists_all_known_libraries(self, fs):

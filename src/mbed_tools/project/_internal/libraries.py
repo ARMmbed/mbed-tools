@@ -70,7 +70,7 @@ class LibraryReferences:
         if list(self.iter_unresolved()):
             self.resolve()
 
-    def checkout(self, force: bool) -> None:
+    def deploy(self, force: bool) -> None:
         """Check out all resolved libs to revision specified in .lib files."""
         for lib in self.iter_resolved():
             repo = git_utils.init(lib.source_code_path)
