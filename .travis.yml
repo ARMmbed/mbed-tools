@@ -59,6 +59,10 @@ matrix:
         - _setup_build_env
         # Install the changes added in the pull request
         - pip install .
+        - pip install -U 'prettytable<1.0'
+        - pip install -U 'future==0.16.0'
+        - pip install -U 'Jinja2>=2.10.1,<2.11'
+        - pip install -U 'intelhex>=1.3,<=2.2.1'
         - mbedtools --version
         # Leave mbed-tools directory to clone dependencies
         - cd ..
