@@ -6,7 +6,7 @@ import pathlib
 
 from unittest import TestCase, mock
 
-from mbed_tools.project import initialise_project, clone_project, checkout_project_revision, get_known_libs
+from mbed_tools.project import initialise_project, clone_project, deploy_project, get_known_libs
 
 
 @mock.patch("mbed_tools.project.project.MbedProgram", autospec=True)
@@ -43,17 +43,17 @@ class TestCloneProject(TestCase):
 
 
 @mock.patch("mbed_tools.project.project.MbedProgram", autospec=True)
-class TestCheckoutProject(TestCase):
+class TestDeployProject(TestCase):
     def test_checks_out_libraries(self, mock_program):
         path = pathlib.Path("somewhere")
-        checkout_project_revision(path, force=False)
+        deploy_project(path, force=False)
 
         mock_program.from_existing.assert_called_once_with(path, False)
-        mock_program.from_existing.return_value.checkout_libraries.assert_called_once_with(force=False)
+        mock_program.from_existing.return_value.deploy_libraries.assert_called_once_with(force=False)
 
     def test_resolves_libs_if_unresolved_detected(self, mock_program):
         path = pathlib.Path("somewhere")
-        checkout_project_revision(path)
+        deploy_project(path)
 
         mock_program.from_existing.return_value.resolve_libraries.assert_called_once()
 

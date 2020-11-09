@@ -49,31 +49,31 @@ class TestLibraryReferences(TestCase):
     @patchfs
     @mock.patch("mbed_tools.project._internal.git_utils.checkout", autospec=True)
     @mock.patch("mbed_tools.project._internal.git_utils.init", autospec=True)
-    def test_does_not_perform_checkout_if_no_git_ref_exists(self, mock_init, mock_checkout, mock_clone, fs):
+    def test_does_not_perform_deploy_if_no_git_ref_exists(self, mock_init, mock_checkout, mock_clone, fs):
         fs_root = pathlib.Path(fs, "foo")
         make_mbed_lib_reference(fs_root, ref_url="https://git", resolved=True)
 
         lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
-        lib_refs.checkout(force=False)
+        lib_refs.deploy(force=False)
 
         mock_checkout.assert_not_called()
 
     @patchfs
     @mock.patch("mbed_tools.project._internal.git_utils.checkout", autospec=True)
     @mock.patch("mbed_tools.project._internal.git_utils.init", autospec=True)
-    def test_performs_checkout_if_git_ref_exists(self, mock_init, mock_checkout, mock_clone, fs):
+    def test_performs_deploy_if_git_ref_exists(self, mock_init, mock_checkout, mock_clone, fs):
         fs_root = pathlib.Path(fs, "foo")
         lib = make_mbed_lib_reference(fs_root, ref_url="https://git#lajdhalk234", resolved=True)
 
         lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
-        lib_refs.checkout(force=False)
+        lib_refs.deploy(force=False)
 
         mock_checkout.assert_called_once_with(mock_init.return_value, lib.get_git_reference().ref, force=False)
 
     @patchfs
     @mock.patch("mbed_tools.project._internal.git_utils.checkout", autospec=True)
     @mock.patch("mbed_tools.project._internal.git_utils.init", autospec=True)
-    def test_resolve_does_not_perform_checkout_if_no_git_ref_exists(self, mock_init, mock_checkout, mock_clone, fs):
+    def test_resolve_does_not_perform_deploy_if_no_git_ref_exists(self, mock_init, mock_checkout, mock_clone, fs):
         fs_root = pathlib.Path(fs, "foo")
         make_mbed_lib_reference(fs_root, ref_url="https://git")
         mock_clone.side_effect = lambda url, dst_dir: dst_dir.mkdir()
@@ -86,7 +86,7 @@ class TestLibraryReferences(TestCase):
     @patchfs
     @mock.patch("mbed_tools.project._internal.git_utils.checkout", autospec=True)
     @mock.patch("mbed_tools.project._internal.git_utils.init", autospec=True)
-    def test_resolve_performs_checkout_if_git_ref_exists(self, mock_init, mock_checkout, mock_clone, fs):
+    def test_resolve_performs_deploy_if_git_ref_exists(self, mock_init, mock_checkout, mock_clone, fs):
         fs_root = pathlib.Path(fs, "foo")
         lib = make_mbed_lib_reference(fs_root, ref_url="https://git#lajdhalk234")
         mock_clone.side_effect = lambda url, dst_dir: dst_dir.mkdir()

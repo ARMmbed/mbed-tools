@@ -2,7 +2,7 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Project management commands: new, clone, checkout and libs."""
+"""Project management commands: new, clone, deploy and libs."""
 import os
 import pathlib
 
@@ -11,7 +11,7 @@ from typing import Any
 import click
 import tabulate
 
-from mbed_tools.project import initialise_project, clone_project, get_known_libs, checkout_project_revision
+from mbed_tools.project import initialise_project, clone_project, get_known_libs, deploy_project
 
 
 @click.command()
@@ -74,17 +74,19 @@ def libs(path: str) -> None:
     click.echo(tabulate.tabulate(table, headers=headers))
 
     if lib_data["unresolved"]:
-        click.echo(
-            "\nUnresolved libraries detected. Please run the `checkout` command to download library source code."
-        )
+        click.echo("\nUnresolved libraries detected. Please run the `deploy` command to download library source code.")
 
 
 @click.command()
 @click.argument("path", type=click.Path(), default=os.getcwd())
 @click.option(
-    "--force", "-f", is_flag=True, show_default=True, help="Force checkout, overwrites local uncommitted changes."
+    "--force",
+    "-f",
+    is_flag=True,
+    show_default=True,
+    help="Forces checkout of all library repositories at specified commit in the .lib file, overwrites local changes.",
 )
-def checkout(path: str, force: bool) -> None:
+def deploy(path: str, force: bool) -> None:
     """Checks out Mbed program library dependencies at the revision specified in the ".lib" files.
 
     Ensures all dependencies are resolved and the versions are synchronised to the version specified in the library
@@ -95,4 +97,4 @@ def checkout(path: str, force: bool) -> None:
     REVISION: The revision of the Mbed project to check out.
     """
     click.echo("Checking out all libraries to revisions specified in .lib files. Resolving any unresolved libraries.")
-    checkout_project_revision(pathlib.Path(path), force)
+    deploy_project(pathlib.Path(path), force)

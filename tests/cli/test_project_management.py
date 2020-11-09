@@ -8,7 +8,7 @@ from unittest import TestCase, mock
 
 from click.testing import CliRunner
 
-from mbed_tools.cli.project_management import new, clone, checkout, libs
+from mbed_tools.cli.project_management import new, clone, deploy, libs
 
 
 @mock.patch("mbed_tools.cli.project_management.initialise_project", autospec=True)
@@ -40,8 +40,8 @@ class TestLibsCommand(TestCase):
         mocked_get_libs.assert_called_once()
 
 
-@mock.patch("mbed_tools.cli.project_management.checkout_project_revision", autospec=True)
-class TestCheckoutCommand(TestCase):
-    def test_calls_checkout_function_with_correct_args(self, mocked_checkout_project_revision):
-        CliRunner().invoke(checkout, ["path", "--force"])
-        mocked_checkout_project_revision.assert_called_once_with(pathlib.Path("path"), True)
+@mock.patch("mbed_tools.cli.project_management.deploy_project", autospec=True)
+class TestDeployCommand(TestCase):
+    def test_calls_deploy_function_with_correct_args(self, mocked_deploy_project):
+        CliRunner().invoke(deploy, ["path", "--force"])
+        mocked_deploy_project.assert_called_once_with(pathlib.Path("path"), True)
