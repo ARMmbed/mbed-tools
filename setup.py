@@ -48,6 +48,7 @@ setup(
         "pyudev; platform_system=='Linux'",
         "typing-extensions",
         "Jinja2",
+        "pyserial",
     ],
     license="Apache 2.0",
     long_description_content_type="text/markdown",
