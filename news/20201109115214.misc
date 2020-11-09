@@ -1,0 +1,1 @@
+Fix issue with tox -e preprelease not deleting news files
