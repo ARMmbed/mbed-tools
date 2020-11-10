@@ -66,8 +66,8 @@ matrix:
         - mbedtools --version
         # Leave mbed-tools directory to clone dependencies
         - cd ..
-        - _clone_dependencies
       script:
+        - _clone_dependencies
         - echo mbedtools build -t GCC_ARM -m ${TARGET_NAME} -b ${PROFILE}
         - mbedtools build -t GCC_ARM -m ${TARGET_NAME} -b ${PROFILE}
         - ccache -s
@@ -127,7 +127,7 @@ matrix:
     - <<: *mbed-tools-test
       name: "Test crypto example (K64F)"
       env: EXAMPLE_NAME=mbed-os-example-mbed-crypto TARGET_NAME=K64F SUBEXAMPLE_NAME=getting-started CACHE_NAME=crypto-getting-started-K64F
- 
+
     - <<: *mbed-tools-test
       name: "Test nfc example (DISCO_L475VG_IOT01A)"
       env: EXAMPLE_NAME=mbed-os-example-nfc TARGET_NAME=DISCO_L475VG_IOT01A SUBEXAMPLE_NAME=NFC_EEPROM CACHE_NAME=nfc-DISCO_L475VG_IOT01A
@@ -135,3 +135,13 @@ matrix:
     - <<: *mbed-tools-test
       name: "Test sockets example (K64F)"
       env: EXAMPLE_NAME=mbed-os-example-sockets TARGET_NAME=K64F CACHE_NAME=sockets-K64F
+
+    # Mbed tools command line option test
+    - <<: *mbed-tools-test
+      name: "Test init command"
+      env: NAME=test-init-cmd CACHE_NAME=test-init-cmd
+      script:
+        - mbedtools init test
+        - cd test
+        - mbedtools build -t GCC_ARM -m K64F
+        - ccache -s
