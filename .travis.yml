@@ -110,7 +110,7 @@ matrix:
 
     - <<: *mbed-tools-test
       name: "Test ble example (NRF52840_DK)"
-      env: EXAMPLE_NAME=mbed-os-example-ble TARGET_NAME=NRF52840_DK SUBEXAMPLE_NAME=BLE_LED CACHE_NAME=ble-ble-led-NRF52840_DK
+      env: EXAMPLE_NAME=mbed-os-example-ble TARGET_NAME=NRF52840_DK SUBEXAMPLE_NAME=BLE_Advertising CACHE_NAME=ble-ble-led-NRF52840_DK
 
     - <<: *mbed-tools-test
       name: "Test cellular example (WIO_3G)"
