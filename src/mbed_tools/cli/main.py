@@ -15,7 +15,7 @@ from mbed_tools.lib.logging import set_log_level, MbedToolsHandler
 
 from mbed_tools.cli.configure import configure
 from mbed_tools.cli.list_connected_devices import list_connected_devices
-from mbed_tools.cli.project_management import init, clone, checkout, libs
+from mbed_tools.cli.project_management import new, clone, checkout, libs
 from mbed_tools.cli.build import build
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
@@ -73,7 +73,7 @@ def cli(verbose: int, traceback: bool) -> None:
 
 cli.add_command(configure, "configure")
 cli.add_command(list_connected_devices, "devices")
-cli.add_command(init, "init")
+cli.add_command(new, "new")
 cli.add_command(checkout, "checkout")
 cli.add_command(clone, "clone")
 cli.add_command(libs, "libs")

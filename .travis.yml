@@ -138,10 +138,10 @@ matrix:
 
     # Mbed tools command line option test
     - <<: *mbed-tools-test
-      name: "Test init command"
-      env: NAME=test-init-cmd CACHE_NAME=test-init-cmd
+      name: "Test new command"
+      env: NAME=test-new-cmd CACHE_NAME=test-new-cmd
       script:
-        - mbedtools init test
+        - mbedtools new test
         - cd test
         - mbedtools build -t GCC_ARM -m K64F
         - ccache -s

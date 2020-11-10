@@ -2,7 +2,7 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Project management commands: init, clone, checkout and libs."""
+"""Project management commands: new, clone, checkout and libs."""
 import os
 import pathlib
 
@@ -17,7 +17,7 @@ from mbed_tools.project import initialise_project, clone_project, get_known_libs
 @click.command()
 @click.option("--create-only", "-c", is_flag=True, show_default=True, help="Create a program without fetching mbed-os.")
 @click.argument("path", type=click.Path())
-def init(path: str, create_only: bool) -> None:
+def new(path: str, create_only: bool) -> None:
     """Creates a new Mbed project at the specified path. Downloads mbed-os and adds it to the project.
 
     PATH: Path to the destination directory for the project. Will be created if it does not exist.
