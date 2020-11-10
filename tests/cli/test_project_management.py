@@ -8,17 +8,17 @@ from unittest import TestCase, mock
 
 from click.testing import CliRunner
 
-from mbed_tools.cli.project_management import init, clone, checkout, libs
+from mbed_tools.cli.project_management import new, clone, checkout, libs
 
 
 @mock.patch("mbed_tools.cli.project_management.initialise_project", autospec=True)
-class TestInitCommand(TestCase):
-    def test_calls_init_function_with_correct_args(self, mock_initialise_project):
-        CliRunner().invoke(init, ["path", "--create-only"])
+class TestNewCommand(TestCase):
+    def test_calls_new_function_with_correct_args(self, mock_initialise_project):
+        CliRunner().invoke(new, ["path", "--create-only"])
         mock_initialise_project.assert_called_once_with(pathlib.Path("path"), True)
 
     def test_echos_mbed_os_message_when_required(self, mock_initialise_project):
-        result = CliRunner().invoke(init, ["path"])
+        result = CliRunner().invoke(new, ["path"])
 
         self.assertEqual(
             result.output,
