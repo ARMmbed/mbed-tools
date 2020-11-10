@@ -8,7 +8,7 @@ from unittest import TestCase, mock
 
 from click.testing import CliRunner
 
-from mbed_tools.cli.project_management import new, clone, deploy, libs
+from mbed_tools.cli.project_management import new, import_, deploy, libs
 
 
 @mock.patch("mbed_tools.cli.project_management.initialise_project", autospec=True)
@@ -26,11 +26,11 @@ class TestNewCommand(TestCase):
         )
 
 
-@mock.patch("mbed_tools.cli.project_management.clone_project", autospec=True)
-class TestCloneCommand(TestCase):
-    def test_calls_clone_function_with_correct_args(self, mocked_clone_project):
-        CliRunner().invoke(clone, ["url", "dst"])
-        mocked_clone_project.assert_called_once_with("url", pathlib.Path("dst"), True)
+@mock.patch("mbed_tools.cli.project_management.import_project", autospec=True)
+class TestImportCommand(TestCase):
+    def test_calls_import_function_with_correct_args(self, mocked_import_project):
+        CliRunner().invoke(import_, ["url", "dst"])
+        mocked_import_project.assert_called_once_with("url", pathlib.Path("dst"), True)
 
 
 @mock.patch("mbed_tools.cli.project_management.get_known_libs", autospec=True)
