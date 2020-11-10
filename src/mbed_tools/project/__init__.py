@@ -9,5 +9,5 @@
 * Deploy of a specific version of Mbed OS or library.
 """
 
-from mbed_tools.project.project import initialise_project, clone_project, deploy_project, get_known_libs
+from mbed_tools.project.project import initialise_project, import_project, deploy_project, get_known_libs
 from mbed_tools.project.mbed_program import MbedProgram

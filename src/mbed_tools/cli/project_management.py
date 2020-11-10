@@ -2,7 +2,7 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Project management commands: new, clone, deploy and libs."""
+"""Project management commands: new, import_, deploy and libs."""
 import os
 import pathlib
 
@@ -11,7 +11,7 @@ from typing import Any
 import click
 import tabulate
 
-from mbed_tools.project import initialise_project, clone_project, get_known_libs, deploy_project
+from mbed_tools.project import initialise_project, import_project, get_known_libs, deploy_project
 
 
 @click.command()
@@ -39,7 +39,7 @@ def new(path: str, create_only: bool) -> None:
     show_default=True,
     help="Skip resolving program library dependencies after cloning.",
 )
-def clone(url: str, path: Any, skip_resolve_libs: bool) -> None:
+def import_(url: str, path: Any, skip_resolve_libs: bool) -> None:
     """Clone an Mbed project and library dependencies.
 
     URL: The git url of the remote project to clone.
@@ -54,7 +54,7 @@ def clone(url: str, path: Any, skip_resolve_libs: bool) -> None:
         click.echo(f"Destination path is '{path}'")
         path = pathlib.Path(path)
 
-    clone_project(url, path, not skip_resolve_libs)
+    import_project(url, path, not skip_resolve_libs)
 
 
 @click.command()

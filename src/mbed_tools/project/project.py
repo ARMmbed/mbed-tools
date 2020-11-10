@@ -13,7 +13,7 @@ from mbed_tools.project.mbed_program import MbedProgram, parse_url
 logger = logging.getLogger(__name__)
 
 
-def clone_project(url: str, dst_path: Any = None, recursive: bool = False) -> None:
+def import_project(url: str, dst_path: Any = None, recursive: bool = False) -> None:
     """Clones an Mbed project from a remote repository.
 
     Args:

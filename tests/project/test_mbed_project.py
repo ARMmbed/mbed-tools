@@ -6,7 +6,7 @@ import pathlib
 
 from unittest import TestCase, mock
 
-from mbed_tools.project import initialise_project, clone_project, deploy_project, get_known_libs
+from mbed_tools.project import initialise_project, import_project, deploy_project, get_known_libs
 
 
 @mock.patch("mbed_tools.project.project.MbedProgram", autospec=True)
@@ -27,16 +27,16 @@ class TestInitialiseProject(TestCase):
 
 
 @mock.patch("mbed_tools.project.project.MbedProgram", autospec=True)
-class TestCloneProject(TestCase):
+class TestImportProject(TestCase):
     def test_clones_from_remote(self, mock_program):
         url = "https://git.com/gitorg/repo"
-        clone_project(url, recursive=False)
+        import_project(url, recursive=False)
 
         mock_program.from_url.assert_called_once_with(url, pathlib.Path(url.rsplit("/", maxsplit=1)[-1]))
 
     def test_resolves_libs_when_recursive_is_true(self, mock_program):
         url = "https://git.com/gitorg/repo"
-        clone_project(url, recursive=True)
+        import_project(url, recursive=True)
 
         mock_program.from_url.assert_called_once_with(url, pathlib.Path(url.rsplit("/", maxsplit=1)[-1]))
         mock_program.from_url.return_value.resolve_libraries.assert_called_once()
