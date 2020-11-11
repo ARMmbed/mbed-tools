@@ -17,6 +17,7 @@ from mbed_tools.cli.configure import configure
 from mbed_tools.cli.list_connected_devices import list_connected_devices
 from mbed_tools.cli.project_management import new, clone, deploy, libs
 from mbed_tools.cli.build import build
+from mbed_tools.cli.sterm import sterm
 
 CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 LOGGER = logging.getLogger(__name__)
@@ -78,3 +79,4 @@ cli.add_command(deploy, "deploy")
 cli.add_command(clone, "clone")
 cli.add_command(libs, "libs")
 cli.add_command(build, "build")
+cli.add_command(sterm, "sterm")
