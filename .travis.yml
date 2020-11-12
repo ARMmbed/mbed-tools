@@ -145,3 +145,16 @@ matrix:
         - cd test
         - mbedtools compile -t GCC_ARM -m K64F
         - ccache -s
+
+    - <<: *mbed-tools-test
+      name: "Test import command"
+      env: NAME=test-import-cmd CACHE_NAME=test-import-cmd
+      script:
+        - mbedtools import mbed-os-example-ble
+        - cd mbed-os-example-ble
+        # Checkout the development branch on BLE example
+        - git checkout development
+        - cd BLE_Advertising
+        - mbedtools deploy
+        - mbedtools compile -t GCC_ARM -m K64F
+        - ccache -s
