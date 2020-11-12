@@ -12,3 +12,4 @@ The functionality covered in this package includes the following:
 """
 from mbed_tools.build.build import build_project, generate_build_system
 from mbed_tools.build.config import generate_config
+from mbed_tools.build.flash import flash_binary
