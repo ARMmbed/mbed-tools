@@ -6,7 +6,7 @@
 import os
 import pathlib
 
-from typing import Any
+from typing import Any, List
 
 import click
 import tabulate
@@ -54,27 +54,10 @@ def import_(url: str, path: Any, skip_resolve_libs: bool) -> None:
         click.echo(f"Destination path is '{path}'")
         path = pathlib.Path(path)
 
-    import_project(url, path, not skip_resolve_libs)
-
-
-@click.command()
-@click.argument("path", type=click.Path(), default=os.getcwd())
-def libs(path: str) -> None:
-    """List all resolved library dependencies.
-
-    PATH: Path to the Mbed project [default: CWD]
-    """
-    lib_data = get_known_libs(pathlib.Path(path))
-    click.echo("This program has the following library dependencies: \n")
-    table = []
-    for lib in sorted(lib_data["known_libs"]):
-        table.append([lib.reference_file.stem, lib.get_git_reference().repo_url, lib.get_git_reference().ref])
-
-    headers = ("Library Name", "Repository URL", "Git reference")
-    click.echo(tabulate.tabulate(table, headers=headers))
-
-    if lib_data["unresolved"]:
-        click.echo("\nUnresolved libraries detected. Please run the `deploy` command to download library source code.")
+    dst_path = import_project(url, path, not skip_resolve_libs)
+    if not skip_resolve_libs:
+        libs = get_known_libs(dst_path)
+        _print_dependency_table(libs)
 
 
 @click.command()
@@ -95,4 +78,24 @@ def deploy(path: str, force: bool) -> None:
     PATH: Path to the Mbed project [default: CWD]
     """
     click.echo("Checking out all libraries to revisions specified in .lib files. Resolving any unresolved libraries.")
-    deploy_project(pathlib.Path(path), force)
+    root_path = pathlib.Path(path)
+    deploy_project(root_path, force)
+    libs = get_known_libs(root_path)
+    _print_dependency_table(libs)
+
+
+def _print_dependency_table(libs: List) -> None:
+    click.echo("The following library dependencies were fetched: \n")
+    table = []
+    for lib in libs:
+        table.append(
+            [
+                lib.reference_file.stem,
+                lib.get_git_reference().repo_url,
+                lib.source_code_path,
+                lib.get_git_reference().ref,
+            ]
+        )
+
+    headers = ("Library Name", "Repository URL", "Path", "Git Reference")
+    click.echo(tabulate.tabulate(table, headers=headers))
