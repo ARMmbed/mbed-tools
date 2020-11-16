@@ -12,6 +12,12 @@ from mbed_tools.project import initialise_project, import_project, deploy_projec
 
 
 @pytest.fixture
+def mock_libs():
+    with mock.patch("mbed_tools.project.project.LibraryReferences") as libs:
+        yield libs
+
+
+@pytest.fixture
 def mock_program():
     with mock.patch("mbed_tools.project.project.MbedProgram") as prog:
         yield prog
@@ -24,55 +30,56 @@ def mock_git():
 
 
 class TestInitialiseProject:
-    def test_fetches_mbed_os_when_create_only_is_false(self, mock_program):
+    def test_fetches_mbed_os_when_create_only_is_false(self, mock_libs, mock_program):
         path = pathlib.Path()
         initialise_project(path, create_only=False)
 
         mock_program.from_new.assert_called_once_with(path)
-        mock_program.from_new.return_value.resolve_libraries.assert_called_once()
+        mock_libs().fetch.assert_called_once()
 
-    def test_skips_mbed_os_when_create_only_is_true(self, mock_program):
+    def test_skips_mbed_os_when_create_only_is_true(self, mock_libs, mock_program):
         path = pathlib.Path()
         initialise_project(path, create_only=True)
 
         mock_program.from_new.assert_called_once_with(path)
-        mock_program.from_new.return_value.resolve_libraries.assert_not_called()
+        mock_libs().fetch.assert_not_called()
 
 
 class TestImportProject:
-    def test_clones_from_remote(self, mock_program):
+    def test_clones_from_remote(self, mock_git):
         url = "https://git.com/gitorg/repo"
         import_project(url, recursive=False)
 
-        mock_program.from_url.assert_called_once_with(url, pathlib.Path(url.rsplit("/", maxsplit=1)[-1]))
+        mock_git.clone.assert_called_once_with(url, pathlib.Path(url.rsplit("/", maxsplit=1)[-1]))
 
-    def test_resolves_libs_when_recursive_is_true(self, mock_program):
+    def test_resolves_libs_when_recursive_is_true(self, mock_git, mock_libs):
         url = "https://git.com/gitorg/repo"
         import_project(url, recursive=True)
 
-        mock_program.from_url.assert_called_once_with(url, pathlib.Path(url.rsplit("/", maxsplit=1)[-1]))
-        mock_program.from_url.return_value.resolve_libraries.assert_called_once()
+        mock_git.clone.assert_called_once_with(url, pathlib.Path(url.rsplit("/", maxsplit=1)[-1]))
+        mock_libs().fetch.assert_called_once()
 
 
 class TestDeployProject:
-    def test_checks_out_libraries(self, mock_program):
+    def test_checks_out_libraries(self, mock_libs):
         path = pathlib.Path("somewhere")
         deploy_project(path, force=False)
 
-        mock_program.from_existing.assert_called_once_with(path, check_mbed_os=False)
-        mock_program.from_existing.return_value.deploy_libraries.assert_called_once_with(force=False)
+        mock_libs().checkout.assert_called_once_with(force=False)
 
-    def test_resolves_libs_if_unresolved_detected(self, mock_program):
+    def test_resolves_libs_if_unresolved_detected(self, mock_libs):
+        mock_libs().iter_unresolved.return_value = [1]
         path = pathlib.Path("somewhere")
         deploy_project(path)
 
-        mock_program.from_existing.return_value.resolve_libraries.assert_called_once()
+        mock_libs().fetch.assert_called_once()
 
 
 class TestPrintLibs:
-    def test_list_libraries_called(self, mock_program):
+    def test_list_libraries_gets_known_lib_list(self, mock_libs):
         path = pathlib.Path("somewhere")
-        get_known_libs(path)
+        mock_libs().iter_resolved.return_value = ["", ""]
 
-        mock_program.from_existing.assert_called_once_with(path, check_mbed_os=False)
-        mock_program.from_existing.return_value.list_known_library_dependencies.assert_called()
+        libs = get_known_libs(path)
+
+        assert libs == ["", ""]

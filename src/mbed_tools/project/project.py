@@ -9,6 +9,8 @@ import logging
 from typing import Dict, Any
 
 from mbed_tools.project.mbed_program import MbedProgram, parse_url
+from mbed_tools.project._internal.libraries import LibraryReferences
+from mbed_tools.project._internal import git_utils
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +28,10 @@ def import_project(url: str, dst_path: Any = None, recursive: bool = False) -> N
     if not dst_path:
         dst_path = pathlib.Path(git_data["dst_path"])
 
-    program = MbedProgram.from_url(url, dst_path)
+    git_utils.clone(url, dst_path)
     if recursive:
-        program.resolve_libraries()
+        libs = LibraryReferences(root=dst_path, ignore_paths=["mbed-os"])
+        libs.fetch()
 
 
 def initialise_project(path: pathlib.Path, create_only: bool) -> None:
@@ -40,7 +43,8 @@ def initialise_project(path: pathlib.Path, create_only: bool) -> None:
     """
     program = MbedProgram.from_new(path)
     if not create_only:
-        program.resolve_libraries()
+        libs = LibraryReferences(root=program.root, ignore_paths=["mbed-os"])
+        libs.fetch()
 
 
 def deploy_project(path: pathlib.Path, force: bool = False) -> None:
@@ -54,11 +58,11 @@ def deploy_project(path: pathlib.Path, force: bool = False) -> None:
         force: Force overwrite uncommitted changes. If False, the deploy will fail if there are uncommitted local
                changes.
     """
-    program = MbedProgram.from_existing(path, check_mbed_os=False)
-    program.deploy_libraries(force=force)
-    if program.has_unresolved_libraries():
+    libs = LibraryReferences(path, ignore_paths=["mbed-os"])
+    libs.checkout(force=force)
+    if list(libs.iter_unresolved()):
         logger.info("Unresolved libraries detected, downloading library source code.")
-        program.resolve_libraries()
+        libs.fetch()
 
 
 def get_known_libs(path: pathlib.Path) -> Dict[str, Any]:
@@ -73,6 +77,5 @@ def get_known_libs(path: pathlib.Path) -> Dict[str, Any]:
         dictionary containing a list of known dependencies and a boolean stating whether unresolved dependencies were
         detected.
     """
-    program = MbedProgram.from_existing(path, check_mbed_os=False)
-
-    return {"known_libs": program.list_known_library_dependencies(), "unresolved": program.has_unresolved_libraries()}
+    libs = LibraryReferences(path, ignore_paths=["mbed-os"])
+    return {"known_libs": list(libs.iter_resolved()), "unresolved": bool(list(libs.iter_unresolved()))}
