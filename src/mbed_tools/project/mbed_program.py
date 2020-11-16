@@ -6,18 +6,16 @@
 import logging
 
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict
 from urllib.parse import urlparse
 
 from mbed_tools.project.exceptions import ProgramNotFound, ExistingProgram, MbedOSNotFound
-from mbed_tools.project._internal import git_utils
 from mbed_tools.project._internal.project_data import (
     MbedProgramFiles,
     MbedOS,
     MBED_OS_REFERENCE_FILE_NAME,
     MBED_OS_DIR_NAME,
 )
-from mbed_tools.project._internal.libraries import LibraryReferences, MbedLibReference
 
 logger = logging.getLogger(__name__)
 
@@ -41,25 +39,6 @@ class MbedProgram:
         self.files = program_files
         self.root = self.files.mbed_os_ref.parent
         self.mbed_os = mbed_os
-        self.lib_references = LibraryReferences(root=self.root, ignore_paths=[self.mbed_os.root.name])
-
-    @classmethod
-    def from_url(cls, url: str, dst_path: Path) -> "MbedProgram":
-        """Fetch an Mbed program from a remote URL.
-
-        Args:
-            url: URL of the remote program repository.
-            dst_path: Destination path for the cloned program.
-        """
-        logger.info(f"Cloning Mbed program from URL '{url}'.")
-        git_utils.clone(url, dst_path)
-        program_files = MbedProgramFiles.from_existing(dst_path)
-        try:
-            mbed_os = MbedOS.from_existing(dst_path / MBED_OS_DIR_NAME, False)
-        except ValueError as mbed_err:
-            raise MbedOSNotFound(f"{mbed_err}")
-
-        return cls(program_files, mbed_os)
 
     @classmethod
     def from_new(cls, dir_path: Path) -> "MbedProgram":
@@ -111,22 +90,6 @@ class MbedProgram:
             )
 
         return cls(program, mbed_os)
-
-    def resolve_libraries(self) -> None:
-        """Resolve all external dependencies defined in .lib files."""
-        self.lib_references.fetch()
-
-    def deploy_libraries(self, force: bool = False) -> None:
-        """Check out all resolved libraries to revisions specified in .lib files."""
-        self.lib_references.checkout(force)
-
-    def list_known_library_dependencies(self) -> List[MbedLibReference]:
-        """Returns a list of all known library dependencies."""
-        return sorted([lib for lib in self.lib_references.iter_all()])
-
-    def has_unresolved_libraries(self) -> bool:
-        """Checks if any unresolved library dependencies exist in the program tree."""
-        return bool(list(self.lib_references.iter_unresolved()))
 
 
 def parse_url(name_or_url: str) -> Dict[str, str]:
