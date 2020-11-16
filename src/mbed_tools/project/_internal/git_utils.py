@@ -38,7 +38,7 @@ def clone(url: str, dst_dir: Path) -> git.Repo:
     try:
         return git.Repo.clone_from(url, str(dst_dir), progress=ProgressReporter(name=url))
     except git.exc.GitCommandError as err:
-        raise VersionControlError(f"Cloning git repository from url '{url}' failed. Error from VCS: {err.stderr}")
+        raise VersionControlError(f"Cloning git repository from url '{url}' failed. Error from VCS: {err}")
 
 
 def checkout(repo: git.Repo, ref: str, force: bool = False) -> None:
@@ -54,7 +54,7 @@ def checkout(repo: git.Repo, ref: str, force: bool = False) -> None:
     try:
         repo.git.checkout(f"--force {ref}" if force else str(ref))
     except git.exc.GitCommandError as err:
-        raise VersionControlError(f"Failed to check out revision '{ref}'. Error from VCS: {err.stderr}")
+        raise VersionControlError(f"Failed to check out revision '{ref}'. Error from VCS: {err}")
 
 
 def init(path: Path) -> git.Repo:
@@ -72,7 +72,7 @@ def init(path: Path) -> git.Repo:
     try:
         return git.Repo.init(str(path))
     except git.exc.GitCommandError as err:
-        raise VersionControlError(f"Failed to initialise git repository at path '{path}'. Error from VCS: {err.stderr}")
+        raise VersionControlError(f"Failed to initialise git repository at path '{path}'. Error from VCS: {err}")
 
 
 def get_repo(path: Path) -> git.Repo:
