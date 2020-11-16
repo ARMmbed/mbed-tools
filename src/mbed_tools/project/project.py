@@ -6,7 +6,7 @@
 import pathlib
 import logging
 
-from typing import Dict, Any
+from typing import List, Any
 
 from mbed_tools.project.mbed_program import MbedProgram, parse_url
 from mbed_tools.project._internal.libraries import LibraryReferences
@@ -15,13 +15,16 @@ from mbed_tools.project._internal import git_utils
 logger = logging.getLogger(__name__)
 
 
-def import_project(url: str, dst_path: Any = None, recursive: bool = False) -> None:
+def import_project(url: str, dst_path: Any = None, recursive: bool = False) -> pathlib.Path:
     """Clones an Mbed project from a remote repository.
 
     Args:
         url: URL of the repository to clone.
         dst_path: Destination path for the repository.
         recursive: Recursively clone all project dependencies.
+
+    Returns:
+        The path the project was cloned to.
     """
     git_data = parse_url(url)
     url = git_data["url"]
@@ -32,6 +35,8 @@ def import_project(url: str, dst_path: Any = None, recursive: bool = False) -> N
     if recursive:
         libs = LibraryReferences(root=dst_path, ignore_paths=["mbed-os"])
         libs.fetch()
+
+    return dst_path
 
 
 def initialise_project(path: pathlib.Path, create_only: bool) -> None:
@@ -65,7 +70,7 @@ def deploy_project(path: pathlib.Path, force: bool = False) -> None:
         libs.fetch()
 
 
-def get_known_libs(path: pathlib.Path) -> Dict[str, Any]:
+def get_known_libs(path: pathlib.Path) -> List:
     """List all resolved library dependencies.
 
     This function will not resolve dependencies. This will only generate a list of resolved dependencies.
@@ -74,8 +79,7 @@ def get_known_libs(path: pathlib.Path) -> Dict[str, Any]:
         path: Path to the Mbed project.
 
     Returns:
-        dictionary containing a list of known dependencies and a boolean stating whether unresolved dependencies were
-        detected.
+        A list of known dependencies.
     """
     libs = LibraryReferences(path, ignore_paths=["mbed-os"])
-    return {"known_libs": list(libs.iter_resolved()), "unresolved": bool(list(libs.iter_unresolved()))}
+    return list(sorted(libs.iter_resolved()))

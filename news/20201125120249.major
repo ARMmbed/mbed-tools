@@ -1,0 +1,1 @@
+Remove the `libs` command and print a table of fetched dependencies after running `import` or `deploy.
