@@ -73,7 +73,7 @@ class LibraryReferences:
     def checkout(self, force: bool) -> None:
         """Check out all resolved libs to revision specified in .lib files."""
         for lib in self.iter_resolved():
-            repo = git_utils.init(lib.source_code_path)
+            repo = git_utils.get_repo(lib.source_code_path)
             git_ref = lib.get_git_reference()
             if git_ref.ref:
                 git_utils.checkout(repo, git_ref.ref, force=force)
