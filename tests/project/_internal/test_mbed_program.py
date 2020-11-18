@@ -119,7 +119,7 @@ class TestLibReferenceHandling(TestCase):
         program = MbedProgram(mbed_program_files(), mbed_os())
         program.resolve_libraries()
 
-        program.lib_references.resolve.assert_called_once()
+        program.lib_references.fetch.assert_called_once()
 
     @mock.patch("mbed_tools.project.mbed_program.LibraryReferences", autospec=True)
     @mock.patch("mbed_tools.project.mbed_program.MbedProgramFiles")
@@ -128,7 +128,7 @@ class TestLibReferenceHandling(TestCase):
         program = MbedProgram(mbed_program_files(), mbed_os())
         program.deploy_libraries()
 
-        program.lib_references.deploy.assert_called_once()
+        program.lib_references.checkout.assert_called_once()
 
     @patchfs
     def test_lists_all_known_libraries(self, fs):

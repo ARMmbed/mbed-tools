@@ -56,7 +56,7 @@ class LibraryReferences:
     root: Path
     ignore_paths: List[str]
 
-    def resolve(self) -> None:
+    def fetch(self) -> None:
         """Recursively clone all dependencies defined in .lib files."""
         for lib in self.iter_unresolved():
             git_ref = lib.get_git_reference()
@@ -68,9 +68,9 @@ class LibraryReferences:
 
         # Check if we find any new references after cloning dependencies.
         if list(self.iter_unresolved()):
-            self.resolve()
+            self.fetch()
 
-    def deploy(self, force: bool) -> None:
+    def checkout(self, force: bool) -> None:
         """Check out all resolved libs to revision specified in .lib files."""
         for lib in self.iter_resolved():
             repo = git_utils.init(lib.source_code_path)
