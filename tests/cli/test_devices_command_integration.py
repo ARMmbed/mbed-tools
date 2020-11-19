@@ -14,7 +14,7 @@ from mbed_tools.lib.exceptions import ToolsError
 
 class TestDevicesCommandIntegration(TestCase):
     def test_devices_is_integrated(self):
-        self.assertEqual(cli.commands["devices"], list_connected_devices)
+        self.assertEqual(cli.commands["detect"], list_connected_devices)
 
 
 class TestClickGroupWithExceptionHandling(TestCase):
