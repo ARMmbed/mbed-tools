@@ -2,7 +2,7 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Command to build an Mbed project using CMake."""
+"""Command to build/compile an Mbed project using CMake."""
 import os
 import pathlib
 import shutil
@@ -13,7 +13,7 @@ from mbed_tools.build import build_project, generate_build_system, generate_conf
 from mbed_tools.project import MbedProgram
 
 
-@click.command(name="build", help="Build an Mbed project.")
+@click.command(name="compile", help="Build an Mbed project.")
 @click.option(
     "-t",
     "--toolchain",
