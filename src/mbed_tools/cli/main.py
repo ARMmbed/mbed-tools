@@ -73,7 +73,7 @@ def cli(verbose: int, traceback: bool) -> None:
 
 
 cli.add_command(configure, "configure")
-cli.add_command(list_connected_devices, "devices")
+cli.add_command(list_connected_devices, "detect")
 cli.add_command(new, "new")
 cli.add_command(deploy, "deploy")
 cli.add_command(clone, "clone")
