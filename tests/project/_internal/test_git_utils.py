@@ -24,17 +24,35 @@ def mock_progress():
 
 
 class TestClone:
-    def test_returns_repo(self, mock_progress, mock_repo):
+    def test_returns_repo(self, mock_progress, mock_repo, tmp_path):
         url = "https://blah"
-        path = Path()
+        path = Path(tmp_path, "dst")
         repo = git_utils.clone(url, path)
 
         assert repo is not None
         mock_repo.clone_from.assert_called_once_with(url, str(path), progress=mock_progress())
 
-    def test_raises_when_clone_fails(self):
-        with pytest.raises(VersionControlError):
-            git_utils.clone("", Path())
+    def test_raises_when_fails_due_to_bad_url(self, tmp_path):
+        with pytest.raises(VersionControlError, match="from url 'bad' failed"):
+            git_utils.clone("bad", Path(tmp_path, "dst"))
+
+    def test_raises_when_fails_due_to_existing_nonempty_dst_dir(self, mock_repo, tmp_path):
+        dst_dir = Path(tmp_path, "dst")
+        dst_dir.mkdir()
+        (dst_dir / "some_file.txt").touch()
+
+        with pytest.raises(VersionControlError, match="exists and is not an empty directory"):
+            git_utils.clone("https://blah", dst_dir)
+
+    def test_can_clone_to_empty_existing_dst_dir(self, mock_repo, tmp_path, mock_progress):
+        dst_dir = Path(tmp_path, "dst")
+        dst_dir.mkdir()
+        url = "https://repo"
+
+        repo = git_utils.clone(url, dst_dir)
+
+        assert repo is not None
+        mock_repo.clone_from.assert_called_once_with(url, str(dst_dir), progress=mock_progress())
 
 
 class TestInit:

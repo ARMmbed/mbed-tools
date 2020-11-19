@@ -35,6 +35,9 @@ def clone(url: str, dst_dir: Path) -> git.Repo:
     Raises:
         VersionControlError: Cloning the repository failed.
     """
+    if dst_dir.exists() and list(dst_dir.glob("*")):
+        raise VersionControlError(f"{dst_dir} exists and is not an empty directory.")
+
     try:
         return git.Repo.clone_from(url, str(dst_dir), progress=ProgressReporter(name=url))
     except git.exc.GitCommandError as err:
