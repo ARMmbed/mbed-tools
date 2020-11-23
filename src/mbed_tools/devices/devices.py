@@ -13,8 +13,8 @@ from mbed_tools.devices._internal.detect_candidate_devices import detect_candida
 from mbed_tools.devices._internal.resolve_board import resolve_board
 from mbed_tools.devices._internal.exceptions import NoBoardForCandidate
 
-from mbed_tools.devices.device import ConnectedDevices
-from mbed_tools.devices.exceptions import DeviceLookupFailed
+from mbed_tools.devices.device import ConnectedDevices, Device
+from mbed_tools.devices.exceptions import DeviceLookupFailed, NoDevicesFound
 
 
 def get_connected_devices() -> ConnectedDevices:
@@ -40,3 +40,35 @@ def get_connected_devices() -> ConnectedDevices:
         connected_devices.add_device(candidate_device, board)
 
     return connected_devices
+
+
+def find_connected_device(target_name: str) -> Device:
+    """Find a connected device matching the given target_name.
+
+    Args:
+        target_name: The Mbed target name of the device.
+
+    Raises:
+        NoDevicesFound: Could not find any connected devices.
+        DeviceLookupFailed: Could not find a connected device matching target_name.
+
+    Returns:
+        Device matching target_name.
+    """
+    connected = get_connected_devices()
+    if not connected.identified_devices:
+        raise NoDevicesFound("No Mbed enabled devices found.")
+
+    for device in connected.identified_devices:
+        if device.mbed_board.board_type == target_name.upper():
+            return device
+
+    detected_targets = "\n".join(
+        f"target: {dev.mbed_board.board_type}, port: {dev.serial_port}, mount point(s): {dev.mount_points}"
+        for dev in connected.identified_devices
+    )
+    msg = (
+        f"Target '{target_name}' was not detected. Connect the device to the USB, or enter the target name correctly!\n"
+        f"The following devices were detected:\n\t {detected_targets}"
+    )
+    raise DeviceLookupFailed(msg)

@@ -12,3 +12,7 @@ class MbedDevicesError(ToolsError):
 
 class DeviceLookupFailed(MbedDevicesError):
     """Failed to look up data associated with the device."""
+
+
+class NoDevicesFound(MbedDevicesError):
+    """No Mbed Enabled devices were found."""
