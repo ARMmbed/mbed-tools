@@ -93,8 +93,6 @@ def deploy(path: str, force: bool) -> None:
     reference.
 
     PATH: Path to the Mbed project [default: CWD]
-
-    REVISION: The revision of the Mbed project to check out.
     """
     click.echo("Checking out all libraries to revisions specified in .lib files. Resolving any unresolved libraries.")
     deploy_project(pathlib.Path(path), force)
