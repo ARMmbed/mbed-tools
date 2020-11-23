@@ -9,8 +9,7 @@ import os
 import pathlib
 import platform
 
-from mbed_tools.devices.device import Device
-from mbed_tools.devices.devices import get_connected_devices
+from mbed_tools.devices.devices import find_connected_device
 from mbed_tools.build.exceptions import BinaryFileNotFoundError, DeviceNotFoundError
 
 
@@ -24,28 +23,6 @@ def _flash_dev(disk: pathlib.Path, image_path: pathlib.Path) -> None:
     shutil.copy(image_path, disk, follow_symlinks=False)
     if not platform.system() == "Windows":
         os.sync()
-
-
-def _find_connected_device(mbed_target: str) -> Device:
-    """Check if requested device is connected to the system.
-
-    Look through the devices connected to the system and if a requested device is found then return it.
-
-    Args:
-       mbed_target: The name of the Mbed target to build for.
-
-    Returns:
-        Device if requested device is connected to system.
-
-    Raises:
-        DeviceNotFoundError: the requested board is not connected to the system
-    """
-    connected_devices = get_connected_devices()
-    for device in connected_devices.identified_devices:
-        if device.mbed_board.board_type.upper() == mbed_target.upper():
-            return device
-
-    raise DeviceNotFoundError("The target board you compiled for is not connected to your system.")
 
 
 def _build_binary_file_path(program_path: pathlib.Path, build_dir: pathlib.Path, hex_file: bool) -> pathlib.Path:
@@ -80,6 +57,6 @@ def flash_binary(program_path: pathlib.Path, build_dir: pathlib.Path, mbed_targe
        mbed_target: The name of the Mbed target to build for.
        hex_file: Use hex file.
     """
-    device = _find_connected_device(mbed_target)
+    device = find_connected_device(mbed_target)
     fw_file = _build_binary_file_path(program_path, build_dir, hex_file)
     _flash_dev(device.mount_points[0].resolve(), fw_file)

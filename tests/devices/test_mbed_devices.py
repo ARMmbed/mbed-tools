@@ -2,6 +2,9 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
+import pathlib
+import re
+
 from unittest import TestCase, mock
 
 from mbed_tools.targets import Board
@@ -11,8 +14,8 @@ from tests.devices.factories import CandidateDeviceFactory
 from mbed_tools.devices.device import Device
 from mbed_tools.devices._internal.exceptions import NoBoardForCandidate
 
-from mbed_tools.devices.devices import get_connected_devices
-from mbed_tools.devices.exceptions import DeviceLookupFailed
+from mbed_tools.devices.devices import get_connected_devices, find_connected_device
+from mbed_tools.devices.exceptions import DeviceLookupFailed, NoDevicesFound
 
 
 @mock.patch("mbed_tools.devices.devices.detect_candidate_devices")
@@ -64,3 +67,47 @@ class TestGetConnectedDevices(TestCase):
 
         with self.assertRaises(DeviceLookupFailed):
             get_connected_devices()
+
+
+@mock.patch("mbed_tools.devices.devices.get_connected_devices")
+class TestFindConnectedDevice(TestCase):
+    def test_finds_device_with_matching_name(self, mock_get_connected_devices):
+        target_name = "K64F"
+        mock_get_connected_devices.return_value = mock.Mock(
+            identified_devices=[mock.Mock(mbed_board=mock.Mock(board_type=target_name, spec=True), spec=True)],
+            spec=True,
+        )
+
+        dev = find_connected_device(target_name)
+
+        self.assertEqual(target_name, dev.mbed_board.board_type)
+
+    def test_raises_when_no_mbed_enabled_devices_found(self, mock_get_connected_devices):
+        mock_get_connected_devices.return_value = mock.Mock(identified_devices=[], spec=True)
+
+        with self.assertRaises(NoDevicesFound):
+            find_connected_device("K64F")
+
+    def test_raises_when_device_matching_target_name_not_found(self, mock_get_connected_devices):
+        target_name = "K64F"
+        connected_target_name = "DISCO"
+        connected_target_serial_port = "tty.BLEH"
+        connected_target_mount_point = [pathlib.Path("/dap")]
+        mock_get_connected_devices.return_value = mock.Mock(
+            identified_devices=[
+                mock.Mock(
+                    serial_port=connected_target_serial_port,
+                    mount_points=connected_target_mount_point,
+                    mbed_board=mock.Mock(board_type=connected_target_name, spec=True),
+                    spec=True,
+                )
+            ],
+            spec=True,
+        )
+
+        with self.assertRaisesRegex(
+            DeviceLookupFailed,
+            f".*(target: {re.escape(connected_target_name)}).*(port: {re.escape(connected_target_serial_port)}).*"
+            f"(mount point.*: {re.escape(str(connected_target_mount_point))})",
+        ):
+            find_connected_device(target_name)

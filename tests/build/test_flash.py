@@ -9,13 +9,13 @@ import tempfile
 from unittest import TestCase, mock
 
 from mbed_tools.devices.device import ConnectedDevices
-from mbed_tools.build.flash import flash_binary, _build_binary_file_path, _find_connected_device, _flash_dev
+from mbed_tools.build.flash import flash_binary, _build_binary_file_path, _flash_dev
 from mbed_tools.build.exceptions import BinaryFileNotFoundError, DeviceNotFoundError
 
 from tests.build.factories import DeviceFactory, ConnectedDevicesFactory
 
 
-@mock.patch("mbed_tools.build.flash._find_connected_device")
+@mock.patch("mbed_tools.build.flash.find_connected_device")
 @mock.patch("mbed_tools.build.flash._build_binary_file_path")
 @mock.patch("mbed_tools.build.flash._flash_dev")
 class TestFlashBinary(TestCase):
@@ -72,23 +72,6 @@ class TestBuildBinFilePath(TestCase):
 
             with self.assertRaises(BinaryFileNotFoundError):
                 _build_binary_file_path(base_dir, build_dir, False)
-
-
-@mock.patch("mbed_tools.build.flash.get_connected_devices")
-class TestFindConnectedDevices(TestCase):
-    def test_check_missing_device(self, get_connected_devices):
-        get_connected_devices.return_value = ConnectedDevicesFactory()
-        with self.assertRaises(DeviceNotFoundError):
-            _find_connected_device("TEST")
-
-    def test_connected_device(self, get_connected_devices):
-        test_device = DeviceFactory()
-
-        test_connected_devices = ConnectedDevices()
-        test_connected_devices.identified_devices = [test_device]
-        get_connected_devices.return_value = test_connected_devices
-
-        self.assertEqual(_find_connected_device("TEST"), test_device)
 
 
 @mock.patch("mbed_tools.build.flash.shutil.copy")
