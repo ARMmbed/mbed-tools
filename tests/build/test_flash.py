@@ -8,21 +8,18 @@ import tempfile
 
 from unittest import TestCase, mock
 
-from mbed_tools.devices.device import ConnectedDevices
 from mbed_tools.build.flash import flash_binary, _build_binary_file_path, _flash_dev
-from mbed_tools.build.exceptions import BinaryFileNotFoundError, DeviceNotFoundError
+from mbed_tools.build.exceptions import BinaryFileNotFoundError
 
-from tests.build.factories import DeviceFactory, ConnectedDevicesFactory
+from tests.build.factories import DeviceFactory
 
 
-@mock.patch("mbed_tools.build.flash.find_connected_device")
 @mock.patch("mbed_tools.build.flash._build_binary_file_path")
 @mock.patch("mbed_tools.build.flash._flash_dev")
 class TestFlashBinary(TestCase):
-    def test_check_flashing(self, _flash_dev, _build_binary_file_path, _find_connected_device):
+    def test_check_flashing(self, _flash_dev, _build_binary_file_path):
         test_device = DeviceFactory()
 
-        _find_connected_device.return_value = test_device
         _flash_dev.return_value = True
 
         with tempfile.TemporaryDirectory() as tmpDir:
@@ -34,9 +31,8 @@ class TestFlashBinary(TestCase):
             bin_file.touch()
             _build_binary_file_path.return_value = bin_file
 
-            flash_binary(base_dir, build_dir, "TEST", False)
+            flash_binary(test_device.mount_points[0].resolve(), base_dir, build_dir, "TEST", False)
 
-            _find_connected_device.assert_called_once_with("TEST")
             _build_binary_file_path.assert_called_once_with(base_dir, build_dir, False)
             _flash_dev.assert_called_once_with(test_device.mount_points[0].resolve(), bin_file)
 

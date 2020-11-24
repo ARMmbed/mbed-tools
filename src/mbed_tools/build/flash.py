@@ -9,8 +9,7 @@ import os
 import pathlib
 import platform
 
-from mbed_tools.devices.devices import find_connected_device
-from mbed_tools.build.exceptions import BinaryFileNotFoundError, DeviceNotFoundError
+from mbed_tools.build.exceptions import BinaryFileNotFoundError
 
 
 def _flash_dev(disk: pathlib.Path, image_path: pathlib.Path) -> None:
@@ -46,17 +45,19 @@ def _build_binary_file_path(program_path: pathlib.Path, build_dir: pathlib.Path,
     return fw_file
 
 
-def flash_binary(program_path: pathlib.Path, build_dir: pathlib.Path, mbed_target: str, hex_file: bool) -> None:
+def flash_binary(
+    mount_point: pathlib.Path, program_path: pathlib.Path, build_dir: pathlib.Path, mbed_target: str, hex_file: bool
+) -> None:
     """Flash binary onto a device.
 
     Look through the connected devices and flash the binary if the connected and built target matches.
 
     Args:
+       mount_point: Mount point of the target device.
        program_path: Path to the Mbed project.
        build_dir: Path to the CMake build folder.
        mbed_target: The name of the Mbed target to build for.
        hex_file: Use hex file.
     """
-    device = find_connected_device(mbed_target)
     fw_file = _build_binary_file_path(program_path, build_dir, hex_file)
-    _flash_dev(device.mount_points[0].resolve(), fw_file)
+    _flash_dev(mount_point, fw_file)
