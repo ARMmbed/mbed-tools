@@ -145,25 +145,55 @@ class TestBuildCommand(TestCase):
             self.assertFalse(program.files.cmake_build_dir.exists())
 
     @mock.patch("mbed_tools.cli.build.flash_binary")
+    @mock.patch("mbed_tools.cli.build.find_connected_device")
     def test_build_flash_option(
-        self, flash_binary, generate_config, mbed_program, build_project, generate_build_system
+        self, mock_find_device, flash_binary, generate_config, mbed_program, build_project, generate_build_system
     ):
         runner = CliRunner()
         runner.invoke(build, ["--flash"])
         flash_binary.assert_called_once()
 
     @mock.patch("mbed_tools.cli.build.flash_binary")
+    @mock.patch("mbed_tools.cli.build.find_connected_device")
     def test_build_flash_and_hex_file_options(
-        self, flash_binary, generate_config, mbed_program, build_project, generate_build_system
+        self, mock_find_device, flash_binary, generate_config, mbed_program, build_project, generate_build_system
     ):
         runner = CliRunner()
         runner.invoke(build, ["--flash", "--hex-file"])
         call_args = flash_binary.call_args
         args, kwargs = call_args
-        flash_binary.assert_called_once_with(args[0], args[1], args[2], True)
+        flash_binary.assert_called_once_with(args[0], args[1], args[2], args[3], True)
 
     def test_build_only_hex_file_option(self, generate_config, mbed_program, build_project, generate_build_system):
         runner = CliRunner()
         result = runner.invoke(build, ["--hex-file"])
 
         self.assertRegex(result.output, "-f/--flash")
+
+    @mock.patch("mbed_tools.cli.build.terminal")
+    @mock.patch("mbed_tools.cli.build.find_connected_device")
+    def test_sterm_is_started_when_flag_passed(
+        self, mock_find_device, mock_terminal, generate_config, mbed_program, build_project, generate_build_system
+    ):
+        target = "K64F"
+        serial_port = "tty.k64f"
+        baud = 115200
+        mock_find_device.return_value = mock.Mock(serial_port=serial_port)
+
+        CliRunner().invoke(build, ["-m", target, "-t", "gcc_arm", "--sterm", "--baudrate", baud])
+
+        mock_find_device.assert_called_once_with(target)
+        mock_terminal.run.assert_called_once_with(serial_port, baud)
+
+    @mock.patch("mbed_tools.cli.build.terminal")
+    @mock.patch("mbed_tools.cli.build.find_connected_device")
+    def test_raises_if_device_does_not_have_serial_port_and_sterm_flag_given(
+        self, mock_find_device, mock_terminal, generate_config, mbed_program, build_project, generate_build_system
+    ):
+        target = "K64F"
+        serial_port = None
+        mock_find_device.return_value = mock.Mock(serial_port=serial_port)
+
+        output = CliRunner().invoke(build, ["-m", target, "-t", "gcc_arm", "--sterm"])
+        self.assertEqual(type(output.exception), SystemExit)
+        mock_terminal.assert_not_called()
