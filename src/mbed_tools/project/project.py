@@ -51,7 +51,6 @@ def deploy_project(path: pathlib.Path, force: bool = False) -> None:
 
     Args:
         path: Path to the Mbed project.
-        project_revision: Revision of the Mbed project to check out.
         force: Force overwrite uncommitted changes. If False, the deploy will fail if there are uncommitted local
                changes.
     """
