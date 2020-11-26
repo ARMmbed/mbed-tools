@@ -75,8 +75,12 @@ class LibraryReferences:
         for lib in self.iter_resolved():
             repo = git_utils.get_repo(lib.source_code_path)
             git_ref = lib.get_git_reference()
-            if git_ref.ref:
-                git_utils.checkout(repo, git_ref.ref, force=force)
+            repo.git.fetch()
+
+            if not git_ref.ref:
+                git_ref.ref = git_utils.get_default_branch(repo)
+
+            git_utils.checkout(repo, git_ref.ref, force=force)
 
     def iter_all(self) -> Generator[MbedLibReference, None, None]:
         """Iterate all library references in the tree.

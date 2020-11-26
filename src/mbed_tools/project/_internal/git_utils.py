@@ -96,3 +96,21 @@ def get_repo(path: Path) -> git.Repo:
         raise VersionControlError(
             "Could not find a valid git repository at this path. Please perform a `git init` command."
         )
+
+
+def get_default_branch(repo: git.Repo) -> str:
+    """Get a default branch from an existing git.Repo.
+
+    Args:
+        repo: git.Repo object
+
+    Returns:
+        The default branch name as a string.
+
+    Raises:
+        VersionControlError: Could not find the default branch name.
+    """
+    try:
+        return str(repo.git.symbolic_ref("refs/remotes/origin/HEAD").rsplit("/", maxsplit=1)[-1])
+    except git.exc.GitCommandError as err:
+        raise VersionControlError(f"Could not resolve default repository branch name. Error from VCS: {err}")

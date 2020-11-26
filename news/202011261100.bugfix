@@ -1,0 +1,1 @@
+Use default branch from the remote repository, if no git hash in lib file. Fetch git repo before checkout when running `deploy` command.

@@ -12,6 +12,7 @@ import click
 import tabulate
 
 from mbed_tools.project import initialise_project, import_project, get_known_libs, deploy_project
+from mbed_tools.project._internal import git_utils
 
 
 @click.command()
@@ -93,7 +94,9 @@ def _print_dependency_table(libs: List) -> None:
                 lib.reference_file.stem,
                 lib.get_git_reference().repo_url,
                 lib.source_code_path,
-                lib.get_git_reference().ref,
+                git_utils.get_default_branch(git_utils.get_repo(lib.source_code_path))
+                if not lib.get_git_reference().ref
+                else lib.get_git_reference().ref,
             ]
         )
 
