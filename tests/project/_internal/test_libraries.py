@@ -30,6 +30,12 @@ def mock_get_repo():
         yield get_repo
 
 
+@pytest.fixture
+def mock_get_default_branch():
+    with mock.patch("mbed_tools.project._internal.git_utils.get_default_branch") as get_default_branch:
+        yield get_default_branch
+
+
 class TestLibraryReferences:
     def test_hydrates_top_level_library_references(self, mock_clone, tmp_path):
         fs_root = pathlib.Path(tmp_path, "foo")
@@ -63,14 +69,16 @@ class TestLibraryReferences:
         assert lib.is_resolved()
         assert lib2.is_resolved()
 
-    def test_does_not_perform_checkout_if_no_git_ref_exists(self, mock_get_repo, mock_checkout, mock_clone, tmp_path):
+    def test_does_perform_checkout_of_default_repo_branch_if_no_git_ref_exists(
+        self, mock_get_repo, mock_checkout, mock_get_default_branch, mock_clone, tmp_path
+    ):
         fs_root = pathlib.Path(tmp_path, "foo")
         make_mbed_lib_reference(fs_root, ref_url="https://git", resolved=True)
 
         lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
         lib_refs.checkout(force=False)
 
-        mock_checkout.assert_not_called()
+        mock_checkout.assert_called_once_with(mock_get_repo(), mock_get_default_branch(), force=False)
 
     def test_performs_checkout_if_git_ref_exists(self, mock_get_repo, mock_checkout, mock_clone, tmp_path):
         fs_root = pathlib.Path(tmp_path, "foo")

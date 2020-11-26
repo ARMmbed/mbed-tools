@@ -93,3 +93,18 @@ class TestCheckout:
 
         with pytest.raises(VersionControlError):
             git_utils.checkout(mock_repo, "bad")
+
+
+class TestGetDefaultBranch:
+    def test_returns_default_branch_name(self, mock_repo):
+        mock_repo().git.symbolic_ref.return_value = "refs/remotes/origin/main"
+
+        branch_name = git_utils.get_default_branch(mock_repo())
+
+        assert branch_name == "main"
+
+    def test_raises_version_control_error_when_git_command_fails(self, mock_repo):
+        mock_repo().git.symbolic_ref.side_effect = git_utils.git.exc.GitCommandError("git symbolic_ref", 255)
+
+        with pytest.raises(VersionControlError):
+            git_utils.get_default_branch(mock_repo())
