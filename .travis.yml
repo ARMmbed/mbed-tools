@@ -157,3 +157,17 @@ matrix:
         - mbedtools deploy
         - mbedtools compile -t GCC_ARM -m K64F
         - ccache -s
+
+    - <<: *mbed-tools-test
+      name: "Test deploy command checks out tip of default branch"
+      env: NAME=test-deploy-cmd CACHE_NAME=test-deploy-cmd
+      script:
+        - mkdir deploy-test
+        - cd deploy-test
+        - echo "https://github.com/ARMmbed/mbed-os" > mbed-os.lib
+        - git clone --branch=latest https://github.com/ARMmbed/mbed-os.git
+        - mbedtools -vvv deploy
+        - cd mbed-os
+        - git branch --points-at origin/HEAD
+        - git branch --points-at origin/HEAD | grep -q "\*" || (echo "Couldn't
+          see current branch points at default branch" && false)
