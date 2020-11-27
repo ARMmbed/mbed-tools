@@ -66,9 +66,17 @@ matrix:
         # Leave mbed-tools directory to clone dependencies
         - cd ..
       script:
-        - _clone_dependencies
+          # We use manual clone, with depth and single branch = the fastest
+        - git clone --depth=1 --single-branch --branch development https://github.com/ARMmbed/${EXAMPLE_NAME}.git
+        - |
+          if [ -z ${SUBEXAMPLE_NAME} ]; then
+              cd ${EXAMPLE_NAME}
+          else
+              cd ${EXAMPLE_NAME}/${SUBEXAMPLE_NAME}
+          fi
+        - mbedtools -vvv deploy
         - echo mbedtools compile -t GCC_ARM -m ${TARGET_NAME} -b ${PROFILE}
-        - mbedtools compile -t GCC_ARM -m ${TARGET_NAME} -b ${PROFILE}
+        - mbedtools -vvv compile -t GCC_ARM -m ${TARGET_NAME} -b ${PROFILE}
         - ccache -s
 
     - <<: *mbed-tools-test
