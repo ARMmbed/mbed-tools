@@ -36,6 +36,12 @@ def mock_get_default_branch():
         yield get_default_branch
 
 
+@pytest.fixture
+def mock_repo():
+    with mock.patch("mbed_tools.project._internal.git_utils.git.Repo") as repo:
+        yield repo
+
+
 class TestLibraryReferences:
     def test_hydrates_top_level_library_references(self, mock_clone, tmp_path):
         fs_root = pathlib.Path(tmp_path, "foo")
@@ -118,4 +124,12 @@ class TestLibraryReferences:
         lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
         lib_refs.fetch()
 
-        mock_clone.assert_not_called()
+    def test_fetches_only_requested_ref(self, mock_repo, tmp_path):
+        fs_root = pathlib.Path(tmp_path, "foo")
+        fake_ref = "28eeee2b4c169739192600b92e7970dbbcabd8d0"
+        make_mbed_lib_reference(fs_root, ref_url=f"https://git#{fake_ref}", resolved=True)
+
+        lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
+        lib_refs.checkout(force=False)
+
+        mock_repo().git.fetch.assert_called_once_with("origin", fake_ref)

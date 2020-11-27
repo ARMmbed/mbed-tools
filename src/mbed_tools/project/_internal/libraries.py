@@ -75,10 +75,13 @@ class LibraryReferences:
         for lib in self.iter_resolved():
             repo = git_utils.get_repo(lib.source_code_path)
             git_ref = lib.get_git_reference()
-            repo.git.fetch()
 
             if not git_ref.ref:
+                repo.git.fetch()
                 git_ref.ref = git_utils.get_default_branch(repo)
+            else:
+                # Fetch only the requested ref
+                repo.git.fetch("origin", git_ref.ref)
 
             git_utils.checkout(repo, git_ref.ref, force=force)
 
