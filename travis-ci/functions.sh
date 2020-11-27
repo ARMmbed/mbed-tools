@@ -69,21 +69,3 @@ _setup_build_env()
   # version, we must instead delete the Travis copy of CMake.
   sudo rm -rf /usr/local/cmake*
 }
-
-_clone_dependencies()
-{
-  # We use manual clone, with depth and single branch = the fastest
-  git clone --depth=1 --single-branch --branch development https://github.com/ARMmbed/${EXAMPLE_NAME}.git
-
-  if [ -z ${SUBEXAMPLE_NAME} ]; then
-      cd ${EXAMPLE_NAME}
-  else
-      cd ${EXAMPLE_NAME}/${SUBEXAMPLE_NAME}
-  fi
-
-  git clone --depth=1 --single-branch https://github.com/ARMmbed/mbed-os.git
-
-  echo “” > mbed-os.lib
-
-  mbedtools deploy
-}
