@@ -65,3 +65,5 @@ def _update_target_attributes(target_attributes: dict, cumulative_data: Cumulati
     target_attributes["features"] = cumulative_data.features
     target_attributes["components"] = cumulative_data.components
     target_attributes["macros"] = cumulative_data.macros
+    target_attributes["c_lib"] = cumulative_data.c_lib
+    target_attributes["printf_lib"] = cumulative_data.printf_lib

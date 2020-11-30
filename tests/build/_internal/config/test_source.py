@@ -88,6 +88,8 @@ class TestSource(TestCase):
             extra_labels={"label_2"},
             config={"foo": "bar", "target.bool": True},
             macros=["MACRO_A"],
+            c_lib="std",
+            printf_lib="minimal-printf",
         )
 
         subject = Source.from_target(target)
@@ -103,6 +105,8 @@ class TestSource(TestCase):
                     "target.labels": target["labels"],
                     "target.extra_labels": target["extra_labels"],
                     "target.macros": target["macros"],
+                    "target.c_lib": target["c_lib"],
+                    "target.printf_lib": target["printf_lib"],
                 },
                 macros=[],
             ),
