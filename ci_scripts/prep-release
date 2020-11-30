@@ -12,7 +12,10 @@ generate-docs --output_dir docs/api
 license-files
 git add docs/api
 
-NEW_VERSION=$(python ci_scripts/bump_version.py -vvv -n news/)
+if ! NEW_VERSION=$(python ci_scripts/bump_version.py -vvv -n news/); then
+    printf "Nothing to do. Exiting.\n"
+    exit 0
+fi
 
 # Commit and tag new version
 # Towncrier will fail if it detects a news file that has not been committed to
@@ -27,3 +30,8 @@ git add ./CHANGELOG.md
 # Amend the git commit to include news file updates.
 git commit --amend -C HEAD
 git tag "${NEW_VERSION}"
+
+# Push the commit and tag to the remote. Relies on `GIT_TOKEN` environment
+# variable being set.
+git push "https://${GIT_TOKEN}@github.com/ARMmbed/mbed-tools.git" master
+git push "https://${GIT_TOKEN}@github.com/ARMmbed/mbed-tools.git" --tags
