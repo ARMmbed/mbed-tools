@@ -1,0 +1,38 @@
+trigger:
+  - none
+
+pr:
+  - none
+
+schedules:
+  - cron: "00 5 * * *"
+    displayName: "Prepare and tag release"
+    branches:
+      include:
+        - master
+    always: true
+
+jobs:
+  - job: TagRelease
+    displayName: 'Prepare mbed-tools release'
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.7'
+
+      - script: |
+          # Set our user to the release bot account and ensure we've checked
+          # out the master branch.
+          git config --global user.name "Monty Bot"
+          git config --global user.email "monty-bot@arm.com"
+          git checkout master
+
+          python -m pip install --upgrade tox
+
+          tox -e preprelease
+        displayName: "Prepare mbed-tools release"
+        env:
+          GIT_TOKEN: $(GIT_TOKEN)
