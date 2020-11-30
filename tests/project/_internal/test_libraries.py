@@ -124,6 +124,8 @@ class TestLibraryReferences:
         lib_refs = LibraryReferences(fs_root, ignore_paths=["mbed-os"])
         lib_refs.fetch()
 
+        mock_clone.assert_not_called()
+
     def test_fetches_only_requested_ref(self, mock_repo, tmp_path):
         fs_root = pathlib.Path(tmp_path, "foo")
         fake_ref = "28eeee2b4c169739192600b92e7970dbbcabd8d0"
