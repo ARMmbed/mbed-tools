@@ -7,9 +7,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.9.2" />
 <title>mbed_tools.cli.build API documentation</title>
-<meta name="description" content="Command to build an Mbed project using CMake." />
+<meta name="description" content="Command to build/compile an Mbed project using CMake." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -26,7 +26,7 @@
 <h1 class="title">Module <code>mbed_tools.cli.build</code></h1>
 </header>
 <section id="section-intro">
-<p>Command to build an Mbed project using CMake.</p>
+<p>Command to build/compile an Mbed project using CMake.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -35,18 +35,20 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-&#34;&#34;&#34;Command to build an Mbed project using CMake.&#34;&#34;&#34;
+&#34;&#34;&#34;Command to build/compile an Mbed project using CMake.&#34;&#34;&#34;
 import os
 import pathlib
 import shutil
 
 import click
 
-from mbed_tools.build import build_project, generate_build_system, generate_config
+from mbed_tools.build import build_project, generate_build_system, generate_config, flash_binary
+from mbed_tools.devices import find_connected_device
 from mbed_tools.project import MbedProgram
+from mbed_tools.sterm import terminal
 
 
-@click.command(name=&#34;build&#34;, help=&#34;Build an Mbed project.&#34;)
+@click.command(name=&#34;compile&#34;, help=&#34;Build an Mbed project.&#34;)
 @click.option(
     &#34;-t&#34;,
     &#34;--toolchain&#34;,
@@ -62,7 +64,32 @@ from mbed_tools.project import MbedProgram
     default=os.getcwd(),
     help=&#34;Path to local Mbed program. By default it is the current working directory.&#34;,
 )
-def build(program_path: str, build_type: str, toolchain: str = &#34;&#34;, mbed_target: str = &#34;&#34;, clean: bool = False) -&gt; None:
+@click.option(
+    &#34;-f&#34;, &#34;--flash&#34;, is_flag=True, default=False, help=&#34;Flash the binary onto a device&#34;,
+)
+@click.option(
+    &#34;--hex-file&#34;, is_flag=True, default=False, help=&#34;Use hex file, this option should be used with &#39;-f/--flash&#39; option&#34;,
+)
+@click.option(
+    &#34;-s&#34;, &#34;--sterm&#34;, is_flag=True, default=False, help=&#34;Launch a serial terminal to the device.&#34;,
+)
+@click.option(
+    &#34;--baudrate&#34;,
+    default=9600,
+    show_default=True,
+    help=&#34;Change the serial baud rate (ignored unless --sterm is also given).&#34;,
+)
+def build(
+    program_path: str,
+    build_type: str,
+    toolchain: str = &#34;&#34;,
+    mbed_target: str = &#34;&#34;,
+    clean: bool = False,
+    flash: bool = False,
+    hex_file: bool = False,
+    sterm: bool = False,
+    baudrate: int = 9600,
+) -&gt; None:
     &#34;&#34;&#34;Configure and build an Mbed project using CMake and Ninja.
 
     If the project has already been configured and contains &#39;.mbedbuild/mbed_config.cmake&#39;, this command will skip the
@@ -77,6 +104,10 @@ def build(program_path: str, build_type: str, toolchain: str = &#34;&#34;, mbed_
        toolchain: The toolchain to use for the build.
        mbed_target: The name of the Mbed target to build for.
        clean: Perform a clean build.
+       flash: Flash the binary onto a device.
+       hex_file: Use hex file, this option should be used with &#39;-f/--flash&#39; option.
+       sterm: Open a serial terminal to the connected target.
+       baudrate: Change the serial baud rate (ignored unless --sterm is also given).
     &#34;&#34;&#34;
     program = MbedProgram.from_existing(pathlib.Path(program_path))
     mbed_config_file = program.files.cmake_config_file
@@ -92,6 +123,23 @@ def build(program_path: str, build_type: str, toolchain: str = &#34;&#34;, mbed_
 
     click.echo(&#34;Building Mbed project...&#34;)
     build_project(build_tree)
+
+    if flash or sterm:
+        dev = find_connected_device(mbed_target)
+
+    if flash:
+        flash_binary(dev.mount_points[0].resolve(), program.root, build_tree, mbed_target, hex_file)
+    elif hex_file:
+        click.echo(&#34;&#39;--hex-file&#39; option should be used with &#39;-f/--flash&#39; option&#34;)
+
+    if sterm:
+        if dev.serial_port is None:
+            raise click.ClickException(
+                f&#34;The connected device {dev.mbed_board.board_name} does not have an associated serial port.&#34;
+                &#34; Reconnect the device and try again.&#34;
+            )
+
+        terminal.run(dev.serial_port, baudrate)
 
 
 def _validate_target_and_toolchain_args(target: str, toolchain: str) -&gt; None:
@@ -123,7 +171,7 @@ def _validate_target_and_toolchain_args(target: str, toolchain: str) -&gt; None:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
 </footer>
 </body>
 </html>

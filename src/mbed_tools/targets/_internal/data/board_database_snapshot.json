@@ -188,6 +188,16 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "DISCO_U599J",
+        "board_name": "ST Discovery STM32U599J",
+        "product_code": "0888",
+        "target_type": "platform",
+        "slug": "ST-Discovery-STM32U599J",
+        "build_variant": [],
+        "mbed_os_support": [],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "PLACEHOLDER",
         "board_name": "MCB4300",
         "product_code": "0",
@@ -228,6 +238,20 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "S1SBP6A",
+        "board_name": "SIDK S1SBP6A Bio-processor dev kit",
+        "product_code": "3703",
+        "target_type": "platform",
+        "slug": "S1SBP6A",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.4"
+        ],
+        "mbed_enabled": [
+            "Baseline"
+        ]
+    },
+    {
         "board_type": "NUCLEO_L010RB",
         "board_name": "NUCLEO_L010RB",
         "product_code": "0783",
@@ -265,13 +289,15 @@
         ]
     },
     {
-        "board_type": "NU_M2354",
+        "board_type": "NU_M2354_NPSA_NS",
         "board_name": "NUMAKER-M2354",
         "product_code": "1312",
         "target_type": "platform",
         "slug": "NUMAKER-M2354",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 5.15"
+        ],
         "mbed_enabled": []
     },
     {
@@ -1356,16 +1382,6 @@
         "mbed_enabled": []
     },
     {
-        "board_type": "MAX32630_MICRO_BOARD",
-        "board_name": "MAX32630 Micro Board Wearable low-powered Microcontroller Platform, ARM",
-        "product_code": "0420",
-        "target_type": "platform",
-        "slug": "max32630_micro_board",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
         "board_type": "FUTURE_SEQUANA",
         "board_name": "Future Electronics Sequana",
         "product_code": "6000",
@@ -2045,16 +2061,6 @@
         "mbed_enabled": [
             "Baseline"
         ]
-    },
-    {
-        "board_type": "PLACEHOLDER",
-        "board_name": "MAX32630MBED",
-        "product_code": "0417",
-        "target_type": "platform",
-        "slug": "MAX32630MBED",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
     },
     {
         "board_type": "TB_SENSE_12",
@@ -3021,16 +3027,6 @@
         "mbed_enabled": [
             "Baseline"
         ]
-    },
-    {
-        "board_type": "PLACEHOLDER",
-        "board_name": "MAX32620MBED\t",
-        "product_code": "0406",
-        "target_type": "platform",
-        "slug": "MAX32620MBED",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
     },
     {
         "board_type": "ARM_BEETLE_SOC",
@@ -4182,8 +4178,7 @@
             "Mbed OS 6.0",
             "Mbed OS 6.1",
             "Mbed OS 6.2",
-            "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.3"
         ],
         "mbed_enabled": [
             "Baseline"

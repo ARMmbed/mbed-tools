@@ -8,8 +8,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.2" />
-<title>mbed_tools.lib API documentation</title>
-<meta name="description" content="Provides a library of common code." />
+<title>mbed_tools.build.flash API documentation</title>
+<meta name="description" content="Flash binary onto the connected device." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,10 +23,10 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>mbed_tools.lib</code></h1>
+<h1 class="title">Module <code>mbed_tools.build.flash</code></h1>
 </header>
 <section id="section-intro">
-<p>Provides a library of common code.</p>
+<p>Flash binary onto the connected device.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -35,29 +35,116 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-&#34;&#34;&#34;Provides a library of common code.&#34;&#34;&#34;</code></pre>
+&#34;&#34;&#34;Flash binary onto the connected device.&#34;&#34;&#34;
+
+import shutil
+import os
+import pathlib
+import platform
+
+from mbed_tools.build.exceptions import BinaryFileNotFoundError
+
+
+def _flash_dev(disk: pathlib.Path, image_path: pathlib.Path) -&gt; None:
+    &#34;&#34;&#34;Flash device using copy method.
+
+    Args:
+        disk: Device mount point.
+        image_path: Image file to be copied to device.
+    &#34;&#34;&#34;
+    shutil.copy(image_path, disk, follow_symlinks=False)
+    if not platform.system() == &#34;Windows&#34;:
+        os.sync()
+
+
+def _build_binary_file_path(program_path: pathlib.Path, build_dir: pathlib.Path, hex_file: bool) -&gt; pathlib.Path:
+    &#34;&#34;&#34;Build binary file name.
+
+    Args:
+       program_path: Path to the Mbed project.
+       build_dir: Path to the CMake build folder.
+       hex_file: Use hex file.
+
+    Returns:
+        Path to binary file.
+
+    Raises:
+        BinaryFileNotFoundError: binary file not found in the path specified
+    &#34;&#34;&#34;
+    fw_fbase = build_dir / program_path.name
+    fw_file = fw_fbase.with_suffix(&#34;.hex&#34; if hex_file else &#34;.bin&#34;)
+    if not fw_file.exists():
+        raise BinaryFileNotFoundError(f&#34;Build program file (firmware) not found {fw_file}&#34;)
+    return fw_file
+
+
+def flash_binary(
+    mount_point: pathlib.Path, program_path: pathlib.Path, build_dir: pathlib.Path, mbed_target: str, hex_file: bool
+) -&gt; None:
+    &#34;&#34;&#34;Flash binary onto a device.
+
+    Look through the connected devices and flash the binary if the connected and built target matches.
+
+    Args:
+       mount_point: Mount point of the target device.
+       program_path: Path to the Mbed project.
+       build_dir: Path to the CMake build folder.
+       mbed_target: The name of the Mbed target to build for.
+       hex_file: Use hex file.
+    &#34;&#34;&#34;
+    fw_file = _build_binary_file_path(program_path, build_dir, hex_file)
+    _flash_dev(mount_point, fw_file)</code></pre>
 </details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="mbed_tools.lib.exceptions" href="exceptions.html">mbed_tools.lib.exceptions</a></code></dt>
+<dt id="mbed_tools.build.flash.flash_binary"><code class="name flex">
+<span>def <span class="ident">flash_binary</span></span>(<span>mount_point: pathlib.Path, program_path: pathlib.Path, build_dir: pathlib.Path, mbed_target: str, hex_file: bool) ‑> NoneType</span>
+</code></dt>
 <dd>
-<div class="desc"><p>Exceptions raised by mbed tools.</p></div>
-</dd>
-<dt><code class="name"><a title="mbed_tools.lib.logging" href="logging.html">mbed_tools.lib.logging</a></code></dt>
-<dd>
-<div class="desc"><p>Helpers for logging errors according to severity of the exception.</p></div>
-</dd>
-<dt><code class="name"><a title="mbed_tools.lib.python_helpers" href="python_helpers.html">mbed_tools.lib.python_helpers</a></code></dt>
-<dd>
-<div class="desc"><p>Helpers for python language related functions.</p></div>
+<div class="desc"><p>Flash binary onto a device.</p>
+<p>Look through the connected devices and flash the binary if the connected and built target matches.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>mount_point</code></strong></dt>
+<dd>Mount point of the target device.</dd>
+<dt><strong><code>program_path</code></strong></dt>
+<dd>Path to the Mbed project.</dd>
+<dt><strong><code>build_dir</code></strong></dt>
+<dd>Path to the CMake build folder.</dd>
+<dt><strong><code>mbed_target</code></strong></dt>
+<dd>The name of the Mbed target to build for.</dd>
+<dt><strong><code>hex_file</code></strong></dt>
+<dd>Use hex file.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def flash_binary(
+    mount_point: pathlib.Path, program_path: pathlib.Path, build_dir: pathlib.Path, mbed_target: str, hex_file: bool
+) -&gt; None:
+    &#34;&#34;&#34;Flash binary onto a device.
+
+    Look through the connected devices and flash the binary if the connected and built target matches.
+
+    Args:
+       mount_point: Mount point of the target device.
+       program_path: Path to the Mbed project.
+       build_dir: Path to the CMake build folder.
+       mbed_target: The name of the Mbed target to build for.
+       hex_file: Use hex file.
+    &#34;&#34;&#34;
+    fw_file = _build_binary_file_path(program_path, build_dir, hex_file)
+    _flash_dev(mount_point, fw_file)</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -70,14 +157,12 @@
 <ul id="index">
 <li><h3>Super-module</h3>
 <ul>
-<li><code><a title="mbed_tools" href="../index.html">mbed_tools</a></code></li>
+<li><code><a title="mbed_tools.build" href="index.html">mbed_tools.build</a></code></li>
 </ul>
 </li>
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
-<ul>
-<li><code><a title="mbed_tools.lib.exceptions" href="exceptions.html">mbed_tools.lib.exceptions</a></code></li>
-<li><code><a title="mbed_tools.lib.logging" href="logging.html">mbed_tools.lib.logging</a></code></li>
-<li><code><a title="mbed_tools.lib.python_helpers" href="python_helpers.html">mbed_tools.lib.python_helpers</a></code></li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="mbed_tools.build.flash.flash_binary" href="#mbed_tools.build.flash.flash_binary">flash_binary</a></code></li>
 </ul>
 </li>
 </ul>

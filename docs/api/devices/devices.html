@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.9.2" />
 <title>mbed_tools.devices.devices API documentation</title>
 <meta name="description" content="API for listing devices." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -46,8 +46,8 @@ from mbed_tools.devices._internal.detect_candidate_devices import detect_candida
 from mbed_tools.devices._internal.resolve_board import resolve_board
 from mbed_tools.devices._internal.exceptions import NoBoardForCandidate
 
-from mbed_tools.devices.device import ConnectedDevices
-from mbed_tools.devices.exceptions import DeviceLookupFailed
+from mbed_tools.devices.device import ConnectedDevices, Device
+from mbed_tools.devices.exceptions import DeviceLookupFailed, NoDevicesFound
 
 
 def get_connected_devices() -&gt; ConnectedDevices:
@@ -72,7 +72,39 @@ def get_connected_devices() -&gt; ConnectedDevices:
 
         connected_devices.add_device(candidate_device, board)
 
-    return connected_devices</code></pre>
+    return connected_devices
+
+
+def find_connected_device(target_name: str) -&gt; Device:
+    &#34;&#34;&#34;Find a connected device matching the given target_name.
+
+    Args:
+        target_name: The Mbed target name of the device.
+
+    Raises:
+        NoDevicesFound: Could not find any connected devices.
+        DeviceLookupFailed: Could not find a connected device matching target_name.
+
+    Returns:
+        Device matching target_name.
+    &#34;&#34;&#34;
+    connected = get_connected_devices()
+    if not connected.identified_devices:
+        raise NoDevicesFound(&#34;No Mbed enabled devices found.&#34;)
+
+    for device in connected.identified_devices:
+        if device.mbed_board.board_type == target_name.upper():
+            return device
+
+    detected_targets = &#34;\n&#34;.join(
+        f&#34;target: {dev.mbed_board.board_type}, port: {dev.serial_port}, mount point(s): {dev.mount_points}&#34;
+        for dev in connected.identified_devices
+    )
+    msg = (
+        f&#34;Target &#39;{target_name}&#39; was not detected. Connect the device to the USB, or enter the target name correctly!\n&#34;
+        f&#34;The following devices were detected:\n\t {detected_targets}&#34;
+    )
+    raise DeviceLookupFailed(msg)</code></pre>
 </details>
 </section>
 <section>
@@ -82,6 +114,61 @@ def get_connected_devices() -&gt; ConnectedDevices:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="mbed_tools.devices.devices.find_connected_device"><code class="name flex">
+<span>def <span class="ident">find_connected_device</span></span>(<span>target_name: str) ‑> <a title="mbed_tools.devices.device.Device" href="device.html#mbed_tools.devices.device.Device">Device</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Find a connected device matching the given target_name.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>target_name</code></strong></dt>
+<dd>The Mbed target name of the device.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NoDevicesFound</code></dt>
+<dd>Could not find any connected devices.</dd>
+<dt><code>DeviceLookupFailed</code></dt>
+<dd>Could not find a connected device matching target_name.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Device matching target_name.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_connected_device(target_name: str) -&gt; Device:
+    &#34;&#34;&#34;Find a connected device matching the given target_name.
+
+    Args:
+        target_name: The Mbed target name of the device.
+
+    Raises:
+        NoDevicesFound: Could not find any connected devices.
+        DeviceLookupFailed: Could not find a connected device matching target_name.
+
+    Returns:
+        Device matching target_name.
+    &#34;&#34;&#34;
+    connected = get_connected_devices()
+    if not connected.identified_devices:
+        raise NoDevicesFound(&#34;No Mbed enabled devices found.&#34;)
+
+    for device in connected.identified_devices:
+        if device.mbed_board.board_type == target_name.upper():
+            return device
+
+    detected_targets = &#34;\n&#34;.join(
+        f&#34;target: {dev.mbed_board.board_type}, port: {dev.serial_port}, mount point(s): {dev.mount_points}&#34;
+        for dev in connected.identified_devices
+    )
+    msg = (
+        f&#34;Target &#39;{target_name}&#39; was not detected. Connect the device to the USB, or enter the target name correctly!\n&#34;
+        f&#34;The following devices were detected:\n\t {detected_targets}&#34;
+    )
+    raise DeviceLookupFailed(msg)</code></pre>
+</details>
+</dd>
 <dt id="mbed_tools.devices.devices.get_connected_devices"><code class="name flex">
 <span>def <span class="ident">get_connected_devices</span></span>(<span>) ‑> <a title="mbed_tools.devices.device.ConnectedDevices" href="device.html#mbed_tools.devices.device.ConnectedDevices">ConnectedDevices</a></span>
 </code></dt>
@@ -141,6 +228,7 @@ Mbed Boards (but not could not be identified in the database) are returned.</p>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="mbed_tools.devices.devices.find_connected_device" href="#mbed_tools.devices.devices.find_connected_device">find_connected_device</a></code></li>
 <li><code><a title="mbed_tools.devices.devices.get_connected_devices" href="#mbed_tools.devices.devices.get_connected_devices">get_connected_devices</a></code></li>
 </ul>
 </li>
@@ -148,7 +236,7 @@ Mbed Boards (but not could not be identified in the database) are returned.</p>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
 </footer>
 </body>
 </html>

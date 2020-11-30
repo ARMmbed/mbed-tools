@@ -12,6 +12,60 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+4.0.0 (2020-11-30)
+==================
+
+Major changes
+-------------
+
+- Rename checkout to deploy command to improve usability. (#202011091500)
+- Rename init to new command to improve usability. (#202011101010)
+- Rename clone to import command to improve usability. (#202011101200)
+- Rename devices to detect command to improve usability. (#202011191400)
+- Rename build to compile command to improve usability. (#202011191700)
+- Remove the `libs` command and print a table of fetched dependencies after running `import` or `deploy. (#20201125120249)
+
+
+Features
+--------
+
+- Save time by amking "deploy" only fetch a specific git reference when a .lib
+  file contains a full git hash. (#202011271738)
+- Implement sterm command. (#20201111104222)
+- Add flash option to build command (#20201112095757)
+- Add --sterm option to the compile command, allows users to open a serial terminal to the device after building and flashing their application. (#20201124142418)
+- Targets added: SIDK S1SBP6A Bio-processor dev kit, ST Discovery STM32U599J.
+  Targets removed: MAX32620MBED	, MAX32630 Micro Board Wearable low-powered Microcontroller Platform, ARM, MAX32630MBED.
+  Targets modified: MAX32600MBED, NUMAKER-M2354. (#20201130181117)
+
+
+Bugfixes
+--------
+
+- Use default branch from the remote repository, if no git hash in lib file. Fetch git repo before checkout when running `deploy` command. (#202011261100)
+- Update CMakeLists template to reflect changes in Mbed OS CMake (#20201110140545)
+- Fix the deploy command for projects containing multiple applications. (#20201119155311)
+
+
+Improved Documentation
+----------------------
+
+- Move howto to mbed-os-5-docs (#202010301024)
+- Update README.md and CONTRIBUTING.md with details on new release process. (#20201105153416)
+
+
+Deprecations and Removals
+-------------------------
+
+- Remove unsupported documented feature called as Revision from deploy command. (#202011231100)
+
+
+Misc
+----
+
+- #202011191602, #20201106115920, #20201106150801, #20201109115214, #20201127153832
+
+
 3.5.0 (2020-11-06)
 ==================
 

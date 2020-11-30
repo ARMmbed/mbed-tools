@@ -7,7 +7,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.9.1" />
+<meta name="generator" content="pdoc 0.9.2" />
 <title>mbed_tools.project.project API documentation</title>
 <meta name="description" content="Defines the public API of the package." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -39,29 +39,37 @@
 import pathlib
 import logging
 
-from typing import Dict, Any
+from typing import List, Any
 
 from mbed_tools.project.mbed_program import MbedProgram, parse_url
+from mbed_tools.project._internal.libraries import LibraryReferences
+from mbed_tools.project._internal import git_utils
 
 logger = logging.getLogger(__name__)
 
 
-def clone_project(url: str, dst_path: Any = None, recursive: bool = False) -&gt; None:
+def import_project(url: str, dst_path: Any = None, recursive: bool = False) -&gt; pathlib.Path:
     &#34;&#34;&#34;Clones an Mbed project from a remote repository.
 
     Args:
         url: URL of the repository to clone.
         dst_path: Destination path for the repository.
         recursive: Recursively clone all project dependencies.
+
+    Returns:
+        The path the project was cloned to.
     &#34;&#34;&#34;
     git_data = parse_url(url)
     url = git_data[&#34;url&#34;]
     if not dst_path:
         dst_path = pathlib.Path(git_data[&#34;dst_path&#34;])
 
-    program = MbedProgram.from_url(url, dst_path)
+    git_utils.clone(url, dst_path)
     if recursive:
-        program.resolve_libraries()
+        libs = LibraryReferences(root=dst_path, ignore_paths=[&#34;mbed-os&#34;])
+        libs.fetch()
+
+    return dst_path
 
 
 def initialise_project(path: pathlib.Path, create_only: bool) -&gt; None:
@@ -73,29 +81,29 @@ def initialise_project(path: pathlib.Path, create_only: bool) -&gt; None:
     &#34;&#34;&#34;
     program = MbedProgram.from_new(path)
     if not create_only:
-        program.resolve_libraries()
+        libs = LibraryReferences(root=program.root, ignore_paths=[&#34;mbed-os&#34;])
+        libs.fetch()
 
 
-def checkout_project_revision(path: pathlib.Path, force: bool = False) -&gt; None:
-    &#34;&#34;&#34;Checkout a specific revision of the current Mbed project.
+def deploy_project(path: pathlib.Path, force: bool = False) -&gt; None:
+    &#34;&#34;&#34;Deploy a specific revision of the current Mbed project.
 
     This function also resolves and syncs all library dependencies to the revision specified in the library reference
     files.
 
     Args:
         path: Path to the Mbed project.
-        project_revision: Revision of the Mbed project to check out.
-        force: Force overwrite uncommitted changes. If False, the checkout will fail if there are uncommitted local
+        force: Force overwrite uncommitted changes. If False, the deploy will fail if there are uncommitted local
                changes.
     &#34;&#34;&#34;
-    program = MbedProgram.from_existing(path, check_mbed_os=False)
-    program.checkout_libraries(force=force)
-    if program.has_unresolved_libraries():
+    libs = LibraryReferences(path, ignore_paths=[&#34;mbed-os&#34;])
+    libs.checkout(force=force)
+    if list(libs.iter_unresolved()):
         logger.info(&#34;Unresolved libraries detected, downloading library source code.&#34;)
-        program.resolve_libraries()
+        libs.fetch()
 
 
-def get_known_libs(path: pathlib.Path) -&gt; Dict[str, Any]:
+def get_known_libs(path: pathlib.Path) -&gt; List:
     &#34;&#34;&#34;List all resolved library dependencies.
 
     This function will not resolve dependencies. This will only generate a list of resolved dependencies.
@@ -104,12 +112,10 @@ def get_known_libs(path: pathlib.Path) -&gt; Dict[str, Any]:
         path: Path to the Mbed project.
 
     Returns:
-        dictionary containing a list of known dependencies and a boolean stating whether unresolved dependencies were
-        detected.
+        A list of known dependencies.
     &#34;&#34;&#34;
-    program = MbedProgram.from_existing(path, check_mbed_os=False)
-
-    return {&#34;known_libs&#34;: program.list_known_library_dependencies(), &#34;unresolved&#34;: program.has_unresolved_libraries()}</code></pre>
+    libs = LibraryReferences(path, ignore_paths=[&#34;mbed-os&#34;])
+    return list(sorted(libs.iter_resolved()))</code></pre>
 </details>
 </section>
 <section>
@@ -119,48 +125,77 @@ def get_known_libs(path: pathlib.Path) -&gt; Dict[str, Any]:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="mbed_tools.project.project.checkout_project_revision"><code class="name flex">
-<span>def <span class="ident">checkout_project_revision</span></span>(<span>path: pathlib.Path, force: bool = False) ‑> NoneType</span>
+<dt id="mbed_tools.project.project.deploy_project"><code class="name flex">
+<span>def <span class="ident">deploy_project</span></span>(<span>path: pathlib.Path, force: bool = False) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Checkout a specific revision of the current Mbed project.</p>
+<div class="desc"><p>Deploy a specific revision of the current Mbed project.</p>
 <p>This function also resolves and syncs all library dependencies to the revision specified in the library reference
 files.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>path</code></strong></dt>
 <dd>Path to the Mbed project.</dd>
-<dt><strong><code>project_revision</code></strong></dt>
-<dd>Revision of the Mbed project to check out.</dd>
 <dt><strong><code>force</code></strong></dt>
-<dd>Force overwrite uncommitted changes. If False, the checkout will fail if there are uncommitted local
+<dd>Force overwrite uncommitted changes. If False, the deploy will fail if there are uncommitted local
 changes.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def checkout_project_revision(path: pathlib.Path, force: bool = False) -&gt; None:
-    &#34;&#34;&#34;Checkout a specific revision of the current Mbed project.
+<pre><code class="python">def deploy_project(path: pathlib.Path, force: bool = False) -&gt; None:
+    &#34;&#34;&#34;Deploy a specific revision of the current Mbed project.
 
     This function also resolves and syncs all library dependencies to the revision specified in the library reference
     files.
 
     Args:
         path: Path to the Mbed project.
-        project_revision: Revision of the Mbed project to check out.
-        force: Force overwrite uncommitted changes. If False, the checkout will fail if there are uncommitted local
+        force: Force overwrite uncommitted changes. If False, the deploy will fail if there are uncommitted local
                changes.
     &#34;&#34;&#34;
-    program = MbedProgram.from_existing(path, check_mbed_os=False)
-    program.checkout_libraries(force=force)
-    if program.has_unresolved_libraries():
+    libs = LibraryReferences(path, ignore_paths=[&#34;mbed-os&#34;])
+    libs.checkout(force=force)
+    if list(libs.iter_unresolved()):
         logger.info(&#34;Unresolved libraries detected, downloading library source code.&#34;)
-        program.resolve_libraries()</code></pre>
+        libs.fetch()</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools.project.project.clone_project"><code class="name flex">
-<span>def <span class="ident">clone_project</span></span>(<span>url: str, dst_path: Any = None, recursive: bool = False) ‑> NoneType</span>
+<dt id="mbed_tools.project.project.get_known_libs"><code class="name flex">
+<span>def <span class="ident">get_known_libs</span></span>(<span>path: pathlib.Path) ‑> List</span>
+</code></dt>
+<dd>
+<div class="desc"><p>List all resolved library dependencies.</p>
+<p>This function will not resolve dependencies. This will only generate a list of resolved dependencies.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>path</code></strong></dt>
+<dd>Path to the Mbed project.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A list of known dependencies.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_known_libs(path: pathlib.Path) -&gt; List:
+    &#34;&#34;&#34;List all resolved library dependencies.
+
+    This function will not resolve dependencies. This will only generate a list of resolved dependencies.
+
+    Args:
+        path: Path to the Mbed project.
+
+    Returns:
+        A list of known dependencies.
+    &#34;&#34;&#34;
+    libs = LibraryReferences(path, ignore_paths=[&#34;mbed-os&#34;])
+    return list(sorted(libs.iter_resolved()))</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools.project.project.import_project"><code class="name flex">
+<span>def <span class="ident">import_project</span></span>(<span>url: str, dst_path: Any = None, recursive: bool = False) ‑> pathlib.Path</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Clones an Mbed project from a remote repository.</p>
@@ -172,62 +207,35 @@ changes.</dd>
 <dd>Destination path for the repository.</dd>
 <dt><strong><code>recursive</code></strong></dt>
 <dd>Recursively clone all project dependencies.</dd>
-</dl></div>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>The path the project was cloned to.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def clone_project(url: str, dst_path: Any = None, recursive: bool = False) -&gt; None:
+<pre><code class="python">def import_project(url: str, dst_path: Any = None, recursive: bool = False) -&gt; pathlib.Path:
     &#34;&#34;&#34;Clones an Mbed project from a remote repository.
 
     Args:
         url: URL of the repository to clone.
         dst_path: Destination path for the repository.
         recursive: Recursively clone all project dependencies.
+
+    Returns:
+        The path the project was cloned to.
     &#34;&#34;&#34;
     git_data = parse_url(url)
     url = git_data[&#34;url&#34;]
     if not dst_path:
         dst_path = pathlib.Path(git_data[&#34;dst_path&#34;])
 
-    program = MbedProgram.from_url(url, dst_path)
+    git_utils.clone(url, dst_path)
     if recursive:
-        program.resolve_libraries()</code></pre>
-</details>
-</dd>
-<dt id="mbed_tools.project.project.get_known_libs"><code class="name flex">
-<span>def <span class="ident">get_known_libs</span></span>(<span>path: pathlib.Path) ‑> Dict[str, Any]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>List all resolved library dependencies.</p>
-<p>This function will not resolve dependencies. This will only generate a list of resolved dependencies.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>path</code></strong></dt>
-<dd>Path to the Mbed project.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>dictionary containing a list of known dependencies and a boolean stating whether unresolved dependencies were
-detected.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_known_libs(path: pathlib.Path) -&gt; Dict[str, Any]:
-    &#34;&#34;&#34;List all resolved library dependencies.
+        libs = LibraryReferences(root=dst_path, ignore_paths=[&#34;mbed-os&#34;])
+        libs.fetch()
 
-    This function will not resolve dependencies. This will only generate a list of resolved dependencies.
-
-    Args:
-        path: Path to the Mbed project.
-
-    Returns:
-        dictionary containing a list of known dependencies and a boolean stating whether unresolved dependencies were
-        detected.
-    &#34;&#34;&#34;
-    program = MbedProgram.from_existing(path, check_mbed_os=False)
-
-    return {&#34;known_libs&#34;: program.list_known_library_dependencies(), &#34;unresolved&#34;: program.has_unresolved_libraries()}</code></pre>
+    return dst_path</code></pre>
 </details>
 </dd>
 <dt id="mbed_tools.project.project.initialise_project"><code class="name flex">
@@ -255,7 +263,8 @@ detected.</p></div>
     &#34;&#34;&#34;
     program = MbedProgram.from_new(path)
     if not create_only:
-        program.resolve_libraries()</code></pre>
+        libs = LibraryReferences(root=program.root, ignore_paths=[&#34;mbed-os&#34;])
+        libs.fetch()</code></pre>
 </details>
 </dd>
 </dl>
@@ -276,9 +285,9 @@ detected.</p></div>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="mbed_tools.project.project.checkout_project_revision" href="#mbed_tools.project.project.checkout_project_revision">checkout_project_revision</a></code></li>
-<li><code><a title="mbed_tools.project.project.clone_project" href="#mbed_tools.project.project.clone_project">clone_project</a></code></li>
+<li><code><a title="mbed_tools.project.project.deploy_project" href="#mbed_tools.project.project.deploy_project">deploy_project</a></code></li>
 <li><code><a title="mbed_tools.project.project.get_known_libs" href="#mbed_tools.project.project.get_known_libs">get_known_libs</a></code></li>
+<li><code><a title="mbed_tools.project.project.import_project" href="#mbed_tools.project.project.import_project">import_project</a></code></li>
 <li><code><a title="mbed_tools.project.project.initialise_project" href="#mbed_tools.project.project.initialise_project">initialise_project</a></code></li>
 </ul>
 </li>
@@ -286,7 +295,7 @@ detected.</p></div>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.9.2</a>.</p>
 </footer>
 </body>
 </html>
