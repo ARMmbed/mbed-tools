@@ -21,6 +21,8 @@ class CumulativeData:
     extra_labels: Set[str] = field(default_factory=set)
     device_has: Set[str] = field(default_factory=set)
     macros: Set[str] = field(default_factory=set)
+    c_lib: str = field(default_factory=str)
+    printf_lib: str = field(default_factory=str)
 
     @classmethod
     def from_sources(cls, sources: Iterable[Source]) -> "CumulativeData":
@@ -41,7 +43,10 @@ def _modify_field(data: CumulativeData, key: str, value: Any) -> None:
     elif modifier == "remove":
         new_value = getattr(data, key) - set(value)
     else:
-        new_value = set(value)
+        if type(value) is str:
+            new_value = value
+        else:
+            new_value = set(value)
     setattr(data, key, new_value)
 
 

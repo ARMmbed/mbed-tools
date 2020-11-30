@@ -86,6 +86,8 @@ class Source:
             "labels": target["labels"],
             "extra_labels": target["extra_labels"],
             "macros": target["macros"],
+            "c_lib": target["c_lib"],
+            "printf_lib": target["printf_lib"],
         }
         namespaced_overrides = _namespace_data(overrides, namespace)
 

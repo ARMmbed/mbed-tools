@@ -57,6 +57,8 @@ class TestAssembleConfigFromSourcesAndLibFiles(TestCase):
             "extra_labels": set(),
             "features": set("RED"),
             "components": set(),
+            "c_lib": "std",
+            "printf_lib": "minimal-printf",
         }
         mbed_lib_files = [
             {
@@ -119,6 +121,8 @@ class TestAssembleConfigFromSourcesAndLibFiles(TestCase):
             "extra_labels": set(),
             "features": set(),
             "components": set(),
+            "c_lib": "std",
+            "printf_lib": "minimal-printf",
         }
         mbed_lib_files = [
             {
