@@ -2,13 +2,11 @@
 # Copyright (C) 2020 Arm Mbed. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-from unittest import TestCase
-
 from tests.build._internal.config.factories import ConfigFactory
 from mbed_tools.build._internal.cmake_file import generate_mbed_config_cmake_file, _render_mbed_config_cmake_template
 
 
-class TestGenerateCMakeListsFile(TestCase):
+class TestGenerateCMakeListsFile:
     def test_correct_arguments_passed(self):
         target = dict()
         target["labels"] = ["foo"]
@@ -29,12 +27,10 @@ class TestGenerateCMakeListsFile(TestCase):
 
         result = generate_mbed_config_cmake_file(mbed_target, target, config, toolchain_name)
 
-        self.assertEqual(
-            result, _render_mbed_config_cmake_template(target, config, toolchain_name, mbed_target,),
-        )
+        assert result == _render_mbed_config_cmake_template(target, config, toolchain_name, mbed_target,)
 
 
-class TestRendersCMakeListsFile(TestCase):
+class TestRendersCMakeListsFile:
     def test_returns_rendered_content(self):
         target = dict()
         target["labels"] = ["foo"]
@@ -54,15 +50,15 @@ class TestRendersCMakeListsFile(TestCase):
         result = _render_mbed_config_cmake_template(target, config, toolchain_name, "target_name")
 
         for label in target["labels"] + target["extra_labels"]:
-            self.assertIn(label, result)
+            assert label in result
 
         for macro in target["features"] + target["components"] + [toolchain_name]:
-            self.assertIn(macro, result)
+            assert macro in result
 
         for toolchain in target["supported_c_libs"]:
-            self.assertIn(toolchain, result)
+            assert toolchain in result
             for supported_c_libs in toolchain:
-                self.assertIn(supported_c_libs, result)
+                assert supported_c_libs in result
 
         for supported_application_profiles in target["supported_application_profiles"]:
-            self.assertIn(supported_application_profiles, result)
+            assert supported_application_profiles in result
