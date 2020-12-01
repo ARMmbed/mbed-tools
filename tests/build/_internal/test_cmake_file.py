@@ -4,8 +4,9 @@
 #
 import pytest
 
-from tests.build._internal.config.factories import ConfigFactory
+from tests.build._internal.config.factories import ConfigFactory, SourceFactory
 from mbed_tools.build._internal.cmake_file import generate_mbed_config_cmake_file, _render_mbed_config_cmake_template
+from mbed_tools.build._internal.config.config import _create_config_option
 
 
 TOOLCHAIN_NAME = "gcc"
@@ -57,3 +58,13 @@ class TestRendersCMakeListsFile:
 
         for supported_application_profiles in fake_target["supported_application_profiles"]:
             assert supported_application_profiles in result
+
+    def test_returns_quoted_content(self, fake_target):
+        config = ConfigFactory()
+        source = SourceFactory()
+
+        # Add an option whose value contains quotes to the config.
+        _create_config_option(config, "iotc-mqtt-host", '{"mqtt.2030.ltsapis.goog", IOTC_MQTT_PORT}', source)
+
+        result = _render_mbed_config_cmake_template(fake_target, config, TOOLCHAIN_NAME, "target_name")
+        assert '"-DMBED_CONF_IOTC_MQTT_HOST={\\"mqtt.2030.ltsapis.goog\\", IOTC_MQTT_PORT}"' in result

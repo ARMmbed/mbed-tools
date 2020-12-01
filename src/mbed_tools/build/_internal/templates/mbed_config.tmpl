@@ -65,7 +65,7 @@ set(MBED_CONFIG_DEFINITIONS
 # options
 {% for option in options -%}
 {% if option.value is not none -%}
-   {%if '{' in option.value|string or '(' in option.value|string %}"{% endif %}-D{{option.macro_name}}={{option.value}}{% if '}' in option.value|string or ')' in option.value|string %}"{% endif %}
+   "-D{{option.macro_name}}={{option.value|replace("\"", "\\\"")}}"
 {% endif %}
 {%- endfor %}
 # macros
