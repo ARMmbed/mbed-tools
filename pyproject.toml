@@ -31,6 +31,7 @@ chardet = "LGPL-2.1 - Accepted temporarily"
 pyudev = "LGPL-2.1 - Accepted temporarily"
 pdoc3 = "AGPL-3.0 - Accepted temporarily"
 zipp = "MIT"
+importlib-metadata = "Apache-2.0"
 
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
