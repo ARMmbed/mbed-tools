@@ -11,6 +11,7 @@ pr:
 
 stages:
   - stage: ReleaseToPyPI
+    condition: not(and(eq(variables['Build.SourceBranch'], 'refs/heads/master'), contains(variables['Build.SourceVersionMessage'], 'Prepare mbed-tools release')))
     displayName: 'Production Release'
     jobs:
       - deployment: PyPIRelease
