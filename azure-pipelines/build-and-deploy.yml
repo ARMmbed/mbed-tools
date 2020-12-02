@@ -33,10 +33,6 @@ stages:
                 - script: |
                     python -m pip install --upgrade tox
                     tox -e py37
-                  displayName: "Run pytests"
-
-                - script: |
-                    python -m pip install --upgrade tox
                     tox -e pypirelease -- -p $TWINE_PASSWORD -u $TWINE_USERNAME
                   displayName: "PyPI release"
                   env:
