@@ -16,3 +16,10 @@ class TestConfigureCommand(TestCase):
         CliRunner().invoke(configure, ["-m", "k64f", "-t", "gcc_arm"])
 
         generate_config.assert_called_once_with("K64F", "GCC_ARM", program.from_existing())
+
+    @mock.patch("mbed_tools.cli.configure.generate_config")
+    @mock.patch("mbed_tools.cli.configure.MbedProgram")
+    def test_generate_config_called_with_mbed_os_path(self, program, generate_config):
+        CliRunner().invoke(configure, ["-m", "k64f", "-t", "gcc_arm", "--mbed-os-path", "./extern/mbed-os"])
+
+        generate_config.assert_called_once_with("K64F", "GCC_ARM", program.from_existing())
