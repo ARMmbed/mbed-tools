@@ -88,6 +88,19 @@ class TestInitialiseProgram(TestCase):
         self.assertTrue(program.files.app_config_file.exists())
         self.assertTrue(program.mbed_os.root.exists())
 
+    @patchfs
+    def test_from_existing_with_mbed_os_path_returns_valid_program(self, fs):
+        fs_root = pathlib.Path(fs, "foo")
+        mbed_os_path = fs_root / "extern/mbed-os"
+        mbed_os_path.mkdir(parents=True)
+        make_mbed_program_files(fs_root)
+        make_mbed_os_files(mbed_os_path)
+
+        program = MbedProgram.from_existing(fs_root, mbed_os_path)
+
+        self.assertTrue(program.files.app_config_file.exists())
+        self.assertTrue(program.mbed_os.root.exists())
+
 
 class TestParseURL(TestCase):
     def test_creates_url_and_dst_dir_from_name(self):
