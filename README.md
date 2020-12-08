@@ -94,5 +94,5 @@ The follow described the major aspects of the project structure:
 
 - Mbed OS is an open source project and we are committed to fostering a welcoming community, please see our
   [Code of Conduct](https://github.com/ARMmbed/mbed-tools/blob/master/CODE_OF_CONDUCT.md) for more information.
-- For ways to contribute to the project, please see the [Contributions Guidelines](https://github.com/ARMmbed/mbed-tools/blob/master/CONTRIBUTING.md)
-- For a technical introduction into developing this package, please see the [Development Guide](https://github.com/ARMmbed/mbed-tools/blob/master/DEVELOPMENT.md)
+- For how to contribute to the project, including how to develop the project,
+  please see the [Contributions Guidelines](https://github.com/ARMmbed/mbed-tools/blob/master/CONTRIBUTING.md)
