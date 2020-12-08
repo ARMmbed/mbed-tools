@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/ARMmbed/mbed-tools-ci-scripts.git
-    rev: 6b22e59771793679854ae520c9f109fa5385dc6d
+    rev: 2a605e0c715ad7f51a8f3853522f01a32846aba7
     hooks:
       - id: licensing
 
