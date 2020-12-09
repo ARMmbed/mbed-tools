@@ -12,6 +12,22 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+4.0.1 (2020-12-09)
+==================
+
+Bugfixes
+--------
+
+- Add c_lib and printf_lib to target config options (#20201130184919)
+- Fix bug where we failed to handle config options that contain quotes (#125) (#20201201142709)
+
+
+Misc
+----
+
+- #20201130143507, #20201202121845, #20201208124121
+
+
 4.0.0 (2020-11-30)
 ==================
 
