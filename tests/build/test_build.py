@@ -30,9 +30,9 @@ class TestBuildProject:
         subprocess_run.assert_called_with(["cmake", "--build", "cmake_build"], check=True)
 
     def test_raises_build_error_if_cmake_invocation_fails(self, subprocess_run):
-        subprocess_run.side_effect = subprocess.CalledProcessError(1, "")
+        subprocess_run.side_effect = (None, subprocess.CalledProcessError(1, ""))
 
-        with pytest.raises(MbedBuildError):
+        with pytest.raises(MbedBuildError, match="CMake invocation failed"):
             build_project(build_dir="cmake_build")
 
 
@@ -47,3 +47,15 @@ class TestConfigureProject:
         subprocess_run.assert_called_with(
             ["cmake", "-S", source_dir, "-B", build_dir, "-GNinja", f"-DCMAKE_BUILD_TYPE={profile}"], check=True
         )
+
+    def test_raises_when_ninja_cannot_be_found(self, subprocess_run):
+        subprocess_run.side_effect = FileNotFoundError
+
+        with pytest.raises(MbedBuildError, match="Ninja"):
+            generate_build_system("", "", "")
+
+    def test_raises_when_cmake_cannot_be_found(self, subprocess_run):
+        subprocess_run.side_effect = (None, FileNotFoundError)
+
+        with pytest.raises(MbedBuildError, match="Could not find CMake"):
+            generate_build_system("", "", "")
