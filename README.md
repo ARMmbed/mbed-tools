@@ -48,6 +48,10 @@ follows:
 
 ## Installation
 
+`mbed-tools` relies on the Ninja build system and CMake.
+- CMake. [Install version 3.19.0 or newer for all operating systems](https://cmake.org/install/).
+- Ninja. [Install version 1.0 or newer for all operating systems](https://github.com/ninja-build/ninja/wiki/Pre-built-Ninja-packages).
+
 We recommend installing `mbed-tools` in a Python virtual environment to avoid dependency conflicts.
 
 To install the most recent production quality release use:
