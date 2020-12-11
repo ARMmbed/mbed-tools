@@ -99,23 +99,29 @@ class MbedProgram:
         return cls(program_files, mbed_os)
 
     @classmethod
-    def from_existing(cls, dir_path: Path, check_mbed_os: bool = True) -&gt; &#34;MbedProgram&#34;:
+    def from_existing(cls, dir_path: Path, mbed_os_path: Path = None, check_mbed_os: bool = True) -&gt; &#34;MbedProgram&#34;:
         &#34;&#34;&#34;Create an MbedProgram from an existing program directory.
 
         Args:
             dir_path: Directory containing an Mbed program.
+            mbed_os_path: Directory containing Mbed OS
             check_mbed_os: If True causes an exception to be raised if the Mbed OS source directory does not
                            exist.
 
         Raises:
             ProgramNotFound: An existing program was not found in the path.
         &#34;&#34;&#34;
-        program_root = _find_program_root(dir_path)
+        if mbed_os_path is None:
+            program_root = _find_program_root(dir_path)
+            mbed_os_path = program_root / MBED_OS_DIR_NAME
+        else:
+            program_root = dir_path
+
         logger.info(f&#34;Found existing Mbed program at path &#39;{program_root}&#39;&#34;)
         program = MbedProgramFiles.from_existing(program_root)
 
         try:
-            mbed_os = MbedOS.from_existing(program_root / MBED_OS_DIR_NAME, check_mbed_os)
+            mbed_os = MbedOS.from_existing(mbed_os_path, check_mbed_os)
         except ValueError as mbed_os_err:
             raise MbedOSNotFound(
                 f&#34;Mbed OS was not found due to the following error: {mbed_os_err}&#34;
@@ -306,23 +312,29 @@ def _find_program_root(cwd: Path) -&gt; Path:
         return cls(program_files, mbed_os)
 
     @classmethod
-    def from_existing(cls, dir_path: Path, check_mbed_os: bool = True) -&gt; &#34;MbedProgram&#34;:
+    def from_existing(cls, dir_path: Path, mbed_os_path: Path = None, check_mbed_os: bool = True) -&gt; &#34;MbedProgram&#34;:
         &#34;&#34;&#34;Create an MbedProgram from an existing program directory.
 
         Args:
             dir_path: Directory containing an Mbed program.
+            mbed_os_path: Directory containing Mbed OS
             check_mbed_os: If True causes an exception to be raised if the Mbed OS source directory does not
                            exist.
 
         Raises:
             ProgramNotFound: An existing program was not found in the path.
         &#34;&#34;&#34;
-        program_root = _find_program_root(dir_path)
+        if mbed_os_path is None:
+            program_root = _find_program_root(dir_path)
+            mbed_os_path = program_root / MBED_OS_DIR_NAME
+        else:
+            program_root = dir_path
+
         logger.info(f&#34;Found existing Mbed program at path &#39;{program_root}&#39;&#34;)
         program = MbedProgramFiles.from_existing(program_root)
 
         try:
-            mbed_os = MbedOS.from_existing(program_root / MBED_OS_DIR_NAME, check_mbed_os)
+            mbed_os = MbedOS.from_existing(mbed_os_path, check_mbed_os)
         except ValueError as mbed_os_err:
             raise MbedOSNotFound(
                 f&#34;Mbed OS was not found due to the following error: {mbed_os_err}&#34;
@@ -334,7 +346,7 @@ def _find_program_root(cwd: Path) -&gt; Path:
 <h3>Static methods</h3>
 <dl>
 <dt id="mbed_tools.project.mbed_program.MbedProgram.from_existing"><code class="name flex">
-<span>def <span class="ident">from_existing</span></span>(<span>dir_path: pathlib.Path, check_mbed_os: bool = True) ‑> <a title="mbed_tools.project.mbed_program.MbedProgram" href="#mbed_tools.project.mbed_program.MbedProgram">MbedProgram</a></span>
+<span>def <span class="ident">from_existing</span></span>(<span>dir_path: pathlib.Path, mbed_os_path: pathlib.Path = None, check_mbed_os: bool = True) ‑> <a title="mbed_tools.project.mbed_program.MbedProgram" href="#mbed_tools.project.mbed_program.MbedProgram">MbedProgram</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Create an MbedProgram from an existing program directory.</p>
@@ -342,6 +354,8 @@ def _find_program_root(cwd: Path) -&gt; Path:
 <dl>
 <dt><strong><code>dir_path</code></strong></dt>
 <dd>Directory containing an Mbed program.</dd>
+<dt><strong><code>mbed_os_path</code></strong></dt>
+<dd>Directory containing Mbed OS</dd>
 <dt><strong><code>check_mbed_os</code></strong></dt>
 <dd>If True causes an exception to be raised if the Mbed OS source directory does not
 exist.</dd>
@@ -356,23 +370,29 @@ exist.</dd>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@classmethod
-def from_existing(cls, dir_path: Path, check_mbed_os: bool = True) -&gt; &#34;MbedProgram&#34;:
+def from_existing(cls, dir_path: Path, mbed_os_path: Path = None, check_mbed_os: bool = True) -&gt; &#34;MbedProgram&#34;:
     &#34;&#34;&#34;Create an MbedProgram from an existing program directory.
 
     Args:
         dir_path: Directory containing an Mbed program.
+        mbed_os_path: Directory containing Mbed OS
         check_mbed_os: If True causes an exception to be raised if the Mbed OS source directory does not
                        exist.
 
     Raises:
         ProgramNotFound: An existing program was not found in the path.
     &#34;&#34;&#34;
-    program_root = _find_program_root(dir_path)
+    if mbed_os_path is None:
+        program_root = _find_program_root(dir_path)
+        mbed_os_path = program_root / MBED_OS_DIR_NAME
+    else:
+        program_root = dir_path
+
     logger.info(f&#34;Found existing Mbed program at path &#39;{program_root}&#39;&#34;)
     program = MbedProgramFiles.from_existing(program_root)
 
     try:
-        mbed_os = MbedOS.from_existing(program_root / MBED_OS_DIR_NAME, check_mbed_os)
+        mbed_os = MbedOS.from_existing(mbed_os_path, check_mbed_os)
     except ValueError as mbed_os_err:
         raise MbedOSNotFound(
             f&#34;Mbed OS was not found due to the following error: {mbed_os_err}&#34;

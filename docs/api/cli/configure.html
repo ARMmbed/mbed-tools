@@ -62,7 +62,10 @@ from mbed_tools.build import generate_config
     default=&#34;.&#34;,
     help=&#34;Path to local Mbed program. By default is the current working directory.&#34;,
 )
-def configure(toolchain: str, mbed_target: str, program_path: str) -&gt; None:
+@click.option(
+    &#34;--mbed-os-path&#34;, type=click.Path(), default=None, help=&#34;Path to local Mbed OS directory.&#34;,
+)
+def configure(toolchain: str, mbed_target: str, program_path: str, mbed_os_path: str) -&gt; None:
     &#34;&#34;&#34;Exports a mbed_config.cmake file to a .mbedbuild directory in the program root.
 
     The parameters set in the CMake file will be dependent on the combination of
@@ -76,8 +79,12 @@ def configure(toolchain: str, mbed_target: str, program_path: str) -&gt; None:
         toolchain: the toolchain you are using (eg. GCC_ARM, ARM)
         mbed_target: the target you are building for (eg. K64F)
         program_path: the path to the local Mbed program
+        mbed_os_path: the path to the local Mbed OS directory
     &#34;&#34;&#34;
-    program = MbedProgram.from_existing(pathlib.Path(program_path))
+    if mbed_os_path is None:
+        program = MbedProgram.from_existing(pathlib.Path(program_path))
+    else:
+        program = MbedProgram.from_existing(pathlib.Path(program_path), pathlib.Path(mbed_os_path))
     mbed_target = mbed_target.upper()
     output_path = generate_config(mbed_target, toolchain, program)
     click.echo(f&#34;mbed_config.cmake has been generated and written to &#39;{str(output_path.resolve())}&#39;&#34;)</code></pre>

@@ -65,6 +65,9 @@ from mbed_tools.sterm import terminal
     help=&#34;Path to local Mbed program. By default it is the current working directory.&#34;,
 )
 @click.option(
+    &#34;--mbed-os-path&#34;, type=click.Path(), default=None, help=&#34;Path to local Mbed OS directory.&#34;,
+)
+@click.option(
     &#34;-f&#34;, &#34;--flash&#34;, is_flag=True, default=False, help=&#34;Flash the binary onto a device&#34;,
 )
 @click.option(
@@ -89,6 +92,7 @@ def build(
     hex_file: bool = False,
     sterm: bool = False,
     baudrate: int = 9600,
+    mbed_os_path: str = None,
 ) -&gt; None:
     &#34;&#34;&#34;Configure and build an Mbed project using CMake and Ninja.
 
@@ -100,6 +104,7 @@ def build(
 
     Args:
        program_path: Path to the Mbed project.
+       mbed_os_path: the path to the local Mbed OS directory
        build_type: The Mbed build profile (debug, develop or release).
        toolchain: The toolchain to use for the build.
        mbed_target: The name of the Mbed target to build for.
@@ -109,7 +114,10 @@ def build(
        sterm: Open a serial terminal to the connected target.
        baudrate: Change the serial baud rate (ignored unless --sterm is also given).
     &#34;&#34;&#34;
-    program = MbedProgram.from_existing(pathlib.Path(program_path))
+    if mbed_os_path is None:
+        program = MbedProgram.from_existing(pathlib.Path(program_path))
+    else:
+        program = MbedProgram.from_existing(pathlib.Path(program_path), pathlib.Path(mbed_os_path))
     mbed_config_file = program.files.cmake_config_file
     build_tree = program.files.cmake_build_dir
     if clean and build_tree.exists():
