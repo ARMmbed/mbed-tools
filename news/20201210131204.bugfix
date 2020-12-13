@@ -1,1 +1,0 @@
-Emit more useful error messages if CMake or Ninja aren't found in PATH.

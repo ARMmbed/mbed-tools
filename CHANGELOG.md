@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+4.1.1 (2020-12-13)
+==================
+
+Bugfixes
+--------
+
+- Emit more useful error messages if CMake or Ninja aren't found in PATH. (#20201210131204)
+
+
 4.1.0 (2020-12-11)
 ==================
 

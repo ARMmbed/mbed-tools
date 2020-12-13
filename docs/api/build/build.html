@@ -55,6 +55,7 @@ def build_project(build_dir: pathlib.Path, target: Optional[str] = None) -&gt; N
         build_dir: Path to the CMake build tree.
         target: The CMake target to build (e.g &#39;install&#39;)
     &#34;&#34;&#34;
+    _check_ninja_found()
     target_flag = [&#34;--target&#34;, target] if target is not None else []
     _cmake_wrapper(&#34;--build&#34;, str(build_dir), *target_flag)
 
@@ -67,6 +68,7 @@ def generate_build_system(source_dir: pathlib.Path, build_dir: pathlib.Path, pro
         build_dir: Path to the CMake build tree.
         profile: The Mbed build profile (develop, debug or release).
     &#34;&#34;&#34;
+    _check_ninja_found()
     _cmake_wrapper(&#34;-S&#34;, str(source_dir), &#34;-B&#34;, str(build_dir), &#34;-GNinja&#34;, f&#34;-DCMAKE_BUILD_TYPE={profile}&#34;)
 
 
@@ -74,8 +76,19 @@ def _cmake_wrapper(*cmake_args: str) -&gt; None:
     try:
         logger.debug(&#34;Running CMake with args: %s&#34;, cmake_args)
         subprocess.run([&#34;cmake&#34;, *cmake_args], check=True)
+    except FileNotFoundError:
+        raise MbedBuildError(&#34;Could not find CMake. Please ensure CMake is installed and added to PATH.&#34;)
     except subprocess.CalledProcessError:
-        raise MbedBuildError(&#34;CMake invocation failed!&#34;)</code></pre>
+        raise MbedBuildError(&#34;CMake invocation failed!&#34;)
+
+
+def _check_ninja_found() -&gt; None:
+    try:
+        subprocess.run([&#34;ninja&#34;, &#34;--version&#34;], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    except FileNotFoundError:
+        raise MbedBuildError(
+            &#34;Could not find the &#39;Ninja&#39; build program. Please ensure &#39;Ninja&#39; is installed and added to PATH.&#34;
+        )</code></pre>
 </details>
 </section>
 <section>
@@ -108,6 +121,7 @@ def _cmake_wrapper(*cmake_args: str) -&gt; None:
         build_dir: Path to the CMake build tree.
         target: The CMake target to build (e.g &#39;install&#39;)
     &#34;&#34;&#34;
+    _check_ninja_found()
     target_flag = [&#34;--target&#34;, target] if target is not None else []
     _cmake_wrapper(&#34;--build&#34;, str(build_dir), *target_flag)</code></pre>
 </details>
@@ -138,6 +152,7 @@ def _cmake_wrapper(*cmake_args: str) -&gt; None:
         build_dir: Path to the CMake build tree.
         profile: The Mbed build profile (develop, debug or release).
     &#34;&#34;&#34;
+    _check_ninja_found()
     _cmake_wrapper(&#34;-S&#34;, str(source_dir), &#34;-B&#34;, str(build_dir), &#34;-GNinja&#34;, f&#34;-DCMAKE_BUILD_TYPE={profile}&#34;)</code></pre>
 </details>
 </dd>
