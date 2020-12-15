@@ -1097,6 +1097,7 @@
         "slug": "SDT64B",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -1578,6 +1579,7 @@
         "slug": "ST-Nucleo-L4R5ZI-P",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
             "Mbed OS 5.13",
@@ -1932,6 +1934,7 @@
         "slug": "NUCLEO-L4R5ZI",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -1957,6 +1960,7 @@
         "slug": "NUCLEO-L433RC-P",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
             "Mbed OS 5.13",
@@ -2061,6 +2065,7 @@
         "slug": "thunderboard-sense-2",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -2339,6 +2344,7 @@
         "slug": "NUMAKER-PFM-M487",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -2395,6 +2401,7 @@
         "slug": "u-blox-EVK-NINA-B1",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -2462,6 +2469,7 @@
         "slug": "ST-Discovery-LRWAN1",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -2652,6 +2660,7 @@
         "slug": "ST-Discovery-L475E-IOT01A",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -2678,6 +2687,7 @@
         "slug": "ST-Discovery-F413H",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -2713,6 +2723,7 @@
         "slug": "ST-Discovery-L496AG",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -2770,6 +2781,7 @@
         "slug": "FRDM-KL43Z",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
             "Mbed OS 5.6",
@@ -2863,6 +2875,7 @@
         "slug": "ST-Nucleo-L496ZG",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
             "Mbed OS 5.13",
@@ -2914,6 +2927,7 @@
         "slug": "Nuvoton-M453",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3061,7 +3075,9 @@
         "target_type": "platform",
         "slug": "FRDM-KL27Z",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -3104,6 +3120,7 @@
         "slug": "FRDM-KW41Z",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3252,6 +3269,7 @@
         "slug": "ST-Nucleo-F767ZI",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3288,6 +3306,7 @@
         "slug": "EFM32-Pearl-Gecko",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3313,6 +3332,7 @@
         "slug": "Switch-Science-mbed-TY51822r3",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3358,6 +3378,7 @@
         "slug": "ST-B96B-F446VE",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3383,6 +3404,7 @@
         "slug": "ST-Nucleo-F429ZI",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3409,6 +3431,7 @@
         "slug": "ST-Nucleo-F207ZG",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3435,6 +3458,7 @@
         "slug": "ST-Nucleo-F446ZE",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3459,6 +3483,7 @@
         "slug": "ST-Nucleo-F303ZE",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3489,6 +3514,7 @@
         "slug": "ST-Discovery-F746NG",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3513,7 +3539,9 @@
         "target_type": "platform",
         "slug": "ARM-IoTSS-M3",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": []
     },
     {
@@ -3589,6 +3617,7 @@
         "slug": "WIZwiki-W7500P",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
             "Mbed OS 5.6"
@@ -3603,6 +3632,7 @@
         "slug": "WIZwiki-W7500ECO",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
             "Mbed OS 5.6"
@@ -3669,6 +3699,7 @@
         "slug": "ST-Discovery-F769NI",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3719,6 +3750,7 @@
         "slug": "ST-Nucleo-F746ZG",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3745,6 +3777,7 @@
         "slug": "ST-Nucleo-F412ZG",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3778,7 +3811,9 @@
         "target_type": "platform",
         "slug": "Microbit",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -3791,6 +3826,7 @@
         "slug": "ST-Nucleo-F031K6",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3809,7 +3845,9 @@
         "target_type": "platform",
         "slug": "Seeed-Arch-Link",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -3822,6 +3860,7 @@
         "slug": "ST-Discovery-F469NI",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3847,6 +3886,7 @@
         "slug": "ST-Nucleo-F410RB",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3872,6 +3912,7 @@
         "slug": "ST-Nucleo-F446RE",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3902,6 +3943,7 @@
         "slug": "WIZwiki-W7500",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
             "Mbed OS 5.6"
@@ -3918,6 +3960,7 @@
         "slug": "FRDM-KW24D512",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3952,6 +3995,7 @@
         "slug": "ST-Discovery-L476VG",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -3986,6 +4030,7 @@
         "slug": "ST-Discovery-L053C8",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4005,6 +4050,7 @@
         "slug": "ST-Discovery-F334C8",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4148,6 +4194,7 @@
         "slug": "ST-Discovery-F429ZI",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4177,7 +4224,9 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-L031K6",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -4190,6 +4239,7 @@
         "slug": "ST-Nucleo-F042K6",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4208,7 +4258,9 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-L011K4",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -4221,6 +4273,7 @@
         "slug": "ST-Nucleo-F303K8",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4245,6 +4298,7 @@
         "slug": "ST-Nucleo-L432KC",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4298,7 +4352,9 @@
         "target_type": "platform",
         "slug": "Seeed-Tiny-BLE",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -4311,6 +4367,7 @@
         "slug": "NAMote-72",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 6.0",
             "Mbed OS 6.1",
@@ -4350,6 +4407,7 @@
         "slug": "EA-LPC4088-Display-Module",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4383,6 +4441,7 @@
         "slug": "MTS-mDot-F411",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4410,6 +4469,7 @@
         "slug": "ST-Nucleo-L476RG",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4441,6 +4501,7 @@
         "slug": "ST-Nucleo-L073RZ",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4471,6 +4532,7 @@
         "slug": "ST-Nucleo-F070RB",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4501,6 +4563,7 @@
         "slug": "MTS-Dragonfly",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
             "Mbed OS 5.6",
@@ -4531,7 +4594,9 @@
         "target_type": "platform",
         "slug": "Switch-Science-mbed-LPC824",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -4553,7 +4618,9 @@
         "target_type": "platform",
         "slug": "JKSoft-Wallbot-BLE",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -4575,7 +4642,9 @@
         "target_type": "platform",
         "slug": "IBMEthernetKit",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -4607,7 +4676,9 @@
         "target_type": "platform",
         "slug": "Nordic-nRF51-Dongle",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -4619,7 +4690,9 @@
         "target_type": "platform",
         "slug": "RedBearLab-BLE-Nano",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": []
     },
     {
@@ -4660,6 +4733,7 @@
         "slug": "Nordic-nRF51-DK",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4705,6 +4779,7 @@
         "slug": "FRDM-K22F",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4734,7 +4809,9 @@
         "target_type": "platform",
         "slug": "LPCXpresso824-MAX",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -4746,7 +4823,9 @@
         "target_type": "platform",
         "slug": "FRDM-K20D50M",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -4759,6 +4838,7 @@
         "slug": "Seeed-Arch-Max",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4782,7 +4862,9 @@
         "target_type": "platform",
         "slug": "EFM32-Happy-Gecko",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": []
     },
     {
@@ -4792,7 +4874,9 @@
         "target_type": "platform",
         "slug": "EFM32-Zero-Gecko",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": []
     },
     {
@@ -4803,6 +4887,7 @@
         "slug": "EFM32-Leopard-Gecko",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4828,6 +4913,7 @@
         "slug": "EFM32-Giant-Gecko",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4858,6 +4944,7 @@
         "slug": "EFM32-Wonder-Gecko",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4882,7 +4969,9 @@
         "target_type": "platform",
         "slug": "RedBearLab-nRF51822",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": []
     },
     {
@@ -4922,7 +5011,9 @@
         "target_type": "platform",
         "slug": "mbed-HRM1017",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -4935,6 +5026,7 @@
         "slug": "ST-Nucleo-F091RC",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4965,6 +5057,7 @@
         "slug": "ST-Nucleo-F303RE",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4994,7 +5087,9 @@
         "target_type": "platform",
         "slug": "LPCXpresso4337",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -5007,6 +5102,7 @@
         "slug": "ST-Nucleo-F411RE",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -5046,7 +5142,9 @@
         "target_type": "platform",
         "slug": "Seeed-Arch-BLE",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -5068,7 +5166,9 @@
         "target_type": "platform",
         "slug": "LPCXpresso11U68",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -5100,7 +5200,9 @@
         "target_type": "platform",
         "slug": "LPCXpresso1549",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -5132,7 +5234,9 @@
         "target_type": "platform",
         "slug": "FRDM-KL05Z",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -5144,7 +5248,9 @@
         "target_type": "platform",
         "slug": "Nordic-nRF51822",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": []
     },
     {
@@ -5155,6 +5261,7 @@
         "slug": "FRDM-K64F",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -5187,6 +5294,7 @@
         "slug": "ST-Nucleo-F334R8",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -5206,6 +5314,7 @@
         "slug": "ST-Nucleo-F072RB",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -5235,7 +5344,9 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-F030R8",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -5248,6 +5359,7 @@
         "slug": "ST-Nucleo-F401RE",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -5277,7 +5389,9 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-L053R8",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -5290,6 +5404,7 @@
         "slug": "ST-Nucleo-L152RE",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -5319,7 +5434,9 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-F302R8",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -5332,6 +5449,7 @@
         "slug": "Seeeduino-Arch-Pro",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -5362,6 +5480,7 @@
         "slug": "FRDM-KL46Z",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
             "Mbed OS 5.6",
@@ -5383,6 +5502,7 @@
         "slug": "ST-Nucleo-F103RB",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -5427,6 +5547,7 @@
         "slug": "u-blox-C027",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -5452,6 +5573,7 @@
         "slug": "LPC1114FN28",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 6.0",
             "Mbed OS 6.1",
             "Mbed OS 6.2",
@@ -5469,7 +5591,9 @@
         "target_type": "platform",
         "slug": "Seeeduino-Arch",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -5522,6 +5646,7 @@
         "slug": "EA-LPC4088",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.4"
         ],
         "mbed_enabled": []
@@ -5533,7 +5658,9 @@
         "target_type": "platform",
         "slug": "NXP-LPC800-MAX",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -5546,6 +5673,7 @@
         "slug": "KL25Z",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.4",
             "Mbed OS 5.5",
             "Mbed OS 5.6",
@@ -5566,7 +5694,9 @@
         "target_type": "platform",
         "slug": "mbed-LPC11U24",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 2"
+        ],
         "mbed_enabled": [
             "Baseline"
         ]
@@ -5579,6 +5709,7 @@
         "slug": "mbed-LPC1768",
         "build_variant": [],
         "mbed_os_support": [
+            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
