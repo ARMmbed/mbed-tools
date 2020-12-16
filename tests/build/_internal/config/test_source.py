@@ -7,11 +7,11 @@ import pathlib
 import tempfile
 from unittest import TestCase
 
+from mbed_tools.lib.json_helpers import decode_json_file
 from mbed_tools.build._internal.config.source import (
     Source,
     _namespace_data,
     _filter_target_overrides,
-    _decode_json_file,
 )
 
 
@@ -141,6 +141,6 @@ class TestDecodeJSONFile(TestCase):
 
             with self.assertRaises(json.JSONDecodeError):
                 with self.assertLogs(level="ERROR") as logger:
-                    _decode_json_file(tmp_file)
+                    decode_json_file(tmp_file)
 
                     self.assertIn(str(tmp_file), logger.output)
