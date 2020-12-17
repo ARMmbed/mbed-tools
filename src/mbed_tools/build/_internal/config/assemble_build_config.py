@@ -9,7 +9,8 @@ from typing import Iterable, Optional
 from mbed_tools.build._internal.config.config import Config
 from mbed_tools.build._internal.config.cumulative_data import CumulativeData
 from mbed_tools.build._internal.config.source import Source
-from mbed_tools.build._internal.find_files import LabelFilter, filter_files, find_files
+from mbed_tools.lib.json_helpers import decode_json_file
+from mbed_tools.build._internal.find_files import LabelFilter, RequiresFilter, filter_files, find_files
 
 
 def assemble_config(target_attributes: dict, mbed_program_directory: Path, mbed_app_file: Optional[Path]) -> Config:
@@ -27,13 +28,23 @@ def _assemble_config_from_sources_and_lib_files(
     target_attributes: dict, mbed_lib_files: Iterable[Path], mbed_app_file: Optional[Path] = None
 ) -> Config:
     previous_cumulative_data = None
+    requires = list()
     target_source = Source.from_target(target_attributes)
     current_cumulative_data = CumulativeData.from_sources([target_source])
+    if mbed_app_file:
+        app_data = decode_json_file(mbed_app_file)
+        requires = app_data["requires"] if "requires" in app_data else []
+
     while previous_cumulative_data != current_cumulative_data:
         current_labels = current_cumulative_data.labels | current_cumulative_data.extra_labels
         filtered_files = _filter_files(
-            mbed_lib_files, current_labels, current_cumulative_data.features, current_cumulative_data.components
+            mbed_lib_files,
+            current_labels,
+            current_cumulative_data.features,
+            current_cumulative_data.components,
+            requires,
         )
+
         mbed_lib_sources = [Source.from_mbed_lib(file, current_labels) for file in filtered_files]
         all_sources = [target_source] + mbed_lib_sources
         if mbed_app_file:
@@ -48,14 +59,24 @@ def _assemble_config_from_sources_and_lib_files(
 
 
 def _filter_files(
-    files: Iterable[Path], labels: Iterable[str], features: Iterable[str], components: Iterable[str]
+    files: Iterable[Path],
+    labels: Iterable[str],
+    features: Iterable[str],
+    components: Iterable[str],
+    requires: Iterable[str],
 ) -> Iterable[Path]:
     filters = (
         LabelFilter("TARGET", labels),
         LabelFilter("FEATURE", features),
         LabelFilter("COMPONENT", components),
     )
-    return filter_files(files, filters)
+    filtered_files = filter_files(files, filters)
+
+    if not requires:
+        return filtered_files
+    else:
+        requires_filter = RequiresFilter(requires)
+        return requires_filter(filtered_files)
 
 
 def _update_target_attributes(target_attributes: dict, cumulative_data: CumulativeData) -> None:
