@@ -245,7 +245,9 @@
         "slug": "S1SBP6A",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -281,7 +283,9 @@
         "mbed_os_support": [
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -359,7 +363,9 @@
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -420,7 +426,9 @@
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -441,7 +449,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -493,7 +503,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -512,7 +524,9 @@
             "Mbed OS 5.15",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -578,7 +592,9 @@
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -598,7 +614,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -623,7 +641,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -646,7 +666,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Pelion Device Ready"
@@ -669,7 +691,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -693,7 +717,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -769,7 +795,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -794,7 +822,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -817,7 +847,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -931,7 +963,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1055,7 +1089,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -1083,7 +1119,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1108,7 +1146,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -1134,7 +1174,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1177,7 +1219,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1231,7 +1275,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -1264,7 +1310,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -1290,7 +1338,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -1516,7 +1566,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1542,7 +1594,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1565,7 +1619,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1589,7 +1645,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -1655,7 +1713,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1682,7 +1742,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1765,7 +1827,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1793,7 +1857,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1851,7 +1917,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1900,7 +1968,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1920,7 +1990,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -1945,7 +2017,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -1970,7 +2044,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2010,7 +2086,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2078,7 +2156,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2280,7 +2360,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2330,7 +2412,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2361,7 +2445,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2486,7 +2572,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2636,7 +2724,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2671,7 +2761,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2698,7 +2790,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2734,7 +2828,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2765,7 +2861,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2789,7 +2887,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -2885,7 +2985,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2944,7 +3046,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -2985,7 +3089,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3106,7 +3212,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3136,7 +3244,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3166,7 +3276,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -3198,7 +3310,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3280,7 +3394,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -3415,7 +3531,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -3442,7 +3560,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -3469,7 +3589,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3500,7 +3622,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3525,7 +3649,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -3710,7 +3836,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -3761,7 +3889,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -3788,7 +3918,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -3871,7 +4003,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -3929,7 +4063,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4006,7 +4142,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4211,7 +4349,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4284,7 +4424,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4309,7 +4451,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4373,7 +4517,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4486,7 +4632,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -4518,7 +4666,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4549,7 +4699,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4571,7 +4723,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4717,7 +4871,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -4796,7 +4952,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4849,7 +5007,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -4930,7 +5090,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5043,7 +5205,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5074,7 +5238,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5119,7 +5285,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5278,7 +5446,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -5331,7 +5501,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5376,7 +5548,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5421,7 +5595,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5466,7 +5642,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5488,7 +5666,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5513,7 +5693,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5578,7 +5760,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5681,7 +5865,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
@@ -5726,7 +5912,9 @@
             "Mbed OS 6.1",
             "Mbed OS 6.2",
             "Mbed OS 6.3",
-            "Mbed OS 6.4"
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"
