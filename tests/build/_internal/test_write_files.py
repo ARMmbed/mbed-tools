@@ -14,17 +14,16 @@ class TestWriteFile(TestCase):
     def test_writes_content_to_file(self):
         with tempfile.TemporaryDirectory() as directory:
             content = "Some rendered content"
-            export_path = pathlib.Path(directory, "output")
-            file_name = "some_file.txt"
+            export_path = pathlib.Path(directory, "output", "some_file.txt")
 
-            write_file(export_path, file_name, content)
+            write_file(export_path, content)
 
-            created_file = pathlib.Path(export_path, pathlib.Path(export_path, file_name))
+            created_file = pathlib.Path(export_path)
             self.assertEqual(created_file.read_text(), content)
 
     def test_output_dir_is_file(self):
         with tempfile.TemporaryDirectory() as directory:
-            bad_export_dir = pathlib.Path(directory, "some_file.txt")
-            bad_export_dir.touch()
+            bad_export_dir = pathlib.Path(directory, "some_file.txt", ".txt")
+            bad_export_dir.parent.touch()
             with self.assertRaises(InvalidExportOutputDirectory):
-                write_file(bad_export_dir, "any_file.txt", "some contents")
+                write_file(bad_export_dir, "some contents")

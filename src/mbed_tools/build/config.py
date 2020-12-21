@@ -30,5 +30,5 @@ def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> p
         target_name=target_name, config=config, toolchain_name=toolchain,
     )
     cmake_config_file_path = program.files.cmake_config_file
-    write_file(cmake_config_file_path.parent, cmake_config_file_path.name, cmake_file_contents)
+    write_file(cmake_config_file_path, cmake_file_contents)
     return cmake_config_file_path
