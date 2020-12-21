@@ -5,6 +5,7 @@
 """Parses the Mbed configuration system and generates a CMake config script."""
 import pathlib
 
+from mbed_tools.lib.json_helpers import decode_json_file
 from mbed_tools.project import MbedProgram
 from mbed_tools.targets import get_target_by_name
 from mbed_tools.build._internal.cmake_file import generate_mbed_config_cmake_file
@@ -23,7 +24,7 @@ def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> p
     Returns:
         Path to the generated config file.
     """
-    target_build_attributes = get_target_by_name(target_name, program.mbed_os.targets_json_file)
+    target_build_attributes = get_target_by_name(target_name, decode_json_file(program.mbed_os.targets_json_file))
     config = assemble_config(target_build_attributes, program.root, program.files.app_config_file)
     cmake_file_contents = generate_mbed_config_cmake_file(target_name, config, toolchain)
     cmake_config_file_path = program.files.cmake_config_file
