@@ -4,7 +4,7 @@
 #
 import pytest
 
-from mbed_tools.build._internal.cmake_file import generate_mbed_config_cmake_file, _render_mbed_config_cmake_template
+from mbed_tools.build._internal.cmake_file import render_mbed_config_cmake_template
 from mbed_tools.build._internal.config.config import Config
 from mbed_tools.build._internal.config.source import ConfigSetting, prepare
 
@@ -30,20 +30,10 @@ def fake_target():
     }
 
 
-class TestGenerateCMakeListsFile:
-    def test_correct_arguments_passed(self, fake_target):
-        config = Config(prepare(fake_target))
-        mbed_target = "K64F"
-
-        result = generate_mbed_config_cmake_file(mbed_target, config, TOOLCHAIN_NAME)
-
-        assert result == _render_mbed_config_cmake_template(Config(prepare(fake_target)), TOOLCHAIN_NAME, mbed_target,)
-
-
 class TestRendersCMakeListsFile:
     def test_returns_rendered_content(self, fake_target):
         config = Config(prepare(fake_target))
-        result = _render_mbed_config_cmake_template(config, TOOLCHAIN_NAME, "target_name")
+        result = render_mbed_config_cmake_template(config, TOOLCHAIN_NAME, "target_name")
 
         for label in fake_target["labels"] + fake_target["extra_labels"]:
             assert label in result
@@ -69,5 +59,5 @@ class TestRendersCMakeListsFile:
             )
         ]
 
-        result = _render_mbed_config_cmake_template(config, TOOLCHAIN_NAME, "target_name")
+        result = render_mbed_config_cmake_template(config, TOOLCHAIN_NAME, "target_name")
         assert '"-DMBED_CONF_IOTC_MQTT_HOST={\\"mqtt.2030.ltsapis.goog\\", IOTC_MQTT_PORT}"' in result
