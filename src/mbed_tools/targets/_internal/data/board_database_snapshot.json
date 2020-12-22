@@ -2531,7 +2531,8 @@
             "Mbed OS 5.6",
             "Mbed OS 5.7",
             "Mbed OS 5.8",
-            "Mbed OS 5.9"
+            "Mbed OS 5.9",
+            "Mbed OS 6.6"
         ],
         "mbed_enabled": [
             "Baseline"

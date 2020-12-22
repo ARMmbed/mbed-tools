@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+4.4.0 (2020-12-22)
+==================
+
+Features
+--------
+
+- Add support for requires config option in mbed_app.json (#20201214165520)
+- Targets modified: MAX32630FTHR. (#20201222050132)
+
+
 4.3.0 (2020-12-19)
 ==================
 
