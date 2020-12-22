@@ -27,6 +27,7 @@ MAIN_CPP_FILE_NAME = "main.cpp"
 MBED_OS_REFERENCE_FILE_NAME = "mbed-os.lib"
 MBED_OS_DIR_NAME = "mbed-os"
 TARGETS_JSON_FILE_PATH = Path("targets", "targets.json")
+CUSTOM_TARGETS_JSON_FILE_NAME = "custom_targets.json"
 
 # Information written to mbed-os.lib
 MBED_OS_REFERENCE_URL = "https://github.com/ARMmbed/mbed-os"
@@ -59,6 +60,7 @@ class MbedProgramFiles:
     cmakelists_file: Path
     cmake_config_file: Path
     cmake_build_dir: Path
+    custom_targets_json: Path
 
     @classmethod
     def from_new(cls, root_path: Path) -> "MbedProgramFiles":
@@ -79,6 +81,7 @@ class MbedProgramFiles:
         gitignore = root_path / ".gitignore"
         cmake_config = root_path / CMAKE_CONFIG_FILE_PATH
         cmake_build_dir = root_path / CMAKE_BUILD_DIR
+        custom_targets_json = root_path / CUSTOM_TARGETS_JSON_FILE_NAME
 
         if mbed_os_ref.exists():
             raise ValueError(f"Program already exists at path {root_path}.")
@@ -94,6 +97,7 @@ class MbedProgramFiles:
             cmakelists_file=cmakelists_file,
             cmake_config_file=cmake_config,
             cmake_build_dir=cmake_build_dir,
+            custom_targets_json=custom_targets_json,
         )
 
     @classmethod
@@ -109,6 +113,7 @@ class MbedProgramFiles:
             logger.info("This program does not contain an mbed_app.json config file.")
             app_config = None
 
+        custom_targets_json = root_path / CUSTOM_TARGETS_JSON_FILE_NAME
         mbed_os_file = root_path / MBED_OS_REFERENCE_FILE_NAME
 
         cmakelists_file = root_path / CMAKELISTS_FILE_NAME
@@ -121,6 +126,7 @@ class MbedProgramFiles:
             cmakelists_file=cmakelists_file,
             cmake_config_file=root_path / CMAKE_CONFIG_FILE_PATH,
             cmake_build_dir=root_path / CMAKE_BUILD_DIR,
+            custom_targets_json=custom_targets_json,
         )
 
 

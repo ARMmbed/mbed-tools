@@ -1,0 +1,28 @@
+{
+    "IMAGINARYBOARD": {
+        "inherits": [
+            "MCU_STM32L475xG"
+        ],
+        "components_add": [
+            "BlueNRG_MS",
+            "QSPIF"
+        ],
+        "extra_labels_add": [
+            "CORDIO",
+            "MX25R6435F"
+        ],
+        "supported_form_factors": [
+            "ARDUINO"
+        ],
+        "detect_code": [
+            "1234"
+        ],
+        "device_has_add": [
+            "QSPI"
+        ],
+        "features": [
+            "BLE"
+        ],
+        "device_name": "STM32L475VG"
+    }
+}

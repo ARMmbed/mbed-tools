@@ -35,6 +35,9 @@ from mbed_tools.sterm import terminal
     "--mbed-os-path", type=click.Path(), default=None, help="Path to local Mbed OS directory.",
 )
 @click.option(
+    "--custom-targets-json", type=click.Path(), default=None, help="Path to custom_targets.json.",
+)
+@click.option(
     "-f", "--flash", is_flag=True, default=False, help="Flash the binary onto a device",
 )
 @click.option(
@@ -60,6 +63,7 @@ def build(
     sterm: bool = False,
     baudrate: int = 9600,
     mbed_os_path: str = None,
+    custom_targets_json: str = None,
 ) -> None:
     """Configure and build an Mbed project using CMake and Ninja.
 
@@ -73,6 +77,7 @@ def build(
        program_path: Path to the Mbed project.
        mbed_os_path: the path to the local Mbed OS directory
        profile: The Mbed build profile (debug, develop or release).
+       custom_targets_json: Path to custom_targets.json.
        toolchain: The toolchain to use for the build.
        mbed_target: The name of the Mbed target to build for.
        clean: Perform a clean build.
@@ -93,6 +98,9 @@ def build(
     if any([not mbed_config_file.exists(), not build_tree.exists(), mbed_target, toolchain]):
         click.echo("Configuring project and generating build system...")
         _validate_target_and_toolchain_args(mbed_target, toolchain)
+        if custom_targets_json is not None:
+            program.files.custom_targets_json = pathlib.Path(custom_targets_json)
+
         generate_config(mbed_target.upper(), toolchain, program)
         generate_build_system(program.root, build_tree, profile)
 
