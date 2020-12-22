@@ -90,6 +90,27 @@ def test_target_and_toolchain_collected(program):
     assert toolchain in config_text
 
 
+def test_custom_targets_data_found(program):
+    program.files.custom_targets_json.write_text(json.dumps({"IMAGINARYBOARD": TARGET_DATA}))
+    target = "IMAGINARYBOARD"
+    toolchain = "GCC_ARM"
+
+    generate_config(target, toolchain, program)
+
+    config_text = program.files.cmake_config_file.read_text()
+
+    assert target in config_text
+
+
+def test_raises_error_when_attempting_to_customize_existing_target(program):
+    program.files.custom_targets_json.write_text(json.dumps({TARGETS[0]: TARGET_DATA}))
+    target = TARGETS[0]
+    toolchain = "GCC_ARM"
+
+    with pytest.raises(ToolsError):
+        generate_config(target, toolchain, program)
+
+
 def test_config_param_from_lib_processed_with_default_name_mangling(program):
     create_mbed_lib_json(
         program.mbed_os.root / "platform" / "mbed_lib.json",
