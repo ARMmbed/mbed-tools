@@ -55,7 +55,8 @@ def checkout(repo: git.Repo, ref: str, force: bool = False) -> None:
         VersionControlError: Check out failed.
     """
     try:
-        repo.git.checkout(f"--force {ref}" if force else str(ref))
+        git_args = [ref] + ["--force"] if force else [ref]
+        repo.git.checkout(*git_args)
     except git.exc.GitCommandError as err:
         raise VersionControlError(f"Failed to check out revision '{ref}'. Error from VCS: {err}")
 
