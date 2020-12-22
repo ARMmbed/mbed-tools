@@ -84,9 +84,14 @@ class TestGetRepo:
 
 class TestCheckout:
     def test_git_lib_called_with_correct_command(self, mock_repo):
+        git_utils.checkout(mock_repo, "master")
+
+        mock_repo.git.checkout.assert_called_once_with("master")
+
+    def test_git_lib_called_with_correct_command_with_force(self, mock_repo):
         git_utils.checkout(mock_repo, "master", force=True)
 
-        mock_repo.git.checkout.assert_called_once_with("--force master")
+        mock_repo.git.checkout.assert_called_once_with("master", "--force")
 
     def test_raises_version_control_error_when_git_checkout_fails(self, mock_repo):
         mock_repo.git.checkout.side_effect = git_utils.git.exc.GitCommandError("git checkout", 255)
