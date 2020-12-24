@@ -2,133 +2,100 @@
 # Copyright (c) 2020-2021 Arm Limited and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-from unittest import TestCase
+import pytest
 
-from mbed_tools.build._internal.config.config import Config, Option, Macro
-from tests.build._internal.config.factories import SourceFactory
-from mbed_tools.build._internal.config.cumulative_data import CUMULATIVE_OVERRIDE_KEYS_IN_SOURCE
-from mbed_tools.build._internal.config.bootloader_overrides import BOOTLOADER_OVERRIDE_KEYS_IN_SOURCE
+from mbed_tools.build._internal.config.config import Config
+from mbed_tools.build._internal.config.source import prepare, ConfigSetting, Override
 
 
-class TestConfigFromSources(TestCase):
-    def test_builds_config_from_sources(self):
-        source_a = SourceFactory(config={"bool": True, "string": "foo"}, macros=["MACRO_A=A"])
-        source_b = SourceFactory(config={"number": 1}, overrides={"bool": False}, macros=["MACRO_B=B"])
+class TestConfig:
+    def test_config_updated(self):
+        conf = Config()
 
-        config = Config.from_sources([source_a, source_b])
+        conf.update(prepare({"config": {"param": {"value": 0}}}, source_name="lib"))
+        conf.update(prepare({"config": {"param2": {"value": 0}}}, source_name="lib2"))
 
-        self.assertEqual(
-            config.options,
+        assert conf["config"][0].name == "param"
+        assert conf["config"][1].name == "param2"
+
+    def test_raises_when_trying_to_add_duplicate_config_setting(self):
+        conf = Config(prepare({"config": {"param": {"value": 0}}}, source_name="lib"))
+
+        with pytest.raises(ValueError, match="lib.param already defined"):
+            conf.update(prepare({"config": {"param": {"value": 0}}}, source_name="lib"))
+
+    def test_target_overrides_handled(self):
+        conf = Config(
             {
-                "bool": Option.build("bool", True, source_a).set_value(False, source_b),
-                "number": Option.build("number", 1, source_b),
-                "string": Option.build("string", "foo", source_a),
-            },
+                "config": [
+                    ConfigSetting(namespace="target", name="network-default-interface-type", help_text="", value="WIFI")
+                ],
+                "device_has": ["TEST"],
+            }
         )
 
-        self.assertEqual(
-            config.macros,
-            {"MACRO_A": Macro.build("MACRO_A=A", source_a), "MACRO_B": Macro.build("MACRO_B=B", source_b)},
+        conf.update(
+            {
+                "overrides": [
+                    Override(namespace="target", name="network-default-interface-type", value="ETHERNET"),
+                    Override(namespace="target", name="device_has", value={"OVERRIDDEN"}),
+                ]
+            }
         )
 
-    def test_raises_when_trying_to_override_unset_option(self):
-        source_a = SourceFactory(config={"bool": True})
-        source_b = SourceFactory(overrides={"string": "hello"})
+        network_iface, *_ = conf["config"]
+        assert network_iface.value == "ETHERNET"
+        assert conf["device_has"] == {"OVERRIDDEN"}
 
-        with self.assertRaises(ValueError):
-            Config.from_sources([source_a, source_b])
+    def test_lib_overrides_handled(self):
+        conf = Config(
+            {
+                "config": [
+                    ConfigSetting(namespace="lib", name="network-default-interface-type", help_text="", value="WIFI")
+                ],
+            }
+        )
 
-    def test_raises_when_trying_to_override_existing_macro(self):
-        source_a = SourceFactory(macros=["MACRO_A=X"])
-        source_b = SourceFactory(macros=["MACRO_A=Y"])
+        conf.update({"overrides": [Override(namespace="lib", name="network-default-interface-type", value="ETHERNET")]})
 
-        with self.assertRaises(ValueError):
-            Config.from_sources([source_a, source_b])
+        network_iface, *_ = conf["config"]
+        assert network_iface.value == "ETHERNET"
 
-    def test_keeps_old_option_data(self):
-        source_a = SourceFactory(config={"bool": {"help": "A simple bool", "value": True}})
-        source_b = SourceFactory(overrides={"bool": False})
+    def test_cumulative_fields_can_be_modified(self):
+        conf = Config({"device_has": {"FLASHING_LIGHTS"}, "macros": {"A"}})
 
-        config = Config.from_sources([source_a, source_b])
+        conf.update(
+            {
+                "overrides": [
+                    Override(namespace="target", name="device_has", modifier="add", value={"OTHER_STUFF"}),
+                    Override(namespace="target", name="device_has", modifier="remove", value={"FLASHING_LIGHTS"}),
+                    Override(namespace="lib", name="macros", modifier="remove", value={"A"}),
+                    Override(namespace="target", name="macros", modifier="add", value={"B"}),
+                ]
+            }
+        )
 
-        self.assertEqual(config.options["bool"].help_text, "A simple bool")
+        conf.update({"overrides": [Override(namespace="target", name="macros", modifier="add", value={"B"})]})
+        assert conf["device_has"] == {"OTHER_STUFF"}
+        assert conf["macros"] == {"B"}
 
-    def test_does_not_explode_on_override_keys_used_by_other_parsers(self):
-        for key in CUMULATIVE_OVERRIDE_KEYS_IN_SOURCE + BOOTLOADER_OVERRIDE_KEYS_IN_SOURCE:
-            with self.subTest("Ignores override key '{key}'"):
-                source_a = SourceFactory()
-                source_b = SourceFactory(overrides={key: "boom?"})
-                Config.from_sources([source_a, source_b])
+    def test_macros_are_appended_to(self):
+        conf = Config({"macros": {"A"}})
+
+        conf.update({"macros": {"B"}})
+        conf.update({"macros": {"B"}})
+
+        assert conf["macros"] == {"A", "B"}
+
+    def test_raises_when_override_not_already_defined(self):
+        conf = Config()
+
+        with pytest.raises(ValueError):
+            conf.update(prepare({"target_overrides": {"*": {"this-does-not-exist": ""}}}))
 
     def test_ignores_present_option(self):
-        source = SourceFactory(config={"mbed_component.present": {"help": "Mbed Component", "value": True}})
+        source = prepare({"name": "mbed_component", "config": {"present": {"help": "Mbed Component", "value": True}}})
 
-        config = Config.from_sources([source])
+        config = Config(source)
 
-        self.assertFalse(config.options)
-
-
-class TestOptionBuild(TestCase):
-    def test_builds_option_from_config_data(self):
-        source = SourceFactory()
-        data = {
-            "value": 123,
-            "help": "some help text",
-            "macro_name": "FOO_MACRO",
-        }
-        option = Option.build(key="target.stack-size", data=data, source=source)
-
-        self.assertEqual(
-            option,
-            Option(
-                key="target.stack-size",
-                value=data["value"],
-                help_text=data["help"],
-                macro_name=data["macro_name"],
-                set_by=source.human_name,
-            ),
-        )
-
-    def test_sanitizes_booleans_into_ints(self):
-        source = SourceFactory()
-        option = Option.build(key="target.is-cool", data={"value": True}, source=source)
-        self.assertEqual(option.value, 1)
-
-        option = Option.build(key="target.is-cool", data=False, source=source)
-        self.assertEqual(option.value, 0)
-
-    def test_generates_macro_name_if_not_in_data(self):
-        source = SourceFactory()
-        data = {
-            "value": 123,
-            "help": "some help text",
-        }
-        option = Option.build(key="update-client.storage-size", data=data, source=source)
-
-        self.assertEqual(option.macro_name, "MBED_CONF_UPDATE_CLIENT_STORAGE_SIZE")
-
-
-class TestOptionSetValue(TestCase):
-    def test_sanitizes_booleans_into_ints(self):
-        option = Option.build(key="foo", data="some-data", source=SourceFactory())
-        option.set_value(False, SourceFactory())
-
-        self.assertEqual(option.value, 0)
-
-
-class TestMacroBuild(TestCase):
-    def test_builds_macros_with_value(self):
-        source = SourceFactory()
-        macro = Macro.build("FOO=BAR", source)
-
-        self.assertEqual(
-            macro, Macro(name="FOO", value="BAR", set_by=source.human_name),
-        )
-
-    def test_builds_macros_without_value(self):
-        source = SourceFactory()
-        macro = Macro.build("FOO", source)
-
-        self.assertEqual(
-            macro, Macro(name="FOO", value=None, set_by=source.human_name),
-        )
+        assert not config["config"]

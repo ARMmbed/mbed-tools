@@ -50,9 +50,6 @@ set(MBED_TARGET_DEFINITIONS{% for component in components %}
 {% for extra_label in extra_labels %}
     TARGET_{{extra_label}}
 {%- endfor %}
-{% for macro in target_macros %}
-    {{macro}}
-{%- endfor %}
 {% for form_factor in supported_form_factors %}
     TARGET_FF_{{form_factor}}
 {%- endfor %}
@@ -62,17 +59,22 @@ set(MBED_TARGET_DEFINITIONS{% for component in components %}
 
 # config
 set(MBED_CONFIG_DEFINITIONS
-# options
-{% for option in options -%}
-{% if option.value is not none -%}
-   "-D{{option.macro_name}}={{option.value|replace("\"", "\\\"")}}"
-{% endif %}
+{% for setting in config %}
+    {%- if setting.macro_name -%}
+        {%- set setting_name = setting.macro_name -%}
+    {%- else -%}
+        {%- set setting_name = "MBED_CONF_{}_{}".format(setting.namespace.upper()|replace('-', '_'), setting.name.upper()|replace('-', '_')) -%}
+    {%- endif -%}
+    {%- if setting.value is sameas true or setting.value is sameas false -%}
+        {% set value = setting.value|int %}
+    {%- else -%}
+        {% set value = setting.value|replace("\"", "\\\"") -%}
+    {%- endif -%}
+    {%- if setting.value is not none -%}
+    "-D{{setting_name}}={{value}}"
+    {% endif -%}
+{%- endfor -%}
+{% for macro in macros %}
+    "{{macro|replace("\"", "\\\"")}}"
 {%- endfor %}
-# macros
-{% for macro in macros -%}
-{% if macro.value is not none -%}
-    {%if '{' in macro.value|string or '(' in macro.value|string %}"{% endif %}-D{{macro.name}}={{macro.value}}{% if '}' in macro.value|string or ')' in macro.value|string %}"{% endif %}
-{% else -%}
-    -D{{macro.name}}
-{% endif %}
-{%- endfor %})
+)
