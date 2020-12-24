@@ -248,12 +248,10 @@ def test_overrides_target_config_param_from_app(matching_target_and_filter, prog
         ("target.c_lib", "super", 'MBED_C_LIB "super"'),
         ("target.printf_lib", "maximal-printf", 'MBED_PRINTF_LIB "maximal-printf"'),
         ("target.extra_labels", ["NEW_LABELS"], "TARGET_NEW_LABELS"),
-        pytest.param(
-            "target.supported_form_factors", ["BEAGLEBONE"], "TARGET_FF_BEAGLEBONE", marks=[pytest.mark.xfail]
-        ),
+        ("target.supported_form_factors", ["BEAGLEBONE"], "TARGET_FF_BEAGLEBONE"),
         ("target.components", ["WARP_DRIVE"], "COMPONENT_WARP_DRIVE"),
         ("target.macros", ["DEFINE"], "DEFINE"),
-        pytest.param("target.device_has", ["NOTHING"], "DEVICE_NOTHING", marks=[pytest.mark.xfail]),
+        ("target.device_has", ["NOTHING"], "DEVICE_NOTHING"),
         ("target.features", ["ELECTRICITY"], "FEATURE_ELECTRICITY"),
     ],
 )
