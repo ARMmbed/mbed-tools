@@ -3,88 +3,108 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Configuration assembly algorithm."""
+from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Iterable, List, Optional, Set
 
 from mbed_tools.build._internal.config.config import Config
-from mbed_tools.build._internal.config.cumulative_data import CumulativeData
-from mbed_tools.build._internal.config.source import Source
-from mbed_tools.lib.json_helpers import decode_json_file
+from mbed_tools.build._internal.config import source
 from mbed_tools.build._internal.find_files import LabelFilter, RequiresFilter, filter_files, find_files
 
 
 def assemble_config(target_attributes: dict, mbed_program_directory: Path, mbed_app_file: Optional[Path]) -> Config:
-    """Assemble Config for given target and program directory.
+    """Assemble config for given target and program directory.
 
-    The structure and configuration of MbedOS requires us to do multiple passes over
-    configuration files, as each pass might affect which configuration files should be included
-    in the final configuration.
+    Mbed library and application specific config parameters are parsed from mbed_lib.json and mbed_app.json files
+    located in the project source tree.
+    The config files contain sets of "labels" which correspond to directory names in the mbed-os source tree. These
+    labels are used to determine which mbed_lib.json files to include in the final configuration.
+
+    The mbed_app.json config overrides must be applied after all the mbed_lib.json files have been parsed.
+    Unfortunately, mbed_app.json may also contain filter labels to tell us which mbed libs we're depending on.
+    This means we have to collect the filter labels from mbed_app.json before parsing any other config files.
+    Then we parse all the required mbed_lib config and finally apply the app overrides.
     """
     mbed_lib_files = find_files("mbed_lib.json", mbed_program_directory)
-    return _assemble_config_from_sources_and_lib_files(target_attributes, mbed_lib_files, mbed_app_file)
+    return _assemble_config_from_sources(target_attributes, mbed_lib_files, mbed_app_file)
 
 
-def _assemble_config_from_sources_and_lib_files(
-    target_attributes: dict, mbed_lib_files: Iterable[Path], mbed_app_file: Optional[Path] = None
+def _assemble_config_from_sources(
+    target_attributes: dict, mbed_lib_files: List[Path], mbed_app_file: Optional[Path] = None
 ) -> Config:
-    previous_cumulative_data = None
-    requires = list()
-    target_source = Source.from_target(target_attributes)
-    current_cumulative_data = CumulativeData.from_sources([target_source])
+    config = Config(source.prepare(target_attributes, source_name="target"))
+    previous_filter_data = None
+    app_data = None
     if mbed_app_file:
-        app_data = decode_json_file(mbed_app_file)
-        requires = app_data["requires"] if "requires" in app_data else []
+        # We need to obtain the file filter data from mbed_app.json so we can select the correct set of mbed_lib.json
+        # files to include in the config. We don't want to update the config object with all of the app settings yet
+        # as we won't be able to apply overrides correctly until all relevant mbed_lib.json files have been parsed.
+        app_data = source.from_file(
+            mbed_app_file, default_name="app", target_filters=FileFilterData.from_config(config).labels
+        )
+        _get_app_filter_labels(app_data, config)
 
-    while previous_cumulative_data != current_cumulative_data:
-        current_labels = current_cumulative_data.labels | current_cumulative_data.extra_labels
-        filtered_files = _filter_files(
-            mbed_lib_files,
-            current_labels,
-            current_cumulative_data.features,
-            current_cumulative_data.components,
-            requires,
+    current_filter_data = FileFilterData.from_config(config)
+    while previous_filter_data != current_filter_data:
+        filtered_files = _filter_files(mbed_lib_files, current_filter_data)
+        for config_file in filtered_files:
+            config.update(source.from_file(config_file, target_filters=current_filter_data.labels))
+            # Remove any mbed_lib files we've already visited from the list so we don't parse them multiple times.
+            mbed_lib_files.remove(config_file)
+
+        previous_filter_data = current_filter_data
+        current_filter_data = FileFilterData.from_config(config)
+
+    # Apply mbed_app.json data last so config parameters are overriden in the correct order.
+    if app_data:
+        config.update(app_data)
+
+    return config
+
+
+def _get_app_filter_labels(mbed_app_data: dict, config: Config) -> None:
+    requires = mbed_app_data.get("requires")
+    if requires:
+        config["requires"] = requires
+
+    config.update(_get_file_filter_overrides(mbed_app_data))
+
+
+def _get_file_filter_overrides(mbed_app_data: dict) -> dict:
+    return {
+        "overrides": [
+            override
+            for override in mbed_app_data.get("overrides", [])
+            if override.modifier or override.name == "requires"
+        ]
+    }
+
+
+@dataclass(frozen=True)
+class FileFilterData:
+    """Data used to navigate mbed-os directories for config files."""
+
+    labels: Set[str]
+    features: Set[str]
+    components: Set[str]
+    requires: Set[str]
+
+    @classmethod
+    def from_config(cls, config: Config) -> "FileFilterData":
+        """Extract file filters from a Config object."""
+        return cls(
+            labels=config.get("labels", set()) | config.get("extra_labels", set()),
+            features=set(config.get("features", set())),
+            components=set(config.get("components", set())),
+            requires=set(config.get("requires", set())),
         )
 
-        mbed_lib_sources = [Source.from_mbed_lib(file, current_labels) for file in filtered_files]
-        all_sources = [target_source] + mbed_lib_sources
-        if mbed_app_file:
-            all_sources = all_sources + [Source.from_mbed_app(mbed_app_file, current_labels)]
 
-        previous_cumulative_data = current_cumulative_data
-        current_cumulative_data = CumulativeData.from_sources(all_sources)
-
-    _update_target_attributes(target_attributes, current_cumulative_data)
-
-    return Config.from_sources(all_sources)
-
-
-def _filter_files(
-    files: Iterable[Path],
-    labels: Iterable[str],
-    features: Iterable[str],
-    components: Iterable[str],
-    requires: Iterable[str],
-) -> Iterable[Path]:
+def _filter_files(files: Iterable[Path], filter_data: FileFilterData) -> Iterable[Path]:
     filters = (
-        LabelFilter("TARGET", labels),
-        LabelFilter("FEATURE", features),
-        LabelFilter("COMPONENT", components),
+        LabelFilter("TARGET", filter_data.labels),
+        LabelFilter("FEATURE", filter_data.features),
+        LabelFilter("COMPONENT", filter_data.components),
+        RequiresFilter(filter_data.requires),
     )
-    filtered_files = filter_files(files, filters)
-
-    if not requires:
-        return filtered_files
-    else:
-        requires_filter = RequiresFilter(requires)
-        return requires_filter(filtered_files)
-
-
-def _update_target_attributes(target_attributes: dict, cumulative_data: CumulativeData) -> None:
-    """Update target attributes with data gathered from the config system."""
-    target_attributes["labels"] = cumulative_data.labels
-    target_attributes["extra_labels"] = cumulative_data.extra_labels
-    target_attributes["features"] = cumulative_data.features
-    target_attributes["components"] = cumulative_data.components
-    target_attributes["macros"] = cumulative_data.macros
-    target_attributes["c_lib"] = cumulative_data.c_lib
-    target_attributes["printf_lib"] = cumulative_data.printf_lib
+    return filter_files(files, filters)

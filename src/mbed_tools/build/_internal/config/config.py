@@ -3,167 +3,84 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Build configuration representation."""
-from dataclasses import dataclass, field
-from typing import Any, Dict, Iterable, Optional
+import logging
 
-from mbed_tools.build._internal.config.source import Source
-from mbed_tools.build._internal.config.cumulative_data import CUMULATIVE_OVERRIDE_KEYS_IN_SOURCE
-from mbed_tools.build._internal.config.bootloader_overrides import BOOTLOADER_OVERRIDE_KEYS_IN_SOURCE
+from collections import UserDict
+from typing import Any, Iterable, Hashable, Callable, List
+
+from mbed_tools.build._internal.config.source import Override, ConfigSetting
+
+logger = logging.getLogger(__name__)
 
 
-@dataclass
-class Macro:
-    """Representation of a macro."""
+class Config(UserDict):
+    """Mapping of config settings.
 
-    value: Any
-    name: str
-    set_by: str
+    This object understands how to populate the different 'config sections' which all have different rules for how the
+    settings are collected.
+    Applies overrides, appends macros and updates config settings.
+    """
 
-    @classmethod
-    def build(cls, macro: str, source: Source) -> "Macro":
-        """Build macro from macro string.
-
-        There are two flavours of macro strings in MbedOS configuration:
-        - with value: FOO=BAR
-        - without value: FOO
-        """
-        value: Any
-        if "=" in macro:
-            name, value = macro.split("=")
+    def __setitem__(self, key: Hashable, item: Any) -> None:
+        """Set an item based on its key."""
+        if key == CONFIG_SECTION:
+            self._update_config_section(item)
+        elif key == OVERRIDES_SECTION:
+            self._handle_overrides(item)
+        elif key == MACROS_SECTION:
+            self.data[MACROS_SECTION] = self.data.get(MACROS_SECTION, set()) | item
         else:
-            name = macro
-            value = None
+            super().__setitem__(key, item)
 
-        return cls(name=name, value=value, set_by=source.human_name)
+    def _handle_overrides(self, overrides: Iterable[Override]) -> None:
+        for override in overrides:
+            logger.debug("Applying override '%s.%s'", override.namespace, override.name)
+            if override.name in self.data:
+                _apply_override(self.data, override)
+                continue
 
+            setting = self._find_config_setting(lambda x: x.name == override.name)
+            setting.value = override.value
 
-@dataclass
-class Option:
-    """Representation of a configuration option."""
+    def _update_config_section(self, config_settings: List[ConfigSetting]) -> None:
+        for setting in config_settings:
+            logger.debug("Adding config setting: '%s.%s'", setting.namespace, setting.name)
+            if setting in self.data.get(CONFIG_SECTION, []):
+                raise ValueError(
+                    f"Setting {setting.namespace}.{setting.name} already defined. You cannot duplicate config settings!"
+                )
 
-    value: Any
-    macro_name: Optional[str]
-    help_text: Optional[str]
-    set_by: str
-    key: str
+        self.data[CONFIG_SECTION] = self.data.get(CONFIG_SECTION, []) + config_settings
 
-    @classmethod
-    def build(cls, key: str, data: Any, source: Source) -> "Option":
-        """Build configuration option from config entry value.
+    def _find_config_setting(self, predicate: Callable) -> Any:
+        """Find a config setting based on `predicate`.
 
-        Config values are either complex data structures or simple values.
-        This function handles both.
+        `predicate` is a callable that gets a config setting passed in as an argument. This callable must define the
+        condition for identifying a config setting.
+
+        Example:
+            The following call will find a ConfigSetting whose name is "foo":
+            `config._find_config_setting(lambda x: x.name == "foo")`
 
         Args:
-            key: Namespaced configuration key
-            data: Configuration data - a dict or a primitive
-            source: Source from which option data came - used for tracing overrides
+            predicate: A callable that returns True when the desired setting is found.
         """
-        if isinstance(data, dict):
-            return cls(
-                key=key,
-                value=_sanitize_option_value(data.get("value")),
-                macro_name=data.get("macro_name", _build_option_macro_name(key)),
-                help_text=data.get("help"),
-                set_by=source.human_name,
-            )
-        else:
-            return cls(
-                value=_sanitize_option_value(data),
-                key=key,
-                macro_name=_build_option_macro_name(key),
-                help_text=None,
-                set_by=source.human_name,
-            )
+        for elem in self.data.get(CONFIG_SECTION, []):
+            if predicate(elem):
+                return elem
 
-    def set_value(self, value: Any, source: Source) -> "Option":
-        """Mutate self with new value."""
-        self.value = _sanitize_option_value(value)
-        self.set_by = source.human_name
-        return self
+        raise ValueError("Could not find element.")
 
 
-IGNORED_OVERRIDE_KEYS_IN_SOURCE = CUMULATIVE_OVERRIDE_KEYS_IN_SOURCE + BOOTLOADER_OVERRIDE_KEYS_IN_SOURCE
+CONFIG_SECTION = "config"
+MACROS_SECTION = "macros"
+OVERRIDES_SECTION = "overrides"
 
 
-@dataclass
-class Config:
-    """Representation of config attributes assembled during Source parsing.
-
-    Attributes:
-        options: Options parsed from "config" and "target_overrides" sections of *.json files
-        macros: Macros parsed from "macros" section of mbed_lib.json and mbed_app.json file
-    """
-
-    options: Dict[str, Option] = field(default_factory=dict)
-    macros: Dict[str, Macro] = field(default_factory=dict)
-
-    @classmethod
-    def from_sources(cls, sources: Iterable[Source]) -> "Config":
-        """Interrogate each source in turn to create final Config."""
-        config = Config()
-        for source in sources:
-            for key, value in source.config.items():
-                # If the config item is about a certain component or feature
-                # being present, avoid adding it to the mbed_config.cmake
-                # configuration file. Instead, applications should depend on
-                # the feature or component with target_link_libraries() and the
-                # component's CMake flle (in the Mbed OS repo) will create
-                # any necessary macros or definitions.
-                if key.endswith(".present"):
-                    continue
-                _create_config_option(config, key, value, source)
-            for key, value in source.overrides.items():
-                if key in IGNORED_OVERRIDE_KEYS_IN_SOURCE:
-                    continue
-                _update_config_option(config, key, value, source)
-            for value in source.macros:
-                _create_macro(config, value, source)
-        return config
-
-
-def _create_config_option(config: Config, key: str, value: Any, source: Source) -> None:
-    """Mutates Config in place by creating a new Option."""
-    config.options[key] = Option.build(key, value, source)
-
-
-def _update_config_option(config: Config, key: str, value: Any, source: Source) -> None:
-    """Mutates Config in place by updating the value of existing Option."""
-    if key not in config.options:
-        raise ValueError(
-            f"Can't update option which does not exist."
-            f" Attempting to set '{key}' to '{value}' in '{source.human_name}'."
-        )
-    config.options[key].set_value(value, source)
-
-
-def _build_option_macro_name(config_key: str) -> str:
-    """Build macro name for configuration key.
-
-    All configuration variables require a macro name, so that they can be referenced in a header file.
-    Some values in config define "macro_name", some don't. This helps generate consistent macro names
-    for the latter.
-    """
-    sanitised_config_key = config_key.replace(".", "_").replace("-", "_").upper()
-    return f"MBED_CONF_{sanitised_config_key}"
-
-
-def _sanitize_option_value(value: Any) -> Any:
-    """Converts booleans to ints, leaves everything else as is."""
-    if isinstance(value, bool):
-        return int(value)
+def _apply_override(data: dict, override: Override) -> None:
+    if override.modifier == "add":
+        data[override.name] |= override.value
+    elif override.modifier == "remove":
+        data[override.name] -= override.value
     else:
-        return value
-
-
-def _create_macro(config: Config, macro_str: str, source: Source) -> None:
-    """Mutates Config in place by creating a new macro."""
-    macro = Macro.build(macro_str, source)
-    existing = config.macros.get(macro.name)
-    if existing:
-        raise ValueError(
-            f"Can't override previously set macro."
-            f" Attempting to set '{macro.name}' to '{macro.value}' in '{source.human_name}'."
-            f" Set previously by '{existing.set_by}'."
-        )
-    config.macros[macro.name] = macro
+        data[override.name] = override.value

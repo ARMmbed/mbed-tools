@@ -25,7 +25,7 @@ def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> p
     """
     target_build_attributes = get_target_by_name(target_name, program.mbed_os.targets_json_file)
     config = assemble_config(target_build_attributes, program.root, program.files.app_config_file)
-    cmake_file_contents = generate_mbed_config_cmake_file(target_name, target_build_attributes, config, toolchain)
+    cmake_file_contents = generate_mbed_config_cmake_file(target_name, config, toolchain)
     cmake_config_file_path = program.files.cmake_config_file
     write_file(cmake_config_file_path.parent, cmake_config_file_path.name, cmake_file_contents)
     return cmake_config_file_path

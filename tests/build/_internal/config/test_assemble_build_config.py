@@ -5,15 +5,12 @@
 import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from unittest import TestCase, mock
 
-from mbed_tools.build._internal.config.assemble_build_config import (
-    _assemble_config_from_sources_and_lib_files,
-    assemble_config,
-)
+from mbed_tools.build._internal.config.assemble_build_config import _assemble_config_from_sources
 from mbed_tools.build._internal.config.config import Config
 from mbed_tools.build._internal.find_files import find_files
-from mbed_tools.build._internal.config.source import Source
+from mbed_tools.build._internal.config.source import prepare
+from mbed_tools.lib.json_helpers import decode_json_file
 
 
 def create_files(directory, files):
@@ -26,54 +23,24 @@ def create_files(directory, files):
     return created_files
 
 
-@mock.patch("mbed_tools.build._internal.config.assemble_build_config.Source", autospec=True)
-@mock.patch("mbed_tools.build._internal.config.assemble_build_config.find_files", autospec=True)
-@mock.patch(
-    "mbed_tools.build._internal.config.assemble_build_config._assemble_config_from_sources_and_lib_files", autospec=True
-)
-class TestAssembleConfig(TestCase):
-    def test_calls_collaborator_with_source_and_file_paths(
-        self, _assemble_config_from_sources_and_lib_files, find_files, Source,
-    ):
-        mbed_target = dict()
-        mbed_program_directory = Path("foo")
-        app_config_file = mbed_program_directory / "mbed_app.json"
-
-        subject = assemble_config(mbed_target, mbed_program_directory, app_config_file)
-
-        self.assertEqual(subject, _assemble_config_from_sources_and_lib_files.return_value)
-        _assemble_config_from_sources_and_lib_files.assert_called_once_with(
-            mbed_target, find_files.return_value, app_config_file
-        )
-        find_files.assert_called_once_with("mbed_lib.json", mbed_program_directory)
-
-
-class TestAssembleConfigFromSourcesAndLibFiles(TestCase):
+class TestAssembleConfigFromSourcesAndLibFiles:
     def test_assembles_config_using_all_relevant_files(self):
         target = {
-            "config": {"foo": None},
-            "macros": {},
-            "labels": set("A"),
-            "extra_labels": set(),
-            "features": set("RED"),
-            "components": set(),
+            "config": {"foo": {"value": None}},
+            "macros": [],
+            "labels": ["A"],
+            "extra_labels": [],
+            "features": ["RED"],
+            "components": [],
             "c_lib": "std",
             "printf_lib": "minimal-printf",
         }
         mbed_lib_files = [
             {
-                "path": Path("TARGET_A", "mbed_lib.json"),
-                "json_contents": {
-                    "name": "a",
-                    "config": {"number": 123},
-                    "target_overrides": {"*": {"target.features_add": ["RED"]}},
-                },
-            },
-            {
                 "path": Path("subdir", "FEATURE_RED", "mbed_lib.json"),
                 "json_contents": {
                     "name": "red",
-                    "config": {"bool": False},
+                    "config": {"bool": {"value": False}},
                     "target_overrides": {
                         "A": {"bool": True, "target.features_add": ["BLUE"], "target.components_add": ["LEG"]}
                     },
@@ -81,8 +48,20 @@ class TestAssembleConfigFromSourcesAndLibFiles(TestCase):
                 },
             },
             {
+                "path": Path("TARGET_A", "mbed_lib.json"),
+                "json_contents": {
+                    "name": "a",
+                    "config": {"number": {"value": 123}},
+                    "target_overrides": {"*": {"target.features_add": ["RED"]}},
+                },
+            },
+            {
                 "path": Path("COMPONENT_LEG", "mbed_lib.json"),
-                "json_contents": {"name": "leg", "config": {"number-of-fingers": 5}, "macros": ["LEG_MACRO"]},
+                "json_contents": {
+                    "name": "leg",
+                    "config": {"number-of-fingers": {"value": 5}},
+                    "macros": ["LEG_MACRO"],
+                },
             },
         ]
         unused_mbed_lib_file = {
@@ -103,21 +82,28 @@ class TestAssembleConfigFromSourcesAndLibFiles(TestCase):
             created_mbed_app_file = create_files(directory, [mbed_app_file])[0]
             create_files(directory, [unused_mbed_lib_file])
 
-            subject = _assemble_config_from_sources_and_lib_files(
+            subject = _assemble_config_from_sources(
                 target, find_files("mbed_lib.json", Path(directory)), created_mbed_app_file
             )
 
-            mbed_lib_sources = [Source.from_mbed_lib(Path(directory, file), ["A"]) for file in created_mbed_lib_files]
-            mbed_app_source = Source.from_mbed_app(created_mbed_app_file, ["A"])
-            expected_config = Config.from_sources([Source.from_target(target)] + mbed_lib_sources + [mbed_app_source])
+            mbed_lib_sources = [
+                prepare(decode_json_file(Path(directory, file)), target_filters=["A"])
+                for file in created_mbed_lib_files
+            ]
+            mbed_app_source = prepare(decode_json_file(Path(directory, created_mbed_app_file)), target_filters=["A"])
+            expected_config = Config(prepare(target, source_name="target"))
+            for source in mbed_lib_sources + [mbed_app_source]:
+                expected_config.update(source)
 
-            self.assertEqual(subject, expected_config)
+            subject["config"].sort(key=lambda x: x.name)
+            expected_config["config"].sort(key=lambda x: x.name)
+            assert subject == expected_config
 
     def test_updates_target_labels_from_config(self):
         target = {
             "config": {"foo": None},
             "macros": {"NO"},
-            "labels": set("A"),
+            "labels": {"A"},
             "extra_labels": set(),
             "features": set(),
             "components": set(),
@@ -162,12 +148,12 @@ class TestAssembleConfigFromSourcesAndLibFiles(TestCase):
             _ = create_files(directory, mbed_lib_files)
             created_mbed_app_file = create_files(directory, [mbed_app_file])[0]
 
-            _ = _assemble_config_from_sources_and_lib_files(
+            config = _assemble_config_from_sources(
                 target, find_files("mbed_lib.json", Path(directory)), created_mbed_app_file
             )
 
-            self.assertEqual(target["features"], {"RED", "BLUE"})
-            self.assertEqual(target["components"], {"LEG"})
-            self.assertEqual(target["extra_labels"], {"EXTRA_HOT"})
-            self.assertEqual(target["labels"], {"A", "PICKLE"})
-            self.assertEqual(target["macros"], {"TICKER"})
+            assert config["features"] == {"RED", "BLUE"}
+            assert config["components"] == {"LEG"}
+            assert config["extra_labels"] == {"EXTRA_HOT"}
+            assert config["labels"] == {"A", "PICKLE"}
+            assert config["macros"] == {"TICKER", "RED_MACRO"}

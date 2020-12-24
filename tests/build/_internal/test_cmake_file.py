@@ -4,9 +4,9 @@
 #
 import pytest
 
-from tests.build._internal.config.factories import ConfigFactory, SourceFactory
 from mbed_tools.build._internal.cmake_file import generate_mbed_config_cmake_file, _render_mbed_config_cmake_template
-from mbed_tools.build._internal.config.config import _create_config_option
+from mbed_tools.build._internal.config.config import Config
+from mbed_tools.build._internal.config.source import ConfigSetting, prepare
 
 
 TOOLCHAIN_NAME = "gcc"
@@ -32,18 +32,18 @@ def fake_target():
 
 class TestGenerateCMakeListsFile:
     def test_correct_arguments_passed(self, fake_target):
-        config = ConfigFactory()
+        config = Config(prepare(fake_target))
         mbed_target = "K64F"
 
-        result = generate_mbed_config_cmake_file(mbed_target, fake_target, config, TOOLCHAIN_NAME)
+        result = generate_mbed_config_cmake_file(mbed_target, config, TOOLCHAIN_NAME)
 
-        assert result == _render_mbed_config_cmake_template(fake_target, config, TOOLCHAIN_NAME, mbed_target,)
+        assert result == _render_mbed_config_cmake_template(Config(prepare(fake_target)), TOOLCHAIN_NAME, mbed_target,)
 
 
 class TestRendersCMakeListsFile:
     def test_returns_rendered_content(self, fake_target):
-        config = ConfigFactory()
-        result = _render_mbed_config_cmake_template(fake_target, config, TOOLCHAIN_NAME, "target_name")
+        config = Config(prepare(fake_target))
+        result = _render_mbed_config_cmake_template(config, TOOLCHAIN_NAME, "target_name")
 
         for label in fake_target["labels"] + fake_target["extra_labels"]:
             assert label in result
@@ -60,11 +60,14 @@ class TestRendersCMakeListsFile:
             assert supported_application_profiles in result
 
     def test_returns_quoted_content(self, fake_target):
-        config = ConfigFactory()
-        source = SourceFactory()
+        config = Config(prepare(fake_target))
 
         # Add an option whose value contains quotes to the config.
-        _create_config_option(config, "iotc-mqtt-host", '{"mqtt.2030.ltsapis.goog", IOTC_MQTT_PORT}', source)
+        config["config"] = [
+            ConfigSetting(
+                name="mqtt-host", namespace="iotc", help_text="", value='{"mqtt.2030.ltsapis.goog", IOTC_MQTT_PORT}',
+            )
+        ]
 
-        result = _render_mbed_config_cmake_template(fake_target, config, TOOLCHAIN_NAME, "target_name")
+        result = _render_mbed_config_cmake_template(config, TOOLCHAIN_NAME, "target_name")
         assert '"-DMBED_CONF_IOTC_MQTT_HOST={\\"mqtt.2030.ltsapis.goog\\", IOTC_MQTT_PORT}"' in result

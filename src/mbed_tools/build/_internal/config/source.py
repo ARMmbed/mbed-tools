@@ -2,129 +2,153 @@
 # Copyright (c) 2020-2021 Arm Limited and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Configuration source abstraction."""
+"""Configuration source parser."""
 import logging
+import pathlib
 
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Any, Optional, List
 
 from mbed_tools.lib.json_helpers import decode_json_file
 
 logger = logging.getLogger(__name__)
 
 
+def from_file(
+    config_source_file_path: pathlib.Path, target_filters: Iterable[str], default_name: Optional[str] = None
+) -> dict:
+    """Load a JSON config file and prepare the contents as a config source."""
+    return prepare(decode_json_file(config_source_file_path), source_name=default_name, target_filters=target_filters)
+
+
+def prepare(
+    input_data: dict, source_name: Optional[str] = None, target_filters: Optional[Iterable[str]] = None
+) -> dict:
+    """Prepare a config source for entry into the Config object.
+
+    Extracts config and override settings from the source. Flattens these nested dictionaries out into lists of
+    objects which are namespaced in the way the Mbed config system expects.
+
+    Args:
+        input_data: The raw config JSON object parsed from the config file.
+        source_name: Optional default name to use for namespacing config settings. If the input_data contains a 'name'
+            field, that field is used as the namespace.
+        target_filters: List of filter string used when extracting data from target_overrides section of the config
+            data.
+
+    Returns:
+        Prepared config source.
+    """
+    data = input_data.copy()
+    namespace = data.pop("name", source_name)
+    for key in data:
+        if isinstance(data[key], list):
+            data[key] = set(data[key])
+
+    if "config" in data:
+        data["config"] = _extract_config_settings(namespace, data["config"])
+
+    if "overrides" in data:
+        data["overrides"] = _extract_overrides(namespace, data["overrides"])
+
+    if "target_overrides" in data:
+        data["overrides"] = _extract_target_overrides(
+            namespace, data.pop("target_overrides"), target_filters if target_filters is not None else []
+        )
+
+    return data
+
+
 @dataclass
-class Source:
-    """Configuration source abstraction.
+class ConfigSetting:
+    """Representation of a config setting.
 
-    MbedOS build configuration is assembled from various sources:
-    - targets.json
-    - mbed_lib.json
-    - mbed_app.json
-
-    This class provides a common interface to configuration data.
+    Auto converts any list values to sets for faster operations and de-duplication of values.
     """
 
-    human_name: str
-    config: dict
-    overrides: dict
-    macros: Iterable[str]
+    namespace: str
+    name: str
+    value: Any
+    help_text: Optional[str] = None
+    macro_name: Optional[str] = None
 
-    @classmethod
-    def from_mbed_lib(cls, mbed_lib_path: Path, target_labels: Iterable[str]) -> "Source":
-        """Build Source from mbed_lib.json file.
-
-        Args:
-            mbed_lib_path: Path to mbed_lib.json file
-            target_labels: Labels for which "target_overrides" should apply
-        """
-        file_contents = decode_json_file(mbed_lib_path)
-        namespace = file_contents["name"]
-
-        return cls.from_file_contents(
-            file_name=str(mbed_lib_path), file_contents=file_contents, namespace=namespace, target_labels=target_labels
-        )
-
-    @classmethod
-    def from_mbed_app(cls, mbed_app_path: Path, target_labels: Iterable[str]) -> "Source":
-        """Build Source from mbed_app.json file.
-
-        Args:
-            mbed_app_path: Path to mbed_app.json file
-            target_labels: Labels for which "target_overrides" should apply
-        """
-        file_contents = decode_json_file(mbed_app_path)
-        return cls.from_file_contents(
-            file_name=str(mbed_app_path), file_contents=file_contents, namespace="app", target_labels=target_labels
-        )
-
-    @classmethod
-    def from_file_contents(
-        cls, file_name: str, file_contents: dict, namespace: str, target_labels: Iterable[str]
-    ) -> "Source":
-        """Build Source from file contents."""
-        config = file_contents.get("config", {})
-        config = _namespace_data(config, namespace)
-
-        overrides = file_contents.get("target_overrides", {})
-        target_specific_overrides = _filter_target_overrides(overrides, target_labels)
-        namespaced_overrides = _namespace_data(target_specific_overrides, namespace)
-
-        macros = file_contents.get("macros", [])
-
-        return cls(human_name=f"File: {file_name}", config=config, overrides=namespaced_overrides, macros=macros)
-
-    @classmethod
-    def from_target(cls, target: dict) -> "Source":
-        """Build Source from retrieved mbed_tools.targets.Target data."""
-        namespace = "target"
-        config = _namespace_data(target["config"], namespace)
-
-        overrides = {
-            "features": target["features"],
-            "components": target["components"],
-            "labels": target["labels"],
-            "extra_labels": target["extra_labels"],
-            "macros": target["macros"],
-            "c_lib": target["c_lib"],
-            "printf_lib": target["printf_lib"],
-        }
-        namespaced_overrides = _namespace_data(overrides, namespace)
-
-        return cls(
-            human_name=f"mbed_target.Target for {target}", config=config, overrides=namespaced_overrides, macros=[],
-        )
+    def __post_init__(self) -> None:
+        """Convert the value to a set if applicable."""
+        if isinstance(self.value, list):
+            self.value = set(self.value)
 
 
-def _filter_target_overrides(data: dict, allowed_labels: Iterable[str]) -> dict:
-    """Flatten and filter target overrides.
+@dataclass
+class Override:
+    """Representation of a config override.
 
-    Ensures returned dictionary only contains configuration settings applicable to given allowed labels.
+    Checks for _add or _remove modifiers and splits them from the name.
     """
-    flattened = {}
-    for target_label, overrides in data.items():
-        if target_label == "*" or target_label in allowed_labels:
-            flattened.update(overrides)
-    return flattened
+
+    namespace: str
+    name: str
+    value: Any
+    modifier: Optional[str] = None
+
+    def __post_init__(self) -> None:
+        """Parse modifiers and convert list values to sets."""
+        if self.name.endswith("_add") or self.name.endswith("_remove"):
+            self.name, self.modifier = self.name.rsplit("_", maxsplit=1)
+
+        if isinstance(self.value, list):
+            self.value = set(self.value)
 
 
-def _namespace_data(data: dict, namespace: str) -> dict:
-    """Prefix configuration key with a namespace.
+def _extract_config_settings(namespace: str, config_data: dict) -> List[ConfigSetting]:
+    settings = []
+    for name, item in config_data.items():
+        logger.debug("Extracting config setting '%s'", name)
+        if isinstance(item, dict):
+            macro_name = item.get("macro_name")
+            help_text = item.get("help")
+            value = item.get("value")
+        else:
+            macro_name = None
+            help_text = None
+            value = item
 
-    Namespace is ConfigSource wide, and is resolved at source build time.
+        setting = ConfigSetting(
+            namespace=namespace, name=name, macro_name=macro_name, help_text=help_text, value=value,
+        )
+        # If the config item is about a certain component or feature
+        # being present, avoid adding it to the mbed_config.cmake
+        # configuration file. Instead, applications should depend on
+        # the feature or component with target_link_libraries() and the
+        # component's CMake flle (in the Mbed OS repo) will create
+        # any necessary macros or definitions.
+        if setting.name == "present":
+            continue
 
-    It should be one of:
-    - "target"
-    - "app"
-    - library name (where "mbed_lib.json" comes from)
+        settings.append(setting)
 
-    If given key is already namespaced, return it as is - this is going to be the case for
-    keys from "target_overrides" entries. Keys from "config" usually need namespacing.
-    """
-    namespaced = {}
-    for key, value in data.items():
-        if "." not in key:
-            key = f"{namespace}.{key}"
-        namespaced[key] = value
-    return namespaced
+    return settings
+
+
+def _extract_target_overrides(
+    namespace: str, override_data: dict, allowed_target_labels: Iterable[str]
+) -> List[Override]:
+    valid_target_data = dict()
+    for target_type in override_data:
+        if target_type == "*" or target_type in allowed_target_labels:
+            valid_target_data.update(override_data[target_type])
+
+    return _extract_overrides(namespace, valid_target_data)
+
+
+def _extract_overrides(namespace: str, override_data: dict) -> List[Override]:
+    overrides = []
+    for name, value in override_data.items():
+        try:
+            override_namespace, override_name = name.split(".")
+        except ValueError:
+            override_namespace = namespace
+            override_name = name
+
+        overrides.append(Override(namespace=override_namespace, name=override_name, value=value))
+
+    return overrides

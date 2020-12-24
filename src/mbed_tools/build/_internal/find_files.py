@@ -5,7 +5,7 @@
 """Find files in MbedOS program directory."""
 from pathlib import Path
 import fnmatch
-from typing import Callable, Iterable, Optional, List, Tuple, Any, Set
+from typing import Callable, Iterable, Optional, List, Tuple
 
 from mbed_tools.lib.json_helpers import decode_json_file
 
@@ -71,7 +71,7 @@ def filter_files(files: Iterable[Path], filters: Iterable[Callable]) -> Iterable
 class RequiresFilter:
     """Filter out mbed libraries not needed by application.
 
-     The 'requires' config option in mbed_app.json can specify list of mbed
+    The 'requires' config option in mbed_app.json can specify list of mbed
     libraries (mbed_lib.json) that application requires. Apply 'requires'
     filter to remove mbed_lib.json files not required by application.
     """
@@ -84,38 +84,9 @@ class RequiresFilter:
         """
         self._requires = requires
 
-    def __call__(self, files: Iterable[Path]) -> Iterable[Path]:
-        """Apply requires filter and remove mbed_lib.json files not required by application."""
-        requires_filtered_files: Set[Path] = set()
-        return self.apply_requires_filter(requires_filtered_files, files, self._requires)
-
-    @staticmethod
-    def apply_requires_filter(
-        requires_filtered_files: set, files: Iterable[Path], requires: Iterable[str]
-    ) -> Iterable[Path]:
-        """Remove mbed_lib.json files not required by application."""
-        for required_mbed_lib in requires:
-            for mbed_lib_path in files:
-                lib_contents = decode_json_file(mbed_lib_path)
-
-                if required_mbed_lib == RequiresFilter.get_mbed_lib_name(lib_contents):
-                    requires_filtered_files.add(mbed_lib_path)
-
-                    RequiresFilter.apply_requires_filter(
-                        requires_filtered_files, files, RequiresFilter.get_mbed_lib_requires(lib_contents)
-                    )
-
-        return requires_filtered_files
-
-    @staticmethod
-    def get_mbed_lib_requires(lib_contents: Any) -> Any:
-        """Get list of mbed libraries required by appplication."""
-        return lib_contents["requires"] if "requires" in lib_contents else []
-
-    @staticmethod
-    def get_mbed_lib_name(lib_contents: Any) -> Any:
-        """Get mbed library name."""
-        return lib_contents["name"]
+    def __call__(self, path: Path) -> bool:
+        """Return True if no requires are specified or our lib name is in the list of required libs."""
+        return decode_json_file(path).get("name", "") in self._requires or not self._requires
 
 
 class LabelFilter:
