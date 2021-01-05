@@ -1,8 +1,10 @@
 repos:
-  - repo: https://github.com/ARMmbed/mbed-tools-ci-scripts.git
-    rev: 2a605e0c715ad7f51a8f3853522f01a32846aba7
+  - repo: https://github.com/kdeyev/licenseheaders.git
+    rev: 'master'
     hooks:
-      - id: licensing
+      - id: licenseheaders
+        exclude: \.yaml$|\.yml$
+        args: ["-t", "ci_scripts/templates/.copyright.tmpl", "-cy", "-f"]
 
   - repo: https://github.com/psf/black
     rev: 19.10b0
