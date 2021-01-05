@@ -9,7 +9,7 @@ git add news/
 
 # Generate API docs and add license headers to them
 generate-docs --output_dir docs/api
-license-files
+pre-commit run licenseheaders --all-files > /dev/null 2>&1 || true
 git add docs/api
 
 if ! NEW_VERSION=$(python ci_scripts/bump_version.py -vvv -n news/); then
