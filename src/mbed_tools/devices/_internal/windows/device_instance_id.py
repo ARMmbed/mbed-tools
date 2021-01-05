@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2020 Arm Mbed. All rights reserved.
+# Copyright (c) 2020-2021 Arm Limited and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
 """Utility in charge of finding the instance ID of a device."""
