@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+4.5.0 (2021-01-07)
+==================
+
+Features
+--------
+
+- Targets modified: SDP-K1. (#20210107050202)
+
+
 4.4.0 (2020-12-22)
 ==================
 
