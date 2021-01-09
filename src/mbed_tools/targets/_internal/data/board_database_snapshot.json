@@ -245,7 +245,6 @@
         "slug": "S1SBP6A",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 6.4",
             "Mbed OS 6.5",
             "Mbed OS 6.6"
         ],

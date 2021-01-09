@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+4.6.0 (2021-01-09)
+==================
+
+Features
+--------
+
+- Targets modified: SIDK S1SBP6A Bio-processor dev kit. (#20210109050122)
+
+
 4.5.0 (2021-01-07)
 ==================
 
