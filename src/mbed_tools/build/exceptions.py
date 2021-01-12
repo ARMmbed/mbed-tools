@@ -20,3 +20,7 @@ class BinaryFileNotFoundError(MbedBuildError):
 
 class DeviceNotFoundError(MbedBuildError):
     """The requested device is not connected to your system."""
+
+
+class InvalidConfigOverride(MbedBuildError):
+    """A given config setting was invalid."""

@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from typing import Iterable, Any, Optional, List
 
 from mbed_tools.lib.json_helpers import decode_json_file
+from mbed_tools.build.exceptions import InvalidConfigOverride
 
 logger = logging.getLogger(__name__)
 
@@ -145,6 +146,12 @@ def _extract_overrides(namespace: str, override_data: dict) -> List[Override]:
     for name, value in override_data.items():
         try:
             override_namespace, override_name = name.split(".")
+            if override_namespace and override_namespace not in [namespace, "target"] and namespace != "app":
+                raise InvalidConfigOverride(
+                    "It is only possible to override config settings defined in an mbed_lib.json from mbed_app.json. "
+                    f"An override was defined by the lib `{namespace}` that attempts to override "
+                    f"`{override_namespace}.{override_name}`."
+                )
         except ValueError:
             override_namespace = namespace
             override_name = name
