@@ -299,9 +299,6 @@ def test_overrides_lib_config_param_from_same_lib(matching_target_and_filter, pr
     assert "MBED_CONF_PLATFORM_STDIO_BAUD_RATE=115200" in config_text
 
 
-@pytest.mark.xfail(
-    reason="Currently we have a bug where we allow lib settings to be overriden from another lib with undefined order."
-)
 def test_raises_when_attempting_to_override_lib_config_param_from_other_lib(matching_target_and_filter, program):
     target, target_filter = matching_target_and_filter
     create_mbed_lib_json(
