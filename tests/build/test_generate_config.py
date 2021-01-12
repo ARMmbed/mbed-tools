@@ -413,3 +413,27 @@ def test_requires_config_option(program):
 
     assert "MBED_CONF_PLATFORM_STDIO_BAUD_RATE=9600" in config_text
     assert "MBED_LFS_READ_SIZE=64" not in config_text
+
+
+def test_target_requires_config_option(program):
+    create_mbed_app_json(program.root, target_overrides={"*": {"target.requires": ["ble"]}})
+    create_mbed_lib_json(
+        program.mbed_os.root / "bare-metal" / "mbed_lib.json",
+        "ble",
+        target_overrides={"*": {"target.requires": ["platform"]}},
+    )
+    create_mbed_lib_json(
+        program.mbed_os.root / "platform" / "mbed_lib.json", "platform", config={"stdio-baud-rate": {"value": 9600}},
+    )
+    create_mbed_lib_json(
+        program.mbed_os.root / "storage" / "mbed_lib.json",
+        "filesystem",
+        config={"read_size": {"macro_name": "MBED_LFS_READ_SIZE", "value": 64}},
+    )
+
+    generate_config("K64F", "GCC_ARM", program)
+
+    config_text = program.files.cmake_config_file.read_text()
+
+    assert "MBED_CONF_PLATFORM_STDIO_BAUD_RATE=9600" in config_text
+    assert "MBED_LFS_READ_SIZE=64" not in config_text
