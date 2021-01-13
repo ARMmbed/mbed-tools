@@ -31,12 +31,6 @@ stages:
               uploadCoverage: "false"
               tox.env: linting
 
-            Linting_Py_3_7:
-              python.version: '3.7'
-              vmImageName: ubuntu-latest
-              uploadCoverage: "false"
-              tox.env: linting
-
             Linting_Py_3_8:
               python.version: '3.8'
               vmImageName: ubuntu-latest
@@ -54,12 +48,6 @@ stages:
               vmImageName: ubuntu-latest
               uploadCoverage: "false"
               tox.env: py36
-
-            Linux_Py_3_7:
-              python.version: '3.7'
-              vmImageName: ubuntu-latest
-              uploadCoverage: "false"
-              tox.env: py37
 
             Linux_Py_3_8:
               python.version: '3.8'
@@ -79,12 +67,6 @@ stages:
               uploadCoverage: "false"
               tox.env: py36
 
-            Windows_Py_3_7:
-              python.version: '3.7'
-              vmImageName: windows-latest
-              uploadCoverage: "false"
-              tox.env: py37
-
             Windows_Py_3_8:
               python.version: '3.8'
               vmImageName: windows-latest
@@ -102,12 +84,6 @@ stages:
               vmImageName: macOS-latest
               uploadCoverage: "false"
               tox.env: py36
-
-            macOS_Py_3_7:
-              python.version: '3.7'
-              vmImageName: macOS-latest
-              uploadCoverage: "false"
-              tox.env: py37
 
             macOS_Py_3_8:
               python.version: '3.8'
