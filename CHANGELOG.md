@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+4.6.1 (2021-01-16)
+==================
+
+Bugfixes
+--------
+
+- Rework config parsing code to enable easier bug fixing and maintainability. (#20201223142415)
+
+
+Misc
+----
+
+- #20210113, #20210105113936
+
+
 4.6.0 (2021-01-09)
 ==================
 
