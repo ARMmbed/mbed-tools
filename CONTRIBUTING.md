@@ -273,6 +273,27 @@ Perform static type check:
 mypy src/mbed_tools
 ```
 
+## Type hints
+
+Type hints should be used in the code wherever possible. Since the
+documentation shows the function signatures with the type hints
+there is no need to include additional type information in the docstrings.
+
+## Code Climate
+
+Code Climate is integrated with our GitHub flow. Raising a pull request that
+fails any of the configured rules will prevent your pull request from being
+merged.
+
+If you prefer to view the Code Climate report on your machine, prior to sending
+a pull request, you can use the [cli provided by Code
+Climate](https://docs.codeclimate.com/docs/command-line-interface).
+
+Plugins for various tools are also available:
+  - [Atom](https://docs.codeclimate.com/docs/code-climate-atom-package)
+  - [PyCharm](https://plugins.jetbrains.com/plugin/13306-code-cleaner-with-code-climate-cli)
+  - [Vim](https://docs.codeclimate.com/docs/vim-plugin)
+
 ## Documenting code
 
 Inclusion of docstrings is needed in all areas of the code for Flake8 checks in
@@ -318,26 +339,6 @@ Azure pipeline artifacts directory for the build.
 Documentation only gets committed back to this repo to the `docs` directory
 during a release and this is what gets published to Github pages. Don't modify
 any of the files in this directory by hand.
-
-## Type hints
-
-Type hints should be used in the code wherever possible. Since the
-documentation shows the function signatures with the type hints there is no
-need to include additional type information in the docstrings.
-
-## Code Climate
-
-Code Climate is integrated with our GitHub flow. Failing the configured rules
-will yield a pull request not mergeable.
-
-If you prefer to view the Code Climate report on your machine, prior to sending
-a pull request, you can use the [cli provided by Code
-Climate](https://docs.codeclimate.com/docs/command-line-interface).
-
-Plugins for various tools are also available:
-  - [Atom](https://docs.codeclimate.com/docs/code-climate-atom-package)
-  - [PyCharm](https://plugins.jetbrains.com/plugin/13306-code-cleaner-with-code-climate-cli)
-  - [Vim](https://docs.codeclimate.com/docs/vim-plugin)
 
 ## Creating a Release
 
