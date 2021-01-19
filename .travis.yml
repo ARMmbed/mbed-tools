@@ -128,8 +128,8 @@ matrix:
       env: EXAMPLE_NAME=mbed-os-example-devicekey TARGET_NAME=K66F CACHE_NAME=devicekey-K66F
 
     - <<: *mbed-tools-test
-      name: "Test lorawan example (K66F)"
-      env: EXAMPLE_NAME=mbed-os-example-lorawan TARGET_NAME=K66F CACHE_NAME=lorawan-K66F
+      name: "Test lorawan example (DISCO_L072CZ_LRWAN1)"
+      env: EXAMPLE_NAME=mbed-os-example-lorawan TARGET_NAME=DISCO_L072CZ_LRWAN1 CACHE_NAME=lorawan-DISCO_L072CZ_LRWAN1
 
     - <<: *mbed-tools-test
       name: "Test crypto example (K64F)"
