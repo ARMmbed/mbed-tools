@@ -115,22 +115,6 @@ We recommend the following commit structure in the following order:
 Follow [this guide](https://chris.beams.io/posts/git-commit/) to ensure you're
 writing good commit messages.
 
-## Creating a Release
-
-To create a production release of mbed-tools, perform the following steps:
-
-1. Check out the `master` branch; ensure it is clean and up to date.
-1. Run `tox -e preprelease`, this will update the necessary files, create a
-   commit and tag it with the new release version number.
-1. Push the commit to `master`.
-1. Push the tag.
-
-The CI will detect a new tag has been created and run the "Build and Deploy"
-pipeline, which then pushes the release to pyPI.
-
-> **_NOTE:_**  The release process relies on a shell script
-> `ci_scripts/prep-release`, so will not work on Windows systems.
-
 ## Contribution Agreement
 
 For us to accept your code contributions, we will need you to agree to our
@@ -307,3 +291,25 @@ Plugins for various tools are also available:
   - [Atom](https://docs.codeclimate.com/docs/code-climate-atom-package)
   - [PyCharm](https://plugins.jetbrains.com/plugin/13306-code-cleaner-with-code-climate-cli)
   - [Vim](https://docs.codeclimate.com/docs/vim-plugin)
+
+## Creating a Release
+
+Production releases of mbed-tools are created automatically every night by our
+continuous delivery system (implemented in Azure Pipelines). There should be no
+human intervention required to deploy mbed-tools to pypi.
+
+If you wish to create a production release of mbed-tools without waiting for
+the continuous deployment system to create one, you can perform the following
+steps:
+
+1. Check out the `master` branch; ensure it is clean and up to date.
+1. Run `tox -e preprelease`, this will update the necessary files, create a
+   commit and tag it with the new release version number.
+1. Push the commit to `master`.
+1. Push the tag.
+
+The CI will detect a new tag has been created and run the "Build and Deploy"
+pipeline, which then pushes the release to pyPI.
+
+> **_NOTE:_**  The release process relies on a shell script
+> `ci_scripts/prep-release`, so will not work on Windows systems.
