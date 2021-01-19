@@ -112,6 +112,19 @@ We recommend the following commit structure in the following order:
 1. Refactoring (no functional change)
 1. Meaningful behavioural changes
 
+We also recommend adding a prefix to your commit message to highlight the area
+of relevance. Write prefixes in lowercase, followed by a colon, followed by a
+space, and then finally the commit title. Some example prefixes include the
+following:
+
+- `project: `
+- `config: `
+- `tests: `
+- `docs: `
+- `cli: `
+- `travis: `
+- `ci: `
+
 Follow [Chris Beams' article on how to write a Git commit
 message](https://chris.beams.io/posts/git-commit/) to ensure you're writing
 good commit messages.
