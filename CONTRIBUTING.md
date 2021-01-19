@@ -180,7 +180,7 @@ export PATH=~/Library/Python/3.7/bin/:$PATH
 
 ## Setup Development Environment
 
-Clone the `mbed-tools` GitHub repository
+Clone the `mbed-tools` GitHub repository.
 
 ```bash
 git clone git@github.com:ARMmbed/mbed-tools.git
