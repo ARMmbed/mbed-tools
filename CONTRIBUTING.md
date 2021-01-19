@@ -38,7 +38,11 @@ feedback. Please bear in mind that the tools for Mbed OS are complex and cover
 a large number of use cases. This means we may ask for changes not only to
 ensure that the proposed change meets our quality criteria, but also to make
 sure the that the change is generally useful and doesn't impact other uses
-cases or maintainability.
+cases or harm maintainability.
+
+If you are new to developing on Python projects, you may find [our development
+tutorial](#Development-and-Testing) valuable. We cover how to get a Python
+development environment set up, how to use tox, and other tips.
 
 ### News Files
 
