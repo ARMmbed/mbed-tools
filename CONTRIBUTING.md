@@ -136,14 +136,14 @@ environments.
 
 `mbed-tools` is compatible with Python 3.6 or later.
 
-If you are on a Linux distribution, or MacOS, you will find that Python comes
+If you are on a Linux distribution, or macOS, you will find that Python comes
 pre-installed on your system. **Do not use the pre-installed versions of Python
 for development.**
 
 Below are links to guides for correctly setting up a development ready version
 of Python 3 on common platforms:
 
-* [MacOS](https://docs.python-guide.org/starting/install3/osx/#doing-it-right)
+* [macOS](https://docs.python-guide.org/starting/install3/osx/#doing-it-right)
 * [Ubuntu](https://docs.python-guide.org/starting/install3/linux/)
 * [Windows](https://docs.python-guide.org/starting/install3/win/)
 
