@@ -118,9 +118,11 @@ good commit messages.
 
 ## Contribution Agreement
 
-For us to accept your code contributions, we will need you to agree to our
-[Mbed Contributor Agreement](https://os.mbed.com/contributor_agreement/) to
-give us the necessary rights to use and distribute your contributions.
+Mbed previously required a signed contributor agreement in order to accept
+contributions. Mbed no longer requires such an agreement. Mbed projects (unless
+otherwise noted in the specific project) now accept contributions under
+Apache-2.0 directly. For more details, refer to [the Mbed OS contributing
+guide](https://os.mbed.com/docs/mbed-os/latest/contributing/index.html)
 
 Thank you for contributing to `mbed-tools`.
 
