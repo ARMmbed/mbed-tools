@@ -129,6 +129,26 @@ Follow [Chris Beams' article on how to write a Git commit
 message](https://chris.beams.io/posts/git-commit/) to ensure you're writing
 good commit messages.
 
+### An example commit message
+
+```
+commit 23efe7ba1009a0b0db890df3b940157c732085b7
+Author: Vikas Katariya <Vikas.katariya@arm.com>
+Date:   Thu Nov 26 11:36:02 2020 +0000
+
+deploy: Use default branch from remote repository
+
+Make sure we checkout the default branch from the remote repository, if
+there is no git hash present in the .lib file.
+
+We also need to fetch the git repository before performing a checkout
+when using the `deploy` command. This makes sure we have the latest
+changes in the upstream repo.
+
+Fixes #122
+
+```
+
 ## Contribution Agreement
 
 Mbed previously required a signed contributor agreement in order to accept
