@@ -112,8 +112,9 @@ We recommend the following commit structure in the following order:
 1. Refactoring (no functional change)
 1. Meaningful behavioural changes
 
-Follow [this guide](https://chris.beams.io/posts/git-commit/) to ensure you're
-writing good commit messages.
+Follow [Chris Beams' article on how to write a Git commit
+message](https://chris.beams.io/posts/git-commit/) to ensure you're writing
+good commit messages.
 
 ## Contribution Agreement
 
