@@ -129,7 +129,8 @@ Thank you for contributing to `mbed-tools`.
 # Development and Testing
 
 For development and testing purposes, it is essential to use a virtual
-environment.
+environment. tox is a commonly used development tool that helps manage virtual
+environments.
 
 ## Setup Python and tox
 
@@ -154,7 +155,7 @@ After you have set up your Python 3 installation, install tox (the `--user`
 flag is important **never use `sudo` to install Python packages!**)
 
 ```bash
-python(3) -m pip install --user tox
+python3 -m pip install --user tox
 ```
 
 Check that tox is in the binary path
@@ -196,11 +197,11 @@ source .venv/bin/activate
 
 ## Unit Tests, Code Formatting and Static Analysis
 
-After you have activated your development environment, run `pre-commit` to run
-unit tests and static code analysis checks:
+After you have activated your development environment, run `tox -e
+linting,py39` to run unit tests and static code analysis checks:
 
 ```bash
-pre-commit run --all-files
+tox -e linting,py39
 ```
 
 This will run `black`, `flake8`, `mypy` and `pytest`. If you would like to run
