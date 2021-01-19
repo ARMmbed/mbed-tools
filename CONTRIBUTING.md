@@ -187,6 +187,15 @@ alternative.
 After you have set up your Python 3 installation, install tox (the `--user`
 flag is important **never use `sudo` to install Python packages!**)
 
+On macOS, with [the defacto macOS package manager, Homebrew](https://brew.sh/):
+
+```bash
+brew install tox
+```
+
+On other platforms, use your native package manager's tox package or your
+Python environment's Python package manager, pip, like so:
+
 ```bash
 python3 -m pip install --user tox
 ```
