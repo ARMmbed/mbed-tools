@@ -168,14 +168,14 @@ If not, find the user base binary directory
 
 ```bash
 python -m site --user-base
-#~ /Users/<username>/Library/Python/3.7
+#~ /Users/<username>/Library/Python/3.9
 ```
 
 Append `bin` to the directory returned and add this to your path by updating
 `~/.profile`. For example you might add the following:
 
 ```bash
-export PATH=~/Library/Python/3.7/bin/:$PATH
+export PATH=~/Library/Python/3.9/bin/:$PATH
 ```
 
 ## Setup Development Environment
