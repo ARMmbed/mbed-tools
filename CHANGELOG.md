@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+4.7.0 (2021-01-20)
+==================
+
+Features
+--------
+
+- Targets added: AdBun-M3HQA development board, SBK-M4KN development board. (#20210120050110)
+
+
+Misc
+----
+
+- #20210119095356
+
+
 4.6.1 (2021-01-16)
 ==================
 

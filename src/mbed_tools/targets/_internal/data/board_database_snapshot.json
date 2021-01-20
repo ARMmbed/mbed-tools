@@ -188,6 +188,30 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "TMPM4KN",
+        "board_name": "SBK-M4KN development board",
+        "product_code": "7020",
+        "target_type": "platform",
+        "slug": "TMPM4KN",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.6"
+        ],
+        "mbed_enabled": []
+    },
+    {
+        "board_type": "TMPM3HQA",
+        "board_name": "AdBun-M3HQA development board",
+        "product_code": "7019",
+        "target_type": "platform",
+        "slug": "TMPM3HQA",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.6"
+        ],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "DISCO_U599J",
         "board_name": "ST Discovery STM32U599J",
         "product_code": "0888",
