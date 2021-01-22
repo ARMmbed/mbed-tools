@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+5.0.0 (2021-01-22)
+==================
+
+Major changes
+-------------
+
+- Compile: change command line option --build-type to --profile (#20210121143556)
+
+
+Improved Documentation
+----------------------
+
+- Update the contributing guide to be more accessible and less scattered. (#144)
+
+
 4.7.0 (2021-01-20)
 ==================
 

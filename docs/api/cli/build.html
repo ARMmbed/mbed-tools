@@ -56,7 +56,7 @@ from mbed_tools.sterm import terminal
     help=&#34;The toolchain you are using to build your app.&#34;,
 )
 @click.option(&#34;-m&#34;, &#34;--mbed-target&#34;, help=&#34;A build target for an Mbed-enabled device, e.g. K64F.&#34;)
-@click.option(&#34;-b&#34;, &#34;--build-type&#34;, default=&#34;develop&#34;, help=&#34;The build type (release, develop or debug).&#34;)
+@click.option(&#34;-b&#34;, &#34;--profile&#34;, default=&#34;develop&#34;, help=&#34;The build type (release, develop or debug).&#34;)
 @click.option(&#34;-c&#34;, &#34;--clean&#34;, is_flag=True, default=False, help=&#34;Perform a clean build.&#34;)
 @click.option(
     &#34;-p&#34;,
@@ -84,7 +84,7 @@ from mbed_tools.sterm import terminal
 )
 def build(
     program_path: str,
-    build_type: str,
+    profile: str,
     toolchain: str = &#34;&#34;,
     mbed_target: str = &#34;&#34;,
     clean: bool = False,
@@ -105,7 +105,7 @@ def build(
     Args:
        program_path: Path to the Mbed project.
        mbed_os_path: the path to the local Mbed OS directory
-       build_type: The Mbed build profile (debug, develop or release).
+       profile: The Mbed build profile (debug, develop or release).
        toolchain: The toolchain to use for the build.
        mbed_target: The name of the Mbed target to build for.
        clean: Perform a clean build.
@@ -127,7 +127,7 @@ def build(
         click.echo(&#34;Configuring project and generating build system...&#34;)
         _validate_target_and_toolchain_args(mbed_target, toolchain)
         generate_config(mbed_target.upper(), toolchain, program)
-        generate_build_system(program.root, build_tree, build_type)
+        generate_build_system(program.root, build_tree, profile)
 
     click.echo(&#34;Building Mbed project...&#34;)
     build_project(build_tree)
