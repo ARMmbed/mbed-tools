@@ -49,6 +49,12 @@ setup(
         "typing-extensions",
         "Jinja2",
         "pyserial",
+        # Mbed OS 6.7 dependencies
+        # TODO Remove these as part of fixing
+        # https://github.com/ARMmbed/mbed-tools/issues/171
+        "prettytable",
+        "intelhex",
+        "future",
     ],
     license="Apache 2.0",
     long_description_content_type="text/markdown",
