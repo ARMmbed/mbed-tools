@@ -53,7 +53,7 @@ matrix:
       name: "Test blinky example - develop (K64F)"
       env: EXAMPLE_NAME=mbed-os-example-blinky TARGET_NAME=K64F PROFILE=develop CACHE_NAME=develop-K64F
       language: python
-      python: 3.8
+      python: 3.9
       install:
         - _setup_build_env
         # Install the changes added in the pull request
