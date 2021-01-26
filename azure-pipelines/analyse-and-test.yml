@@ -136,23 +136,3 @@ stages:
           - publish: $(Build.Repository.LocalPath)/docs/api
             artifact: Documentation
             displayName: 'Publish documentation'
-
-  - stage: Licensing
-    displayName: 'Report licences in use (SPDX)'
-    dependsOn: []
-    jobs:
-      - job: Licensing
-        displayName: 'Generate SPDX documents'
-        pool:
-          vmImage: 'ubuntu-latest'
-
-        steps:
-          - task: UsePythonVersion@0
-            displayName: 'Use Python 3.7'
-            inputs:
-              versionSpec: '3.7'
-
-          - script: |
-              python -m pip install --upgrade tox
-
-          - template: steps/generate-spdx-documents.yml

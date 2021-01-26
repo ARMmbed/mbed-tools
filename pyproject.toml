@@ -22,17 +22,6 @@ DOCUMENTATION_DEFAULT_OUTPUT_PATH = "local_docs"
 DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs/api"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 
-[ProjectConfig.PACKAGES_WITH_CHECKED_LICENCE]
-GitPython = "BSD-3-Clause"
-python-dotenv = "BSD-3-Clause"
-setuptools  = "MIT"
-typing-extensions = "Actually licensed as PSF-2.0."
-chardet = "LGPL-2.1 - Accepted temporarily"
-pyudev = "LGPL-2.1 - Accepted temporarily"
-pdoc3 = "AGPL-3.0 - Accepted temporarily"
-zipp = "MIT"
-importlib-metadata = "Apache-2.0"
-
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
 
@@ -77,8 +66,3 @@ showcontent = false
 
 [tool.black]
 line-length = 120
-
-[spdx]
-CreatorWebsite = "spdx.org"
-PathToSpdx = "spdx/spdxdocs"
-UUID = "8d60126f-ae17-4e1f-b953-b2ace2c6aab1"
