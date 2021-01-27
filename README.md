@@ -7,7 +7,6 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/mbed-tools)](https://pypi.org/project/mbed-tools/)
 
 [![License](https://badgen.net/pypi/license/mbed-tools)](https://github.com/ARMmbed/mbed-tools/blob/master/LICENSE)
-[![Compliance](https://badgen.net/badge/License%20Report/compliant/green?icon=libraries)](https://armmbed.github.io/mbed-tools/api/third_party_IP_report.html)
 
 [![Build Status](https://dev.azure.com/mbed-tools/mbed-tools/_apis/build/status/Build%20and%20Release?branchName=master&stageName=CI%20Checkpoint)](https://dev.azure.com/mbed-tools/mbed-tools/_build/latest?definitionId=10&branchName=master)
 [![Test Coverage](https://codecov.io/gh/ARMmbed/mbed-tools/branch/master/graph/badge.svg)](https://codecov.io/gh/ARMmbed/mbed-tools)
