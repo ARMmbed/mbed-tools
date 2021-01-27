@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+5.1.0 (2021-01-27)
+==================
+
+Features
+--------
+
+- Targets modified: MAX32625MBED. (#20210127050123)
+
+
+Misc
+----
+
+- #20210126131920
+
+
 5.0.0 (2021-01-22)
 ==================
 

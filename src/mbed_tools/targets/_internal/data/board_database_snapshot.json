@@ -2484,7 +2484,9 @@
         "target_type": "platform",
         "slug": "MAX32625MBED",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 6.6"
+        ],
         "mbed_enabled": []
     },
     {
