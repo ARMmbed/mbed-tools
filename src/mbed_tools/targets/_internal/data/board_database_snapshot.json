@@ -483,31 +483,11 @@
         ]
     },
     {
-        "board_type": "OKDO_ODIN_W2",
-        "board_name": "OKdo ODIN-W2",
-        "product_code": "1280",
-        "target_type": "platform",
-        "slug": "OKdo_ODIN_W2",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
         "board_type": "WIO_R410",
         "board_name": "Seeed Wio SARA-R410",
         "product_code": "9016",
         "target_type": "platform",
         "slug": "Seeed-Wio-SARA-R410",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "S3JT100",
-        "board_name": "S3JT100",
-        "product_code": "3702",
-        "target_type": "platform",
-        "slug": "S3JT100",
         "build_variant": [],
         "mbed_os_support": [],
         "mbed_enabled": []
@@ -775,16 +755,6 @@
         "mbed_enabled": [
             "Baseline"
         ]
-    },
-    {
-        "board_type": "MTB_ACONNO_ACN52832",
-        "board_name": "MTB_ACONNO_ACN52832",
-        "product_code": "0472",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE23",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
     },
     {
         "board_type": "LPC55S69_NS",
@@ -1489,36 +1459,6 @@
         "mbed_enabled": []
     },
     {
-        "board_type": "ADV_WISE_1570",
-        "board_name": "ADV_WISE_1570",
-        "product_code": "0460",
-        "target_type": "platform",
-        "slug": "ADV_WISE_1570",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "ADV_WISE_1530",
-        "board_name": "ADV_WISE_1530",
-        "product_code": "0459",
-        "target_type": "platform",
-        "slug": "ADV_WISE_1530",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "ADV_WISE_1510",
-        "board_name": "ADV_WISE_1510",
-        "product_code": "0458",
-        "target_type": "platform",
-        "slug": "ADV_WISE_1510",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
         "board_type": "MTB_RAK811",
         "board_name": "MTB_RAK811",
         "product_code": "0457",
@@ -1702,16 +1642,6 @@
         "product_code": "5005",
         "target_type": "platform",
         "slug": "ARM-MPS3",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "VBLUNO51",
-        "board_name": "VNG VBLUNO51",
-        "product_code": "C006",
-        "target_type": "platform",
-        "slug": "VBLUNO51",
         "build_variant": [],
         "mbed_os_support": [],
         "mbed_enabled": []
@@ -2127,16 +2057,6 @@
         "mbed_enabled": []
     },
     {
-        "board_type": "PLACEHOLDER",
-        "board_name": "ADZS-U4050LF-EZKIT",
-        "product_code": "1271",
-        "target_type": "platform",
-        "slug": "ADZS-U4050LF-EZKIT",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
         "board_type": "MAX32620FTHR",
         "board_name": "MAX32620FTHR",
         "product_code": "0418",
@@ -2409,7 +2329,9 @@
         "target_type": "platform",
         "slug": "MAX32625PICO",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 6.6"
+        ],
         "mbed_enabled": []
     },
     {
@@ -3185,16 +3107,6 @@
         "product_code": "1011",
         "target_type": "platform",
         "slug": "LPCXpresso1769",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "SAMG55J19",
-        "board_name": "Atmel ATSAMG55-XPRO",
-        "product_code": "0920",
-        "target_type": "platform",
-        "slug": "SAMG55-XPRO",
         "build_variant": [],
         "mbed_os_support": [],
         "mbed_enabled": []

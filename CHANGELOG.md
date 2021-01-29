@@ -12,6 +12,23 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+5.2.0 (2021-01-29)
+==================
+
+Features
+--------
+
+- Add Cortex-M55 target definitions (#20210127171548)
+- Targets removed: ADV_WISE_1510, ADV_WISE_1530, ADV_WISE_1570, ADZS-U4050LF-EZKIT, Atmel ATSAMG55-XPRO, MTB_ACONNO_ACN52832, OKdo ODIN-W2, S3JT100, VNG VBLUNO51.
+  Targets modified: MAX32625PICO. (#20210129050125)
+
+
+Misc
+----
+
+- #20210127150731
+
+
 5.1.0 (2021-01-27)
 ==================
 
