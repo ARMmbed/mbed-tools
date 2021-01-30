@@ -188,6 +188,16 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "ARM_MPS2_M55",
+        "board_name": "arm_mps2_m55",
+        "product_code": "5010",
+        "target_type": "platform",
+        "slug": "arm_mps2_m55",
+        "build_variant": [],
+        "mbed_os_support": [],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "TMPM4KN",
         "board_name": "SBK-M4KN development board",
         "product_code": "7020",

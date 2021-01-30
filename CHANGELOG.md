@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+5.3.0 (2021-01-30)
+==================
+
+Features
+--------
+
+- Targets added: arm_mps2_m55. (#20210130050107)
+
+
 5.2.0 (2021-01-29)
 ==================
 
