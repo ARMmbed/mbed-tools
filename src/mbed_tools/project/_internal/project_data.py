@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 
 # Mbed program file names and constants.
 APP_CONFIG_FILE_NAME = "mbed_app.json"
+BUILD_DIR = "cmake_build"
 CMAKE_CONFIG_FILE_PATH = Path(".mbedbuild", "mbed_config.cmake")
-CMAKE_BUILD_DIR = "cmake_build"
 CMAKELISTS_FILE_NAME = "CMakeLists.txt"
 MAIN_CPP_FILE_NAME = "main.cpp"
 MBED_OS_REFERENCE_FILE_NAME = "mbed-os.lib"
@@ -80,7 +80,7 @@ class MbedProgramFiles:
         main_cpp = root_path / MAIN_CPP_FILE_NAME
         gitignore = root_path / ".gitignore"
         cmake_config = root_path / CMAKE_CONFIG_FILE_PATH
-        cmake_build_dir = root_path / CMAKE_BUILD_DIR
+        cmake_build_dir = root_path / BUILD_DIR
         custom_targets_json = root_path / CUSTOM_TARGETS_JSON_FILE_NAME
 
         if mbed_os_ref.exists():
@@ -101,11 +101,12 @@ class MbedProgramFiles:
         )
 
     @classmethod
-    def from_existing(cls, root_path: Path) -> "MbedProgramFiles":
+    def from_existing(cls, root_path: Path, build_subdir: Path) -> "MbedProgramFiles":
         """Create MbedProgramFiles from a directory containing an existing program.
 
         Args:
             root_path: The path containing the MbedProgramFiles.
+            build_subdir: The subdirectory of BUILD_DIR to use for CMake build.
         """
         app_config: Optional[Path]
         app_config = root_path / APP_CONFIG_FILE_NAME
@@ -119,13 +120,14 @@ class MbedProgramFiles:
         cmakelists_file = root_path / CMAKELISTS_FILE_NAME
         if not cmakelists_file.exists():
             logger.warning("No CMakeLists.txt found in the program root.")
+        cmake_build_dir = root_path / BUILD_DIR / build_subdir
 
         return cls(
             app_config_file=app_config,
             mbed_os_ref=mbed_os_file,
             cmakelists_file=cmakelists_file,
             cmake_config_file=root_path / CMAKE_CONFIG_FILE_PATH,
-            cmake_build_dir=root_path / CMAKE_BUILD_DIR,
+            cmake_build_dir=cmake_build_dir,
             custom_targets_json=custom_targets_json,
         )
 

@@ -66,11 +66,14 @@ class MbedProgram:
         return cls(program_files, mbed_os)
 
     @classmethod
-    def from_existing(cls, dir_path: Path, mbed_os_path: Path = None, check_mbed_os: bool = True) -> "MbedProgram":
+    def from_existing(
+        cls, dir_path: Path, build_subdir: Path, mbed_os_path: Path = None, check_mbed_os: bool = True,
+    ) -> "MbedProgram":
         """Create an MbedProgram from an existing program directory.
 
         Args:
             dir_path: Directory containing an Mbed program.
+            build_subdir: The subdirectory for the CMake build tree.
             mbed_os_path: Directory containing Mbed OS.
             check_mbed_os: If True causes an exception to be raised if the Mbed OS source directory does not
                            exist.
@@ -85,7 +88,7 @@ class MbedProgram:
             program_root = dir_path
 
         logger.info(f"Found existing Mbed program at path '{program_root}'")
-        program = MbedProgramFiles.from_existing(program_root)
+        program = MbedProgramFiles.from_existing(program_root, build_subdir)
 
         try:
             mbed_os = MbedOS.from_existing(mbed_os_path, check_mbed_os)

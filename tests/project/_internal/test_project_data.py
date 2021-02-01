@@ -58,7 +58,7 @@ class TestMbedProgramFiles(TestCase):
         root = pathlib.Path(fs, "foo")
         make_mbed_program_files(root)
 
-        program = MbedProgramFiles.from_existing(root)
+        program = MbedProgramFiles.from_existing(root, pathlib.Path("K64F", "develop", "GCC_ARM"))
 
         self.assertTrue(program.app_config_file.exists())
         self.assertTrue(program.mbed_os_ref.exists())

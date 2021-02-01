@@ -14,6 +14,16 @@ from mbed_tools.project._internal.project_data import MbedProgramFiles
 from tests.project.factories import make_mbed_program_files, make_mbed_os_files, patchfs
 
 
+DEFAULT_BUILD_SUBDIR = pathlib.Path("K64F", "develop", "GCC_ARM")
+
+
+def from_new_set_target_toolchain(program_root):
+    program = MbedProgram.from_new(program_root)
+    parent_build_dir = program.files.cmake_build_dir
+    program.files.cmake_build_dir = parent_build_dir / DEFAULT_BUILD_SUBDIR
+    return program
+
+
 class TestInitialiseProgram(TestCase):
     @patchfs
     def test_from_new_local_dir_raises_if_path_is_existing_program(self, fs):
@@ -30,9 +40,9 @@ class TestInitialiseProgram(TestCase):
         fs_root.mkdir()
         program_root = fs_root / "programfoo"
 
-        program = MbedProgram.from_new(program_root)
+        program = from_new_set_target_toolchain(program_root)
 
-        self.assertEqual(program.files, MbedProgramFiles.from_existing(program_root))
+        self.assertEqual(program.files, MbedProgramFiles.from_existing(program_root, DEFAULT_BUILD_SUBDIR))
 
     @patchfs
     def test_from_new_local_dir_generates_valid_program_creating_directory_in_cwd(self, fs):
@@ -43,9 +53,9 @@ class TestInitialiseProgram(TestCase):
             os.chdir(fs_root)
             program_root = pathlib.Path("programfoo")
 
-            program = MbedProgram.from_new(program_root)
+            program = from_new_set_target_toolchain(program_root)
 
-            self.assertEqual(program.files, MbedProgramFiles.from_existing(program_root))
+            self.assertEqual(program.files, MbedProgramFiles.from_existing(program_root, DEFAULT_BUILD_SUBDIR))
         finally:
             os.chdir(old_cwd)
 
@@ -56,9 +66,9 @@ class TestInitialiseProgram(TestCase):
         program_root = fs_root / "programfoo"
         program_root.mkdir()
 
-        program = MbedProgram.from_new(program_root)
+        program = from_new_set_target_toolchain(program_root)
 
-        self.assertEqual(program.files, MbedProgramFiles.from_existing(program_root))
+        self.assertEqual(program.files, MbedProgramFiles.from_existing(program_root, DEFAULT_BUILD_SUBDIR))
 
     @patchfs
     def test_from_existing_raises_if_path_is_not_a_program(self, fs):
@@ -67,7 +77,7 @@ class TestInitialiseProgram(TestCase):
         program_root = fs_root / "programfoo"
 
         with self.assertRaises(ProgramNotFound):
-            MbedProgram.from_existing(program_root)
+            MbedProgram.from_existing(program_root, DEFAULT_BUILD_SUBDIR)
 
     @patchfs
     def test_from_existing_raises_if_no_mbed_os_dir_found_and_check_mbed_os_is_true(self, fs):
@@ -75,7 +85,7 @@ class TestInitialiseProgram(TestCase):
         make_mbed_program_files(fs_root)
 
         with self.assertRaises(MbedOSNotFound):
-            MbedProgram.from_existing(fs_root, check_mbed_os=True)
+            MbedProgram.from_existing(fs_root, DEFAULT_BUILD_SUBDIR, check_mbed_os=True)
 
     @patchfs
     def test_from_existing_returns_valid_program(self, fs):
@@ -83,7 +93,7 @@ class TestInitialiseProgram(TestCase):
         make_mbed_program_files(fs_root)
         make_mbed_os_files(fs_root / "mbed-os")
 
-        program = MbedProgram.from_existing(fs_root)
+        program = MbedProgram.from_existing(fs_root, DEFAULT_BUILD_SUBDIR)
 
         self.assertTrue(program.files.app_config_file.exists())
         self.assertTrue(program.mbed_os.root.exists())
@@ -96,7 +106,7 @@ class TestInitialiseProgram(TestCase):
         make_mbed_program_files(fs_root)
         make_mbed_os_files(mbed_os_path)
 
-        program = MbedProgram.from_existing(fs_root, mbed_os_path)
+        program = MbedProgram.from_existing(fs_root, DEFAULT_BUILD_SUBDIR, mbed_os_path)
 
         self.assertTrue(program.files.app_config_file.exists())
         self.assertTrue(program.mbed_os.root.exists())

@@ -12,26 +12,29 @@ from unittest import TestCase, mock
 from click.testing import CliRunner
 
 from mbed_tools.cli.build import build
-from mbed_tools.project._internal.project_data import CMAKE_CONFIG_FILE_PATH, CMAKE_BUILD_DIR
+from mbed_tools.project._internal.project_data import BUILD_DIR, CMAKE_CONFIG_FILE_PATH
 
 
 DEFAULT_BUILD_ARGS = ["-t", "GCC_ARM", "-m", "K64F"]
+DEFAULT_BUILD_SUBDIR = pathlib.Path("K64F", "develop", "GCC_ARM")
 
 
 @contextlib.contextmanager
-def mock_project_directory(program, mbed_config_exists=False, build_tree_exists=False):
+def mock_project_directory(
+    program, mbed_config_exists=False, build_tree_exists=False, build_subdir=DEFAULT_BUILD_SUBDIR
+):
     with TemporaryDirectory() as tmp_dir:
         root = pathlib.Path(tmp_dir, "test-project")
         root.mkdir()
         program.root = root
-        program.files.cmake_build_dir = root / CMAKE_BUILD_DIR
+        program.files.cmake_build_dir = root / BUILD_DIR / build_subdir
         program.files.cmake_config_file = root / CMAKE_CONFIG_FILE_PATH
         if mbed_config_exists:
             program.files.cmake_config_file.parent.mkdir(exist_ok=True)
             program.files.cmake_config_file.touch(exist_ok=True)
 
         if build_tree_exists:
-            program.files.cmake_build_dir.mkdir(exist_ok=True)
+            program.files.cmake_build_dir.mkdir(exist_ok=True, parents=True)
 
         yield
 
@@ -47,7 +50,7 @@ class TestBuildCommand(TestCase):
         runner = CliRunner()
         runner.invoke(build, DEFAULT_BUILD_ARGS)
 
-        mbed_program.from_existing.assert_called_once_with(pathlib.Path(os.getcwd()))
+        mbed_program.from_existing.assert_called_once_with(pathlib.Path(os.getcwd()), DEFAULT_BUILD_SUBDIR)
 
     def test_searches_for_mbed_program_at_user_defined_project_root(
         self, generate_config, mbed_program, build_project, generate_build_system
@@ -57,7 +60,7 @@ class TestBuildCommand(TestCase):
         runner = CliRunner()
         runner.invoke(build, ["-p", project_path, *DEFAULT_BUILD_ARGS])
 
-        mbed_program.from_existing.assert_called_once_with(pathlib.Path(project_path))
+        mbed_program.from_existing.assert_called_once_with(pathlib.Path(project_path), DEFAULT_BUILD_SUBDIR)
 
     def test_calls_generate_build_system_if_build_tree_nonexistent(
         self, generate_config, mbed_program, build_project, generate_build_system
@@ -73,7 +76,9 @@ class TestBuildCommand(TestCase):
         self, generate_config, mbed_program, build_project, generate_build_system
     ):
         program = mbed_program.from_existing()
-        with mock_project_directory(program, mbed_config_exists=False):
+        with mock_project_directory(
+            program, mbed_config_exists=False, build_subdir=pathlib.Path("K64F", "develop", "GCC_ARM")
+        ):
             target = "k64f"
             toolchain = "gcc_arm"
 
@@ -124,7 +129,12 @@ class TestBuildCommand(TestCase):
         self, generate_config, mbed_program, build_project, generate_build_system
     ):
         program = mbed_program.from_existing()
-        with mock_project_directory(program, mbed_config_exists=True, build_tree_exists=True):
+        with mock_project_directory(
+            program,
+            mbed_config_exists=True,
+            build_tree_exists=True,
+            build_subdir=pathlib.Path("K64F", "develop", "GCC_ARM"),
+        ):
             toolchain = "gcc_arm"
             target = "k64f"
             mbed_os_path = "./extern/mbed-os"
@@ -154,7 +164,12 @@ class TestBuildCommand(TestCase):
         self, generate_config, mbed_program, build_project, generate_build_system
     ):
         program = mbed_program.from_existing()
-        with mock_project_directory(program, mbed_config_exists=True, build_tree_exists=True):
+        with mock_project_directory(
+            program,
+            mbed_config_exists=True,
+            build_tree_exists=True,
+            build_subdir=pathlib.Path("K64F", "develop", "GCC_ARM"),
+        ):
             toolchain = "gcc_arm"
             target = "k64f"
 

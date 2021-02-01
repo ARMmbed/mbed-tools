@@ -87,10 +87,11 @@ def build(
        baudrate: Change the serial baud rate (ignored unless --sterm is also given).
     """
     _validate_target_and_toolchain_args(mbed_target, toolchain)
+    cmake_build_subdir = pathlib.Path(mbed_target.upper(), profile.lower(), toolchain.upper())
     if mbed_os_path is None:
-        program = MbedProgram.from_existing(pathlib.Path(program_path))
+        program = MbedProgram.from_existing(pathlib.Path(program_path), cmake_build_subdir)
     else:
-        program = MbedProgram.from_existing(pathlib.Path(program_path), pathlib.Path(mbed_os_path))
+        program = MbedProgram.from_existing(pathlib.Path(program_path), cmake_build_subdir, pathlib.Path(mbed_os_path))
     build_tree = program.files.cmake_build_dir
     if clean and build_tree.exists():
         shutil.rmtree(build_tree)
