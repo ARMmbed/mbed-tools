@@ -48,10 +48,11 @@ def configure(toolchain: str, mbed_target: str, program_path: str, mbed_os_path:
         program_path: the path to the local Mbed program
         mbed_os_path: the path to the local Mbed OS directory
     """
+    cmake_build_subdir = pathlib.Path(mbed_target.upper(), "develop", toolchain.upper())
     if mbed_os_path is None:
-        program = MbedProgram.from_existing(pathlib.Path(program_path))
+        program = MbedProgram.from_existing(pathlib.Path(program_path), cmake_build_subdir)
     else:
-        program = MbedProgram.from_existing(pathlib.Path(program_path), pathlib.Path(mbed_os_path))
+        program = MbedProgram.from_existing(pathlib.Path(program_path), cmake_build_subdir, pathlib.Path(mbed_os_path))
     mbed_target = mbed_target.upper()
     output_path = generate_config(mbed_target, toolchain, program)
     click.echo(f"mbed_config.cmake has been generated and written to '{str(output_path.resolve())}'")
