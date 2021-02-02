@@ -44,8 +44,10 @@ def prepare(
     namespace = data.pop("name", source_name)
     for key in data:
         if isinstance(data[key], list):
-            data[key] = set(data[key])
-
+            try:
+                data[key] = set(data[key])
+            except TypeError:
+                data[key] = set(*data[key])
     if "config" in data:
         data["config"] = _extract_config_settings(namespace, data["config"])
 
