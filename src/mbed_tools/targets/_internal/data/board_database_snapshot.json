@@ -232,16 +232,6 @@
         "mbed_enabled": []
     },
     {
-        "board_type": "PLACEHOLDER",
-        "board_name": "MCB4300",
-        "product_code": "0",
-        "target_type": "platform",
-        "slug": "MCB4300",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
         "board_type": "MIMXRT1180_EVK",
         "board_name": "MIMXRT1180-EVK",
         "product_code": "0239",
@@ -739,16 +729,6 @@
         ]
     },
     {
-        "board_type": "EFM32TG11_STK3301",
-        "board_name": "EFM32 Tiny Gecko 11",
-        "product_code": "2043",
-        "target_type": "platform",
-        "slug": "EFM32-Tiny-Gecko-11",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
         "board_type": "GD32_E103VB",
         "board_name": "GD32-E103VB",
         "product_code": "1703",
@@ -980,9 +960,7 @@
         "target_type": "platform",
         "slug": "S5JS100",
         "build_variant": [],
-        "mbed_os_support": [
-            "Mbed OS 5.15"
-        ],
+        "mbed_os_support": [],
         "mbed_enabled": []
     },
     {

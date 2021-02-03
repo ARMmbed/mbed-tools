@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+5.4.0 (2021-02-03)
+==================
+
+Features
+--------
+
+- Targets removed: EFM32 Tiny Gecko 11, MCB4300.
+  Targets modified: S5JS100. (#20210203050126)
+
+
 5.3.0 (2021-01-30)
 ==================
 
