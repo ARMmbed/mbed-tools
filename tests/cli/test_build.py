@@ -15,6 +15,9 @@ from mbed_tools.cli.build import build
 from mbed_tools.project._internal.project_data import CMAKE_CONFIG_FILE_PATH, CMAKE_BUILD_DIR
 
 
+DEFAULT_BUILD_ARGS = ["-t", "GCC_ARM", "-m", "K64F"]
+
+
 @contextlib.contextmanager
 def mock_project_directory(program, mbed_config_exists=False, build_tree_exists=False):
     with TemporaryDirectory() as tmp_dir:
@@ -42,7 +45,7 @@ class TestBuildCommand(TestCase):
         self, generate_config, mbed_program, build_project, generate_build_system
     ):
         runner = CliRunner()
-        runner.invoke(build)
+        runner.invoke(build, DEFAULT_BUILD_ARGS)
 
         mbed_program.from_existing.assert_called_once_with(pathlib.Path(os.getcwd()))
 
@@ -52,7 +55,7 @@ class TestBuildCommand(TestCase):
         project_path = "my-blinky"
 
         runner = CliRunner()
-        runner.invoke(build, ["-p", project_path])
+        runner.invoke(build, ["-p", project_path, *DEFAULT_BUILD_ARGS])
 
         mbed_program.from_existing.assert_called_once_with(pathlib.Path(project_path))
 
@@ -62,7 +65,7 @@ class TestBuildCommand(TestCase):
         program = mbed_program.from_existing()
         with mock_project_directory(program, mbed_config_exists=True, build_tree_exists=False):
             runner = CliRunner()
-            runner.invoke(build, ["-m", "k64f", "-t", "gcc_arm"])
+            runner.invoke(build, DEFAULT_BUILD_ARGS)
 
             generate_build_system.assert_called_once_with(program.root, program.files.cmake_build_dir, "develop")
 
@@ -72,7 +75,7 @@ class TestBuildCommand(TestCase):
         program = mbed_program.from_existing()
         with mock_project_directory(program, mbed_config_exists=True, build_tree_exists=True):
             runner = CliRunner()
-            runner.invoke(build)
+            runner.invoke(build, DEFAULT_BUILD_ARGS)
 
             generate_build_system.assert_not_called()
 
@@ -115,19 +118,17 @@ class TestBuildCommand(TestCase):
             self.assertIsNotNone(result.exception)
             self.assertRegex(result.output, "--mbed-target")
 
-    def test_build_system_regenerated_when_target_and_toolchain_passed(
+    def test_raises_if_gen_config_target_toolchain_not_passed(
         self, generate_config, mbed_program, build_project, generate_build_system
     ):
         program = mbed_program.from_existing()
-        with mock_project_directory(program, mbed_config_exists=True, build_tree_exists=True):
-            toolchain = "gcc_arm"
-            target = "k64f"
-
+        with mock_project_directory(program):
             runner = CliRunner()
-            runner.invoke(build, ["-t", toolchain, "-m", target])
+            result = runner.invoke(build)
 
-            generate_config.assert_called_once_with(target.upper(), toolchain.upper(), program)
-            generate_build_system.assert_called_once_with(program.root, program.files.cmake_build_dir, "develop")
+            self.assertIsNotNone(result.exception)
+            self.assertRegex(result.output, "--mbed-target")
+            self.assertRegex(result.output, "--toolchain")
 
     def test_build_system_regenerated_when_mbed_os_path_passed(
         self, generate_config, mbed_program, build_project, generate_build_system
@@ -180,7 +181,7 @@ class TestBuildCommand(TestCase):
         self, mock_find_device, flash_binary, generate_config, mbed_program, build_project, generate_build_system
     ):
         runner = CliRunner()
-        runner.invoke(build, ["--flash"])
+        runner.invoke(build, ["--flash", *DEFAULT_BUILD_ARGS])
         flash_binary.assert_called_once()
 
     @mock.patch("mbed_tools.cli.build.flash_binary")
@@ -189,14 +190,14 @@ class TestBuildCommand(TestCase):
         self, mock_find_device, flash_binary, generate_config, mbed_program, build_project, generate_build_system
     ):
         runner = CliRunner()
-        runner.invoke(build, ["--flash", "--hex-file"])
+        runner.invoke(build, ["--flash", "--hex-file", *DEFAULT_BUILD_ARGS])
         call_args = flash_binary.call_args
         args, kwargs = call_args
         flash_binary.assert_called_once_with(args[0], args[1], args[2], args[3], True)
 
     def test_build_only_hex_file_option(self, generate_config, mbed_program, build_project, generate_build_system):
         runner = CliRunner()
-        result = runner.invoke(build, ["--hex-file"])
+        result = runner.invoke(build, ["--hex-file", *DEFAULT_BUILD_ARGS])
 
         self.assertRegex(result.output, "-f/--flash")
 

@@ -86,6 +86,7 @@ def build(
        sterm: Open a serial terminal to the connected target.
        baudrate: Change the serial baud rate (ignored unless --sterm is also given).
     """
+    _validate_target_and_toolchain_args(mbed_target, toolchain)
     if mbed_os_path is None:
         program = MbedProgram.from_existing(pathlib.Path(program_path))
     else:
@@ -94,13 +95,17 @@ def build(
     build_tree = program.files.cmake_build_dir
     if clean and build_tree.exists():
         shutil.rmtree(build_tree)
-
-    if any([not mbed_config_file.exists(), not build_tree.exists(), mbed_target, toolchain]):
+    if any(
+        [
+            not mbed_config_file.exists(),
+            not build_tree.exists(),
+            mbed_os_path is not None,
+            custom_targets_json is not None,
+        ]
+    ):
         click.echo("Configuring project and generating build system...")
-        _validate_target_and_toolchain_args(mbed_target, toolchain)
         if custom_targets_json is not None:
             program.files.custom_targets_json = pathlib.Path(custom_targets_json)
-
         generate_config(mbed_target.upper(), toolchain, program)
         generate_build_system(program.root, build_tree, profile)
 
@@ -127,4 +132,6 @@ def build(
 
 def _validate_target_and_toolchain_args(target: str, toolchain: str) -> None:
     if not all([toolchain, target]):
-        raise click.UsageError("--toolchain and --mbed-target arguments are required when generating Mbed config!")
+        raise click.UsageError(
+            "Both --toolchain and --mbed-target arguments are required when using the compile subcommand."
+        )
