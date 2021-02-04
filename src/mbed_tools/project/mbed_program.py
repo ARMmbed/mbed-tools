@@ -71,7 +71,7 @@ class MbedProgram:
 
         Args:
             dir_path: Directory containing an Mbed program.
-            mbed_os_path: Directory containing Mbed OS
+            mbed_os_path: Directory containing Mbed OS.
             check_mbed_os: If True causes an exception to be raised if the Mbed OS source directory does not
                            exist.
 

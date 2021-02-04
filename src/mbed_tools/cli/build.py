@@ -75,7 +75,7 @@ def build(
 
     Args:
        program_path: Path to the Mbed project.
-       mbed_os_path: the path to the local Mbed OS directory
+       mbed_os_path: The path to the local Mbed OS directory.
        profile: The Mbed build profile (debug, develop or release).
        custom_targets_json: Path to custom_targets.json.
        toolchain: The toolchain to use for the build.
