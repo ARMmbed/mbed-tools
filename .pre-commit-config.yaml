@@ -4,7 +4,8 @@ repos:
     hooks:
       - id: licenseheaders
         exclude: \.yaml$|\.yml$
-        args: ["-t", "ci_scripts/templates/.copyright.tmpl", "-cy", "-f"]
+        args: ["-s", "ci_scripts/licenseheaders.json", "-t",
+        "ci_scripts/templates/.copyright.tmpl", "-cy", "-f"]
 
   - repo: https://github.com/psf/black
     rev: 19.10b0
