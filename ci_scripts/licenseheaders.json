@@ -1,0 +1,15 @@
+{
+    "cmake": {
+        "extensions": [],
+        "filenames": ["CMakeLists.txt"],
+        "keepFirst": "",
+        "blockCommentStartPattern": "",
+        "blockCommentEndPattern": "",
+        "lineCommentStartPattern": "^\\s*#",
+        "lineCommentEndPattern": "",
+        "headerStartLine": "",
+        "headerEndLine": "",
+        "headerLinePrefix": "# ",
+        "headerLineSuffix": ""
+    }
+}
