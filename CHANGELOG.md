@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+5.5.0 (2021-02-06)
+==================
+
+Features
+--------
+
+- Support custom_targets.json. (#20201222090211)
+
+
 5.4.0 (2021-02-03)
 ==================
 
