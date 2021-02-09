@@ -91,23 +91,15 @@ def build(
         program = MbedProgram.from_existing(pathlib.Path(program_path))
     else:
         program = MbedProgram.from_existing(pathlib.Path(program_path), pathlib.Path(mbed_os_path))
-    mbed_config_file = program.files.cmake_config_file
     build_tree = program.files.cmake_build_dir
     if clean and build_tree.exists():
         shutil.rmtree(build_tree)
-    if any(
-        [
-            not mbed_config_file.exists(),
-            not build_tree.exists(),
-            mbed_os_path is not None,
-            custom_targets_json is not None,
-        ]
-    ):
-        click.echo("Configuring project and generating build system...")
-        if custom_targets_json is not None:
-            program.files.custom_targets_json = pathlib.Path(custom_targets_json)
-        generate_config(mbed_target.upper(), toolchain, program)
-        generate_build_system(program.root, build_tree, profile)
+
+    click.echo("Configuring project and generating build system...")
+    if custom_targets_json is not None:
+        program.files.custom_targets_json = pathlib.Path(custom_targets_json)
+    generate_config(mbed_target.upper(), toolchain, program)
+    generate_build_system(program.root, build_tree, profile)
 
     click.echo("Building Mbed project...")
     build_project(build_tree)
