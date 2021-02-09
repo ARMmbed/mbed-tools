@@ -69,16 +69,6 @@ class TestBuildCommand(TestCase):
 
             generate_build_system.assert_called_once_with(program.root, program.files.cmake_build_dir, "develop")
 
-    def test_generate_build_system_not_called_if_build_tree_exists(
-        self, generate_config, mbed_program, build_project, generate_build_system
-    ):
-        program = mbed_program.from_existing()
-        with mock_project_directory(program, mbed_config_exists=True, build_tree_exists=True):
-            runner = CliRunner()
-            runner.invoke(build, DEFAULT_BUILD_ARGS)
-
-            generate_build_system.assert_not_called()
-
     def test_generate_config_called_if_config_script_nonexistent(
         self, generate_config, mbed_program, build_project, generate_build_system
     ):
