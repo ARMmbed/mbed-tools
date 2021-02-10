@@ -1,1 +1,0 @@
-The compile subcommand now requires both toolchain and mbed-target arguments.

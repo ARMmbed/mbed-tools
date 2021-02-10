@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+6.0.0 (2021-02-10)
+==================
+
+Major changes
+-------------
+
+- The compile subcommand now requires both toolchain and mbed-target arguments. (#20210203124012)
+
+
+Features
+--------
+
+- Builds are now separated by target, profile and toolchain, allowing use of different configurations without clearing previous builds. (#141)
+
+
 5.5.0 (2021-02-06)
 ==================
 
