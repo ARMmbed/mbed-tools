@@ -12,7 +12,8 @@ from unittest import TestCase, mock
 from click.testing import CliRunner
 
 from mbed_tools.cli.build import build
-from mbed_tools.project._internal.project_data import BUILD_DIR, CMAKE_CONFIG_FILE_PATH
+from mbed_tools.project._internal.project_data import BUILD_DIR
+from mbed_tools.build.config import CMAKE_CONFIG_FILE
 
 
 DEFAULT_BUILD_ARGS = ["-t", "GCC_ARM", "-m", "K64F"]
@@ -28,9 +29,9 @@ def mock_project_directory(
         root.mkdir()
         program.root = root
         program.files.cmake_build_dir = root / BUILD_DIR / build_subdir
-        program.files.cmake_config_file = root / CMAKE_CONFIG_FILE_PATH
+        program.files.cmake_config_file = root / BUILD_DIR / build_subdir / CMAKE_CONFIG_FILE
         if mbed_config_exists:
-            program.files.cmake_config_file.parent.mkdir(exist_ok=True)
+            program.files.cmake_config_file.parent.mkdir(exist_ok=True, parents=True)
             program.files.cmake_config_file.touch(exist_ok=True)
 
         if build_tree_exists:

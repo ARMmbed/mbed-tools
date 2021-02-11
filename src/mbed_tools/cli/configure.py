@@ -33,7 +33,7 @@ from mbed_tools.build import generate_config
     "--mbed-os-path", type=click.Path(), default=None, help="Path to local Mbed OS directory.",
 )
 def configure(toolchain: str, mbed_target: str, program_path: str, mbed_os_path: str) -> None:
-    """Exports a mbed_config.cmake file to a .mbedbuild directory in the program root.
+    """Exports a mbed_config.cmake file to build directory in the program root.
 
     The parameters set in the CMake file will be dependent on the combination of
     toolchain and Mbed target provided and these can then control which parts of

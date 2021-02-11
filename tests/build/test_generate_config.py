@@ -8,6 +8,7 @@ import pytest
 
 from mbed_tools.project import MbedProgram
 from mbed_tools.build import generate_config
+from mbed_tools.build.config import CMAKE_CONFIG_FILE
 from mbed_tools.lib.exceptions import ToolsError
 
 
@@ -84,7 +85,7 @@ def test_target_and_toolchain_collected(program):
 
     generate_config(target, toolchain, program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert target in config_text
     assert toolchain in config_text
@@ -97,7 +98,7 @@ def test_custom_targets_data_found(program):
 
     generate_config(target, toolchain, program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert target in config_text
 
@@ -125,7 +126,7 @@ def test_config_param_from_lib_processed_with_default_name_mangling(program):
 
     generate_config("K64F", "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert "MBED_CONF_PLATFORM_STDIO_CONVERT_NEWLINES" in config_text
 
@@ -145,7 +146,7 @@ def test_config_param_from_lib_processed_with_user_set_name(program):
 
     generate_config("K64F", "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert "ENABLE_NEWLINES" in config_text
 
@@ -163,7 +164,7 @@ def test_config_param_from_app_processed_with_default_name_mangling(program):
 
     generate_config("K64F", "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert "MBED_CONF_APP_STDIO_CONVERT_NEWLINES" in config_text
 
@@ -171,7 +172,7 @@ def test_config_param_from_app_processed_with_default_name_mangling(program):
 def test_config_param_from_target_processed_with_default_name_mangling(program):
     generate_config("K64F", "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert "MBED_CONF_TARGET_XIP_ENABLE=0" in config_text
 
@@ -186,7 +187,7 @@ def test_macros_from_lib_collected(macros, program):
 
     generate_config("K64F", "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     for macro in macros:
         assert macro in config_text
@@ -202,7 +203,7 @@ def test_macros_from_app_collected(macros, program):
 
     generate_config("K64F", "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     for macro in macros:
         assert macro in config_text
@@ -211,7 +212,7 @@ def test_macros_from_app_collected(macros, program):
 def test_macros_from_target_collected(program):
     generate_config("K64F", "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     for macro in TARGET_DATA["macros"]:
         assert macro in config_text
@@ -220,7 +221,7 @@ def test_macros_from_target_collected(program):
 def test_target_labels_collected_as_defines(program):
     generate_config("K64F", "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     for label in TARGET_DATA["labels"] + TARGET_DATA["extra_labels"]:
         assert f"TARGET_{label}" in config_text
@@ -247,7 +248,7 @@ def test_overrides_lib_config_param_from_app(matching_target_and_filter, program
     create_mbed_app_json(program.root, target_overrides={target_filter: {"platform.stdio-baud-rate": 115200}})
     generate_config(target, "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert "MBED_CONF_PLATFORM_STDIO_BAUD_RATE=115200" in config_text
 
@@ -258,7 +259,7 @@ def test_overrides_target_config_param_from_app(matching_target_and_filter, prog
 
     generate_config(target, "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert "MBED_CONF_TARGET_XIP_ENABLE=1" in config_text
 
@@ -284,7 +285,7 @@ def test_overrides_target_non_config_params_from_app(
 
     generate_config(target, "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert expected_output in config_text
 
@@ -299,7 +300,7 @@ def test_overrides_target_config_param_from_lib(matching_target_and_filter, prog
 
     generate_config(target, "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert "MBED_CONF_TARGET_XIP_ENABLE=1" in config_text
 
@@ -315,7 +316,7 @@ def test_overrides_lib_config_param_from_same_lib(matching_target_and_filter, pr
 
     generate_config(target, "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert "MBED_CONF_PLATFORM_STDIO_BAUD_RATE=115200" in config_text
 
@@ -354,7 +355,7 @@ def test_target_list_params_can_be_added_to(
 
     generate_config(target, "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     for expected in expected_output:
         assert expected in config_text
@@ -379,7 +380,7 @@ def test_target_list_params_can_be_removed(
 
     generate_config(target, "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert expected_output not in config_text
 
@@ -407,7 +408,7 @@ def test_settings_from_multiple_libs_included(matching_target_and_filter, progra
 
     generate_config(target, "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert "MBED_CONF_PLATFORM_STDIO_BAUD_RATE=9600" in config_text
     assert "MBED_LFS_READ_SIZE=64" in config_text
@@ -427,7 +428,7 @@ def test_requires_config_option(program):
 
     generate_config("K64F", "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert "MBED_CONF_PLATFORM_STDIO_BAUD_RATE=9600" in config_text
     assert "MBED_LFS_READ_SIZE=64" not in config_text
@@ -451,7 +452,7 @@ def test_target_requires_config_option(program):
 
     generate_config("K64F", "GCC_ARM", program)
 
-    config_text = program.files.cmake_config_file.read_text()
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert "MBED_CONF_PLATFORM_STDIO_BAUD_RATE=9600" in config_text
     assert "MBED_LFS_READ_SIZE=64" not in config_text
