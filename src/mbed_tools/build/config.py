@@ -15,6 +15,8 @@ from mbed_tools.build._internal.config.assemble_build_config import assemble_con
 from mbed_tools.build._internal.write_files import write_file
 from mbed_tools.build.exceptions import MbedBuildError
 
+CMAKE_CONFIG_FILE = "mbed_config.cmake"
+
 
 def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> pathlib.Path:
     """Generate an Mbed config file at the program root by parsing the mbed config system.
@@ -33,7 +35,7 @@ def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> p
     cmake_file_contents = render_mbed_config_cmake_template(
         target_name=target_name, config=config, toolchain_name=toolchain,
     )
-    cmake_config_file_path = program.files.cmake_config_file
+    cmake_config_file_path = program.files.cmake_build_dir / CMAKE_CONFIG_FILE
     write_file(cmake_config_file_path, cmake_file_contents)
     return cmake_config_file_path
 
