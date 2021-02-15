@@ -113,6 +113,9 @@ def parse_url(name_or_url: str) -> Dict[str, str]:
     url_obj = urlparse(name_or_url)
     if url_obj.hostname:
         url = url_obj.geturl()
+    elif ":" in name_or_url.split("/", maxsplit=1)[0]:
+        # If non-standard and no slashes before first colon, git will recognize as scp ssh syntax
+        url = name_or_url
     else:
         url = f"https://github.com/armmbed/{url_obj.path}"
     # We need to create a valid directory name from the url path section.

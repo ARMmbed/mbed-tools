@@ -127,6 +127,12 @@ class TestParseURL(TestCase):
         self.assertEqual(data["url"], url)
         self.assertEqual(data["dst_path"], "mbed-os-example-numskull")
 
+    def test_creates_valid_dst_dir_from_ssh_url(self):
+        url = "git@superversioncontrol:superorg/mbed-os-example-numskull"
+        data = parse_url(url)
+        self.assertEqual(data["url"], url)
+        self.assertEqual(data["dst_path"], "mbed-os-example-numskull")
+
 
 class TestFindProgramRoot(TestCase):
     @patchfs
