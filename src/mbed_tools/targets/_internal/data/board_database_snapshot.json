@@ -2358,7 +2358,7 @@
         "slug": "MAX32625PICO",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 6.6"
+            "Mbed OS 6.7"
         ],
         "mbed_enabled": []
     },
@@ -2437,9 +2437,12 @@
         "slug": "MAX32625MBED",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 6.6"
+            "Mbed OS 6.7"
         ],
-        "mbed_enabled": []
+        "mbed_enabled": [
+            "Advanced",
+            "Baseline"
+        ]
     },
     {
         "board_type": "DELTA_DFCM_NNN50",

@@ -1,1 +1,0 @@
-config: move mbed config cmake `mbed_config.cmake` file from root to build directory.

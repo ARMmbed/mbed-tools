@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.0.0 (2021-02-16)
+==================
+
+Major changes
+-------------
+
+- config: move mbed config cmake `mbed_config.cmake` file from root to build directory. (#20210210161209)
+
+
+Features
+--------
+
+- Targets modified: MAX32625MBED, MAX32625PICO. (#20210216050133)
+
+
 6.1.0 (2021-02-12)
 ==================
 

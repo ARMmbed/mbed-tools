@@ -96,9 +96,6 @@ def build(
 ) -&gt; None:
     &#34;&#34;&#34;Configure and build an Mbed project using CMake and Ninja.
 
-    If the project has already been configured and contains &#39;.mbedbuild/mbed_config.cmake&#39;, this command will skip the
-    Mbed configuration step and invoke CMake.
-
     If the CMake configuration step has already been run previously (i.e a CMake build tree exists), then just try to
     build the project immediately using Ninja.
 
