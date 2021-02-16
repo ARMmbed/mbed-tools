@@ -47,6 +47,30 @@ class TestConfig:
         assert network_iface.value == "ETHERNET"
         assert conf["device_has"] == {"OVERRIDDEN"}
 
+    def test_target_overrides_separate_namespace(self):
+        conf = Config(
+            {
+                "config": [
+                    ConfigSetting(
+                        namespace="dontchangeme", name="network-default-interface-type", help_text="", value="WIFI"
+                    ),
+                    ConfigSetting(
+                        namespace="changeme", name="network-default-interface-type", help_text="", value="WIFI"
+                    ),
+                ]
+            }
+        )
+
+        conf.update(
+            {"overrides": [Override(namespace="changeme", name="network-default-interface-type", value="ETHERNET")]}
+        )
+
+        dontchangeme, changeme, *_ = conf["config"]
+        assert changeme.namespace == "changeme"
+        assert changeme.value == "ETHERNET"
+        assert dontchangeme.namespace == "dontchangeme"
+        assert dontchangeme.value == "WIFI"
+
     def test_lib_overrides_handled(self):
         conf = Config(
             {

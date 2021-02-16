@@ -43,7 +43,7 @@ class Config(UserDict):
                 _apply_override(self.data, override)
                 continue
 
-            setting = self._find_config_setting(lambda x: x.name == override.name)
+            setting = self._find_config_setting(lambda x: x.name == override.name and x.namespace == override.namespace)
             setting.value = override.value
 
     def _update_config_section(self, config_settings: List[ConfigSetting]) -> None:
