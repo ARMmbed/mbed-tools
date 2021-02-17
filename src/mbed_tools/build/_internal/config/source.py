@@ -122,7 +122,7 @@ def _extract_config_settings(namespace: str, config_data: dict) -> List[ConfigSe
         # being present, avoid adding it to the mbed_config.cmake
         # configuration file. Instead, applications should depend on
         # the feature or component with target_link_libraries() and the
-        # component's CMake flle (in the Mbed OS repo) will create
+        # component's CMake file (in the Mbed OS repo) will create
         # any necessary macros or definitions.
         if setting.name == "present":
             continue
