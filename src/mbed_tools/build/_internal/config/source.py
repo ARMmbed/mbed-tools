@@ -11,6 +11,7 @@ from typing import Iterable, Any, Optional, List
 
 from mbed_tools.lib.json_helpers import decode_json_file
 from mbed_tools.build.exceptions import InvalidConfigOverride
+from mbed_tools.lib.python_helpers import flatten_nested
 
 logger = logging.getLogger(__name__)
 
@@ -43,11 +44,8 @@ def prepare(
     data = input_data.copy()
     namespace = data.pop("name", source_name)
     for key in data:
-        if isinstance(data[key], list):
-            try:
-                data[key] = set(data[key])
-            except TypeError:
-                data[key] = set(*data[key])
+        data[key] = _sanitise_value(data[key])
+
     if "config" in data:
         data["config"] = _extract_config_settings(namespace, data["config"])
 
@@ -77,8 +75,7 @@ class ConfigSetting:
 
     def __post_init__(self) -> None:
         """Convert the value to a set if applicable."""
-        if isinstance(self.value, list):
-            self.value = set(self.value)
+        self.value = _sanitise_value(self.value)
 
 
 @dataclass
@@ -98,8 +95,7 @@ class Override:
         if self.name.endswith("_add") or self.name.endswith("_remove"):
             self.name, self.modifier = self.name.rsplit("_", maxsplit=1)
 
-        if isinstance(self.value, list):
-            self.value = set(self.value)
+        self.value = _sanitise_value(self.value)
 
 
 def _extract_config_settings(namespace: str, config_data: dict) -> List[ConfigSetting]:
@@ -161,3 +157,19 @@ def _extract_overrides(namespace: str, override_data: dict) -> List[Override]:
         overrides.append(Override(namespace=override_namespace, name=override_name, value=value))
 
     return overrides
+
+
+def _sanitise_value(val: Any) -> Any:
+    """Convert list values to sets and return scalar values and strings unchanged.
+
+    For whatever reason, we allowed config settings to have values of any type available in the JSON spec.
+    The value type can be a list, nested list, str, int, you name it.
+
+    When we process the config, we want to use sets instead of lists, this is for two reasons:
+    * To take advantage of set operations when we deal with "cumulative" settings.
+    * To prevent any duplicate settings ending up in the final config.
+    """
+    if isinstance(val, list):
+        return set(flatten_nested(val))
+
+    return val
