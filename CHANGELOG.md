@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.1.0 (2021-02-17)
+==================
+
+Features
+--------
+
+- Targets modified: NUCLEO-WL55JC, SDP-K1. (#20210217050139)
+
+
+Bugfixes
+--------
+
+- Take namespaces into account when applying target overrides. (#191)
+
+
 7.0.0 (2021-02-16)
 ==================
 

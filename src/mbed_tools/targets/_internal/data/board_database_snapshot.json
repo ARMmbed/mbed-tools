@@ -550,7 +550,9 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-WL55JC",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 6.7"
+        ],
         "mbed_enabled": []
     },
     {
@@ -846,7 +848,8 @@
             "Mbed OS 6.2",
             "Mbed OS 6.3",
             "Mbed OS 6.4",
-            "Mbed OS 6.5"
+            "Mbed OS 6.5",
+            "Mbed OS 6.7"
         ],
         "mbed_enabled": [
             "Baseline"
