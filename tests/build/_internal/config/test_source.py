@@ -110,9 +110,11 @@ class TestPrepareSource:
             "name": "library",
             "config": {"list-values": {"value": ["ETHERNET", "WIFI"]}},
             "sectors": [[0, 2048]],
+            "header_info": [[0, 2048], ["bobbins"], ["magic"]],
         }
 
         conf = source.prepare(lib)
 
         assert conf["config"][0].value == {"ETHERNET", "WIFI"}
         assert conf["sectors"] == {0, 2048}
+        assert conf["header_info"] == {0, 2048, "bobbins", "magic"}
