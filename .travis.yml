@@ -108,6 +108,42 @@ matrix:
       env: EXAMPLE_NAME=mbed-os-example-blinky TARGET_NAME=NRF52840_DK PROFILE=debug CACHE_NAME=debug-NRF52840_DK
 
     - <<: *mbed-tools-test
+      name: "Test blinky bare-metal example - develop (K64F)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky-baremetal TARGET_NAME=K64F PROFILE=develop CACHE_NAME=develop-K64F-baremetal
+
+    - <<: *mbed-tools-test
+      name: "Test blinky bare-metal example - release (K64F)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky-baremetal TARGET_NAME=K64F PROFILE=release CACHE_NAME=release-K64F-baremetal
+
+    - <<: *mbed-tools-test
+      name: "Test blinky bare-metal example - debug (K64F)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky-baremetal TARGET_NAME=K64F PROFILE=debug CACHE_NAME=debug-K64F-baremetal
+
+    - <<: *mbed-tools-test
+      name: "Test blinky bare-metal example - develop (DISCO_L475VG_IOT01A)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky-baremetal TARGET_NAME=DISCO_L475VG_IOT01A PROFILE=develop CACHE_NAME=develop-DISCO_L475VG_IOT01A-baremetal
+
+    - <<: *mbed-tools-test
+      name: "Test blinky bare-metal example - release (DISCO_L475VG_IOT01A)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky-baremetal TARGET_NAME=DISCO_L475VG_IOT01A PROFILE=release CACHE_NAME=release-DISCO_L475VG_IOT01A-baremetal
+
+    - <<: *mbed-tools-test
+      name: "Test blinky bare-metal example - debug (DISCO_L475VG_IOT01A)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky-baremetal TARGET_NAME=DISCO_L475VG_IOT01A PROFILE=debug CACHE_NAME=debug-DISCO_L475VG_IOT01A-baremetal
+
+    - <<: *mbed-tools-test
+      name: "Test blinky bare-metal example - develop (NRF52840_DK)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky-baremetal TARGET_NAME=NRF52840_DK PROFILE=develop CACHE_NAME=develop-NRF52840_DK-baremetal
+
+    - <<: *mbed-tools-test
+      name: "Test blinky bare-metal example - release (NRF52840_DK)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky-baremetal TARGET_NAME=NRF52840_DK PROFILE=release CACHE_NAME=release-NRF52840_DK-baremetal
+
+    - <<: *mbed-tools-test
+      name: "Test blinky bare-metal example - debug (NRF52840_DK)"
+      env: EXAMPLE_NAME=mbed-os-example-blinky-baremetal TARGET_NAME=NRF52840_DK PROFILE=debug CACHE_NAME=debug-NRF52840_DK-baremetal
+
+    - <<: *mbed-tools-test
       name: "Test kvstore example (K64F)"
       env: EXAMPLE_NAME=mbed-os-example-kvstore TARGET_NAME=K64F CACHE_NAME=kvstore-K64F
 
