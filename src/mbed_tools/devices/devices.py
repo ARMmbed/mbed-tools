@@ -4,7 +4,8 @@
 #
 """API for listing devices."""
 
-from typing import Optional
+from operator import attrgetter
+from typing import List, Optional
 
 from mbed_tools.targets.exceptions import MbedTargetsError
 from mbed_tools.targets import Board
@@ -48,27 +49,43 @@ def find_connected_device(target_name: str) -> Device:
     Args:
         target_name: The Mbed target name of the device.
 
+    Returns:
+        The first Device found matching target_name.
+    """
+    return find_all_connected_devices(target_name)[0]
+
+
+def find_all_connected_devices(target_name: str) -> List[Device]:
+    """Find all connected devices matching the given target_name.
+
+    Args:
+        target_name: The Mbed target name of the device.
+
     Raises:
         NoDevicesFound: Could not find any connected devices.
         DeviceLookupFailed: Could not find a connected device matching target_name.
 
     Returns:
-        Device matching target_name.
+        List of Devices matching target_name.
     """
     connected = get_connected_devices()
     if not connected.identified_devices:
         raise NoDevicesFound("No Mbed enabled devices found.")
 
-    for device in connected.identified_devices:
-        if device.mbed_board.board_type == target_name.upper():
-            return device
+    matching_devices = sorted(
+        [device for device in connected.identified_devices if device.mbed_board.board_type == target_name.upper()],
+        key=attrgetter("serial_number"),
+    )
+    if matching_devices:
+        return matching_devices
 
     detected_targets = "\n".join(
         f"target: {dev.mbed_board.board_type}, port: {dev.serial_port}, mount point(s): {dev.mount_points}"
         for dev in connected.identified_devices
     )
     msg = (
-        f"Target '{target_name}' was not detected. Connect the device to the USB, or enter the target name correctly!\n"
-        f"The following devices were detected:\n\t {detected_targets}"
+        f"Target '{target_name}' was not detected.\n"
+        "Check the device is connected by USB, and that the name is entered correctly.\n"
+        f"The following devices were detected:\n{detected_targets}"
     )
     raise DeviceLookupFailed(msg)

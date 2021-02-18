@@ -14,7 +14,11 @@ from tests.devices.factories import CandidateDeviceFactory
 from mbed_tools.devices.device import Device
 from mbed_tools.devices._internal.exceptions import NoBoardForCandidate
 
-from mbed_tools.devices.devices import get_connected_devices, find_connected_device
+from mbed_tools.devices.devices import (
+    get_connected_devices,
+    find_connected_device,
+    find_all_connected_devices,
+)
 from mbed_tools.devices.exceptions import DeviceLookupFailed, NoDevicesFound
 
 
@@ -69,24 +73,43 @@ class TestGetConnectedDevices(TestCase):
             get_connected_devices()
 
 
-@mock.patch("mbed_tools.devices.devices.get_connected_devices")
+@mock.patch("mbed_tools.devices.devices.find_all_connected_devices")
 class TestFindConnectedDevice(TestCase):
-    def test_finds_device_with_matching_name(self, mock_get_connected_devices):
+    def test_finds_device_with_matching_name(self, mock_find_connected_devices):
         target_name = "K64F"
-        mock_get_connected_devices.return_value = mock.Mock(
-            identified_devices=[mock.Mock(mbed_board=mock.Mock(board_type=target_name, spec=True), spec=True)],
-            spec=True,
-        )
+        mock_find_connected_devices.return_value = [
+            mock.Mock(mbed_board=mock.Mock(board_type=target_name, spec=True), serial_number="123", spec=True)
+        ]
 
         dev = find_connected_device(target_name)
 
         self.assertEqual(target_name, dev.mbed_board.board_type)
 
+
+@mock.patch("mbed_tools.devices.devices.get_connected_devices")
+class TestFindAllConnectedDevices(TestCase):
+    def test_finds_all_devices_with_matching_name(self, mock_get_connected_devices):
+        target_name = "K64F"
+        mock_get_connected_devices.return_value = mock.Mock(
+            identified_devices=[
+                mock.Mock(mbed_board=mock.Mock(board_type=target_name, spec=True), serial_number="456", spec=True),
+                mock.Mock(mbed_board=mock.Mock(board_type=target_name, spec=True), serial_number="123", spec=True),
+                mock.Mock(mbed_board=mock.Mock(board_type="DISCO", spec=True), serial_number="345", spec=True),
+            ],
+            spec=True,
+        )
+
+        devices = find_all_connected_devices(target_name)
+
+        self.assertEqual(len(devices), 2)
+        self.assertEqual(devices[0].serial_number, "123")
+        self.assertEqual(devices[1].serial_number, "456")
+
     def test_raises_when_no_mbed_enabled_devices_found(self, mock_get_connected_devices):
         mock_get_connected_devices.return_value = mock.Mock(identified_devices=[], spec=True)
 
         with self.assertRaises(NoDevicesFound):
-            find_connected_device("K64F")
+            find_all_connected_devices("K64F")
 
     def test_raises_when_device_matching_target_name_not_found(self, mock_get_connected_devices):
         target_name = "K64F"
@@ -110,4 +133,4 @@ class TestFindConnectedDevice(TestCase):
             f".*(target: {re.escape(connected_target_name)}).*(port: {re.escape(connected_target_serial_port)}).*"
             f"(mount point.*: {re.escape(str(connected_target_mount_point))})",
         ):
-            find_connected_device(target_name)
+            find_all_connected_devices(target_name)
