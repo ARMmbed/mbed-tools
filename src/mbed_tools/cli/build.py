@@ -110,7 +110,8 @@ def build(
 
     if flash:
         for dev in devices:
-            flash_binary(dev.mount_points[0].resolve(), program.root, build_tree, mbed_target, hex_file)
+            flashed_path = flash_binary(dev.mount_points[0].resolve(), program.root, build_tree, mbed_target, hex_file)
+        click.echo(f"Copied {str(flashed_path.resolve())} to {len(devices)} device(s).")
     elif hex_file:
         click.echo("'--hex-file' option should be used with '-f/--flash' option")
 
