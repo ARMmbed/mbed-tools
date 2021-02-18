@@ -17,7 +17,7 @@ from mbed_tools.project._internal import git_utils
 
 @click.command()
 @click.option("--create-only", "-c", is_flag=True, show_default=True, help="Create a program without fetching mbed-os.")
-@click.argument("path", type=click.Path())
+@click.argument("path", type=click.Path(resolve_path=True))
 def new(path: str, create_only: bool) -> None:
     """Creates a new Mbed project at the specified path. Downloads mbed-os and adds it to the project.
 
