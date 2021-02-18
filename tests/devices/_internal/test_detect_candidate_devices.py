@@ -2,10 +2,12 @@
 # Copyright (c) 2020-2021 Arm Limited and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
+import pytest
 from unittest import mock
 
 from tests.devices.markers import windows_only, darwin_only, linux_only
 from mbed_tools.devices._internal.base_detector import DeviceDetector
+from mbed_tools.devices.exceptions import UnknownOSError
 from mbed_tools.devices._internal.detect_candidate_devices import (
     detect_candidate_devices,
     _get_detector_for_current_os,
@@ -38,3 +40,11 @@ class TestGetDetectorForCurrentOS:
         from mbed_tools.devices._internal.linux.device_detector import LinuxDeviceDetector
 
         assert isinstance(_get_detector_for_current_os(), LinuxDeviceDetector)
+
+    @mock.patch("platform.system")
+    def test_raises_when_os_is_unknown(self, platform_system):
+        os_name = "SomethingNobodyUses"
+        platform_system.return_value = os_name
+
+        with pytest.raises(UnknownOSError):
+            _get_detector_for_current_os()

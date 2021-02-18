@@ -16,3 +16,7 @@ class DeviceLookupFailed(MbedDevicesError):
 
 class NoDevicesFound(MbedDevicesError):
     """No Mbed Enabled devices were found."""
+
+
+class UnknownOSError(MbedDevicesError):
+    """The current OS is not supported."""
