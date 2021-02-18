@@ -180,8 +180,13 @@ matrix:
       name: "Test new command"
       env: NAME=test-new-cmd CACHE_NAME=test-new-cmd
       script:
+        # Create a new Mbed OS project named "test"
         - mbedtools new test
         - cd test
+        - mbedtools compile -t GCC_ARM -m K64F
+        - cd .. && mkdir mbed-os-example && cd mbed-os-example
+        # Create a new Mbed OS project in current directory
+        - mbedtools new .
         - mbedtools compile -t GCC_ARM -m K64F
         - ccache -s
 
