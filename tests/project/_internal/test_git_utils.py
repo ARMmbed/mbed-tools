@@ -30,11 +30,32 @@ class TestClone:
         repo = git_utils.clone(url, path)
 
         assert repo is not None
-        mock_repo.clone_from.assert_called_once_with(url, str(path), progress=mock_progress())
+        mock_repo.clone_from.assert_called_once_with(url=url, to_path=str(path), progress=mock_progress(), depth=1)
+
+    def test_returns_repo_for_ref(self, mock_progress, mock_repo, tmp_path):
+        url = "https://example.com/org/repo.git"
+        ref = "development"
+        path = Path(tmp_path, "repo")
+        repo = git_utils.clone(url, path, ref)
+
+        assert repo is not None
+        mock_repo.clone_from.assert_called_once_with(
+            url=url, to_path=str(path), progress=mock_progress(), depth=1, branch=ref
+        )
 
     def test_raises_when_fails_due_to_bad_url(self, tmp_path):
         with pytest.raises(VersionControlError, match="from url 'bad' failed"):
             git_utils.clone("bad", Path(tmp_path, "dst"))
+
+    def test_raises_when_fails_due_to_bad_url_with_ref(self, mock_progress, mock_repo, tmp_path):
+        url = "https://example.com/org/repo.git"
+        ref = "development"
+        path = Path(tmp_path, "repo")
+
+        mock_repo.clone_from.side_effect = git_utils.git.exc.GitCommandError("git clone", 255)
+
+        with pytest.raises(VersionControlError, match=f"Cloning git repository from url '{url}' failed."):
+            git_utils.clone(url, path, ref)
 
     def test_raises_when_fails_due_to_existing_nonempty_dst_dir(self, mock_repo, tmp_path):
         dst_dir = Path(tmp_path, "dst")
@@ -52,7 +73,7 @@ class TestClone:
         repo = git_utils.clone(url, dst_dir)
 
         assert repo is not None
-        mock_repo.clone_from.assert_called_once_with(url, str(dst_dir), progress=mock_progress())
+        mock_repo.clone_from.assert_called_once_with(url=url, to_path=str(dst_dir), progress=mock_progress(), depth=1)
 
 
 class TestInit:
@@ -98,6 +119,21 @@ class TestCheckout:
 
         with pytest.raises(VersionControlError):
             git_utils.checkout(mock_repo, "bad")
+
+
+class TestFetch:
+    def test_does_a_fetch(self, mock_repo):
+        ref = "b23a8eb1c3f80292c8eb40689106759fae83a4c6"
+        git_utils.fetch(mock_repo, ref)
+
+        mock_repo.git.fetch.assert_called_once_with("origin", ref)
+
+    def test_raises_when_fetch_fails(self, mock_repo):
+        ref = "v2.7.9"
+        mock_repo.git.fetch.side_effect = git_utils.git.exc.GitCommandError("git fetch", 255)
+
+        with pytest.raises(VersionControlError):
+            git_utils.fetch(mock_repo, ref)
 
 
 class TestGetDefaultBranch:

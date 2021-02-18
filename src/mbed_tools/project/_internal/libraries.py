@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Generator, List
 
 from mbed_tools.project._internal import git_utils
+from mbed_tools.project.exceptions import VersionControlError
 
 logger = logging.getLogger(__name__)
 
@@ -61,10 +62,7 @@ class LibraryReferences:
         for lib in self.iter_unresolved():
             git_ref = lib.get_git_reference()
             logger.info(f"Resolving library reference {git_ref.repo_url}.")
-            repo = git_utils.clone(git_ref.repo_url, lib.source_code_path)
-            if git_ref.ref:
-                logger.info(f"Checking out revision {git_ref.ref} for library {git_ref.repo_url}.")
-                git_utils.checkout(repo, git_ref.ref)
+            _clone_at_ref(git_ref.repo_url, lib.source_code_path, git_ref.ref)
 
         # Check if we find any new references after cloning dependencies.
         if list(self.iter_unresolved()):
@@ -77,13 +75,10 @@ class LibraryReferences:
             git_ref = lib.get_git_reference()
 
             if not git_ref.ref:
-                repo.git.fetch()
                 git_ref.ref = git_utils.get_default_branch(repo)
-            else:
-                # Fetch only the requested ref
-                repo.git.fetch("origin", git_ref.ref)
 
-            git_utils.checkout(repo, git_ref.ref, force=force)
+            git_utils.fetch(repo, git_ref.ref)
+            git_utils.checkout(repo, "FETCH_HEAD", force=force)
 
     def iter_all(self) -> Generator[MbedLibReference, None, None]:
         """Iterate all library references in the tree.
@@ -118,3 +113,21 @@ class LibraryReferences:
     def _in_ignore_path(self, lib_reference_path: Path) -> bool:
         """Check if a library reference is in a path we want to ignore."""
         return any(p in lib_reference_path.parts for p in self.ignore_paths)
+
+
+def _clone_at_ref(url: str, path: Path, ref: str) -> None:
+    if ref:
+        logger.info(f"Checking out revision {ref} for library {url}.")
+        try:
+            git_utils.clone(url, path, ref)
+        except VersionControlError:
+            # We weren't able to clone. Try again without the ref.
+            repo = git_utils.clone(url, path)
+            # We couldn't clone the ref and had to fall back to cloning
+            # just the default branch. Fetch the ref before checkout, so
+            # that we have it available locally.
+            logger.warning(f"No tag or branch with name {ref}. Fetching full repository.")
+            git_utils.fetch(repo, ref)
+            git_utils.checkout(repo, "FETCH_HEAD")
+    else:
+        git_utils.clone(url, path)

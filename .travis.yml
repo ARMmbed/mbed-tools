@@ -197,7 +197,8 @@ matrix:
         - mbedtools import mbed-os-example-ble
         - cd mbed-os-example-ble
         # Checkout the development branch on BLE example
-        - git checkout development
+        - git fetch origin development
+        - git checkout FETCH_HEAD
         - cd BLE_Advertising
         - mbedtools deploy
         - mbedtools compile -t GCC_ARM -m K64F
