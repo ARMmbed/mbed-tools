@@ -43,16 +43,40 @@ def get_connected_devices() -> ConnectedDevices:
     return connected_devices
 
 
-def find_connected_device(target_name: str) -> Device:
-    """Find a connected device matching the given target_name.
+def find_connected_device(target_name: str, identifier: Optional[int] = None) -> Device:
+    """Find a connected device matching the given target_name, if there is only one.
 
     Args:
         target_name: The Mbed target name of the device.
+        identifier: Where multiple of the same Mbed device are connected, the associated [id].
+
+    Raise:
+        DeviceLookupFailed: Could not find device matching target_name.
 
     Returns:
         The first Device found matching target_name.
     """
-    return find_all_connected_devices(target_name)[0]
+    devices = find_all_connected_devices(target_name)
+    if identifier is None and len(devices) == 1:
+        return devices[0]
+    elif identifier is not None and len(devices) > identifier:
+        return devices[identifier]
+
+    detected_targets = "\n".join(
+        f"target: {dev.mbed_board.board_type}[{i}]," f" port: {dev.serial_port}, mount point(s): {dev.mount_points}"
+        for i, dev in enumerate(devices)
+    )
+    if identifier is None:
+        msg = (
+            f"`Multiple matching, please select a connected target with [n] identifier.\n"
+            f"The following {target_name}s were detected:\n{detected_targets}"
+        )
+    else:
+        msg = (
+            f"`{target_name}[{identifier}]` is not a valid connected target.\n"
+            f"The following {target_name}s were detected:\n{detected_targets}"
+        )
+    raise DeviceLookupFailed(msg)
 
 
 def find_all_connected_devices(target_name: str) -> List[Device]:

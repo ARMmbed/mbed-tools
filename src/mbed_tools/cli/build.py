@@ -7,6 +7,8 @@ import os
 import pathlib
 import shutil
 
+from typing import Optional, Tuple
+
 import click
 
 from mbed_tools.build import build_project, generate_build_system, generate_config, flash_binary
@@ -84,6 +86,8 @@ def build(
        baudrate: Change the serial baud rate (ignored unless --sterm is also given).
     """
     _validate_target_and_toolchain_args(mbed_target, toolchain)
+    mbed_target, target_id = _get_target_id(mbed_target)
+
     cmake_build_subdir = pathlib.Path(mbed_target.upper(), profile.lower(), toolchain.upper())
     if mbed_os_path is None:
         program = MbedProgram.from_existing(pathlib.Path(program_path), cmake_build_subdir)
@@ -103,8 +107,8 @@ def build(
     build_project(build_tree)
 
     if flash or sterm:
-        if sterm:
-            devices = [find_connected_device(mbed_target)]
+        if target_id is not None or sterm:
+            devices = [find_connected_device(mbed_target, target_id)]
         else:
             devices = find_all_connected_devices(mbed_target)
 
@@ -131,3 +135,12 @@ def _validate_target_and_toolchain_args(target: str, toolchain: str) -> None:
         raise click.UsageError(
             "Both --toolchain and --mbed-target arguments are required when using the compile subcommand."
         )
+
+
+def _get_target_id(target: str) -> Tuple[str, Optional[int]]:
+    if "[" in target:
+        target_name, target_id = target.replace("]", "").split("[", maxsplit=1)
+        if target_id.isdigit() and int(target_id) >= 0:
+            return (target_name, int(target_id))
+        raise click.ClickException("When using the format mbed-target[ID], ID must be a positive integer or 0.")
+    return (target, None)

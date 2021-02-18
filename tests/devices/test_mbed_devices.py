@@ -85,6 +85,64 @@ class TestFindConnectedDevice(TestCase):
 
         self.assertEqual(target_name, dev.mbed_board.board_type)
 
+    def test_finds_device_with_matching_name_identifier(self, mock_find_connected_devices):
+        target_name = "K64F"
+        target_identifier = 1
+        mock_find_connected_devices.return_value = [
+            mock.Mock(mbed_board=mock.Mock(board_type=target_name, spec=True), serial_number="123", spec=True),
+            mock.Mock(mbed_board=mock.Mock(board_type=target_name, spec=True), serial_number="456", spec=True),
+        ]
+
+        dev = find_connected_device(target_name, target_identifier)
+
+        self.assertEqual(dev.serial_number, "456")
+
+    def test_raises_when_multiple_matching_name_no_identifier(self, mock_find_connected_devices):
+        target_name = "K64F"
+        mock_find_connected_devices.return_value = [
+            mock.Mock(
+                serial_port="tty.0",
+                mount_points=[pathlib.Path("/board")],
+                mbed_board=mock.Mock(board_type=target_name, spec=True),
+                serial_number="456",
+                spec=True,
+            ),
+            mock.Mock(
+                serial_port="tty.1",
+                mount_points=[pathlib.Path("/board2")],
+                mbed_board=mock.Mock(board_type=target_name, spec=True),
+                serial_number="123",
+                spec=True,
+            ),
+        ]
+
+        with self.assertRaises(DeviceLookupFailed) as ex:
+            find_connected_device("K64F", None)
+        self.assertTrue("Multiple" in ex.exception.args[0])
+
+    def test_raises_when_identifier_out_of_bounds(self, mock_find_connected_devices):
+        target_name = "K64F"
+        mock_find_connected_devices.return_value = [
+            mock.Mock(
+                serial_port="tty.0",
+                mount_points=[pathlib.Path("/board")],
+                mbed_board=mock.Mock(board_type=target_name, spec=True),
+                serial_number="456",
+                spec=True,
+            ),
+            mock.Mock(
+                serial_port="tty.1",
+                mount_points=[pathlib.Path("/board2")],
+                mbed_board=mock.Mock(board_type=target_name, spec=True),
+                serial_number="123",
+                spec=True,
+            ),
+        ]
+
+        with self.assertRaises(DeviceLookupFailed) as ex:
+            find_connected_device("K64F", 2)
+        self.assertTrue("valid" in ex.exception.args[0])
+
 
 @mock.patch("mbed_tools.devices.devices.get_connected_devices")
 class TestFindAllConnectedDevices(TestCase):
