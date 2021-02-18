@@ -126,6 +126,24 @@ class TestBuildCommand(TestCase):
             self.assertRegex(result.output, "--mbed-target")
             self.assertRegex(result.output, "--toolchain")
 
+    def test_raises_if_target_identifier_not_int(
+        self, generate_config, mbed_program, build_project, generate_build_system
+    ):
+        target = "K64F[foo]"
+
+        result = CliRunner().invoke(build, ["-m", target, "-t", "gcc_arm"])
+        self.assertIsNotNone(result.exception)
+        self.assertRegex(result.output, "ID")
+
+    def test_raises_if_target_identifier_negative(
+        self, generate_config, mbed_program, build_project, generate_build_system
+    ):
+        target = "K64F[-1]"
+
+        result = CliRunner().invoke(build, ["-m", target, "-t", "gcc_arm"])
+        self.assertIsNotNone(result.exception)
+        self.assertRegex(result.output, "ID")
+
     def test_build_system_regenerated_when_mbed_os_path_passed(
         self, generate_config, mbed_program, build_project, generate_build_system
     ):
@@ -213,6 +231,16 @@ class TestBuildCommand(TestCase):
         runner.invoke(build, ["--flash", *DEFAULT_BUILD_ARGS])
         self.assertEqual(flash_binary.call_count, 2)
 
+    @mock.patch("mbed_tools.cli.build.flash_binary")
+    @mock.patch("mbed_tools.cli.build.find_connected_device")
+    def test_build_flash_only_identifier_device(
+        self, mock_find_device, flash_binary, generate_config, mbed_program, build_project, generate_build_system
+    ):
+        mock_find_device.return_value = mock.MagicMock()
+        runner = CliRunner()
+        runner.invoke(build, ["--flash", "-m", "K64F[1]", "-t", "GCC_ARM"])
+        self.assertEqual(flash_binary.call_count, 1)
+
     def test_build_only_hex_file_option(self, generate_config, mbed_program, build_project, generate_build_system):
         runner = CliRunner()
         result = runner.invoke(build, ["--hex-file", *DEFAULT_BUILD_ARGS])
@@ -231,7 +259,7 @@ class TestBuildCommand(TestCase):
 
         CliRunner().invoke(build, ["-m", target, "-t", "gcc_arm", "--sterm", "--baudrate", baud])
 
-        mock_find_device.assert_called_once_with(target)
+        mock_find_device.assert_called_once_with(target, None)
         mock_terminal.run.assert_called_once_with(serial_port, baud)
 
     @mock.patch("mbed_tools.cli.build.terminal")
