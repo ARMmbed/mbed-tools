@@ -47,7 +47,7 @@ def _build_binary_file_path(program_path: pathlib.Path, build_dir: pathlib.Path,
 
 def flash_binary(
     mount_point: pathlib.Path, program_path: pathlib.Path, build_dir: pathlib.Path, mbed_target: str, hex_file: bool
-) -> None:
+) -> pathlib.Path:
     """Flash binary onto a device.
 
     Look through the connected devices and flash the binary if the connected and built target matches.
@@ -61,3 +61,4 @@ def flash_binary(
     """
     fw_file = _build_binary_file_path(program_path, build_dir, hex_file)
     _flash_dev(mount_point, fw_file)
+    return fw_file
