@@ -10,7 +10,7 @@ import shutil
 import click
 
 from mbed_tools.build import build_project, generate_build_system, generate_config, flash_binary
-from mbed_tools.devices import find_connected_device
+from mbed_tools.devices import find_connected_device, find_all_connected_devices
 from mbed_tools.project import MbedProgram
 from mbed_tools.sterm import terminal
 
@@ -103,14 +103,19 @@ def build(
     build_project(build_tree)
 
     if flash or sterm:
-        dev = find_connected_device(mbed_target)
+        if sterm:
+            devices = [find_connected_device(mbed_target)]
+        else:
+            devices = find_all_connected_devices(mbed_target)
 
     if flash:
-        flash_binary(dev.mount_points[0].resolve(), program.root, build_tree, mbed_target, hex_file)
+        for dev in devices:
+            flash_binary(dev.mount_points[0].resolve(), program.root, build_tree, mbed_target, hex_file)
     elif hex_file:
         click.echo("'--hex-file' option should be used with '-f/--flash' option")
 
     if sterm:
+        dev = devices[0]
         if dev.serial_port is None:
             raise click.ClickException(
                 f"The connected device {dev.mbed_board.board_name} does not have an associated serial port."
