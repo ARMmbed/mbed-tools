@@ -34,7 +34,7 @@
 &#34;&#34;&#34;Helpers for python language related functions.&#34;&#34;&#34;
 import sys
 from collections import namedtuple
-from typing import NamedTuple, Iterable, Any, cast
+from typing import NamedTuple, Iterable, Any, List, cast
 
 
 def minimum_python_version(major: int, minor: int) -&gt; bool:
@@ -53,7 +53,29 @@ def named_tuple_with_defaults(typename: str, field_names: Iterable[str], default
     else:
         a_tuple: NamedTuple = namedtuple(typename=typename, field_names=field_names)  # type: ignore
         a_tuple.__new__.__defaults__ = tuple(defaults)  # type: ignore
-        return cast(NamedTuple, a_tuple)</code></pre>
+        return cast(NamedTuple, a_tuple)
+
+
+def flatten_nested(input_iter: Iterable) -&gt; List:
+    &#34;&#34;&#34;Flatten a nested Iterable with arbitrary levels of nesting.
+
+    If the input is an iterator then this function will exhaust it.
+
+    Args:
+        input_iter: The input Iterable which may or may not be nested.
+
+    Returns:
+        A flat list created from the input_iter.
+        If input_iter has no nesting its elements are appended to a list and returned.
+    &#34;&#34;&#34;
+    output = []
+    for elem in input_iter:
+        if isinstance(elem, Iterable) and not isinstance(elem, str):
+            output += flatten_nested(elem)
+        else:
+            output.append(elem)
+
+    return output</code></pre>
 </details>
 </section>
 <section>
@@ -63,6 +85,46 @@ def named_tuple_with_defaults(typename: str, field_names: Iterable[str], default
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="mbed_tools.lib.python_helpers.flatten_nested"><code class="name flex">
+<span>def <span class="ident">flatten_nested</span></span>(<span>input_iter: Iterable) ‑> List</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Flatten a nested Iterable with arbitrary levels of nesting.</p>
+<p>If the input is an iterator then this function will exhaust it.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>input_iter</code></strong></dt>
+<dd>The input Iterable which may or may not be nested.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>A flat list created from the input_iter.
+If input_iter has no nesting its elements are appended to a list and returned.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def flatten_nested(input_iter: Iterable) -&gt; List:
+    &#34;&#34;&#34;Flatten a nested Iterable with arbitrary levels of nesting.
+
+    If the input is an iterator then this function will exhaust it.
+
+    Args:
+        input_iter: The input Iterable which may or may not be nested.
+
+    Returns:
+        A flat list created from the input_iter.
+        If input_iter has no nesting its elements are appended to a list and returned.
+    &#34;&#34;&#34;
+    output = []
+    for elem in input_iter:
+        if isinstance(elem, Iterable) and not isinstance(elem, str):
+            output += flatten_nested(elem)
+        else:
+            output.append(elem)
+
+    return output</code></pre>
+</details>
+</dd>
 <dt id="mbed_tools.lib.python_helpers.minimum_python_version"><code class="name flex">
 <span>def <span class="ident">minimum_python_version</span></span>(<span>major: int, minor: int) ‑> bool</span>
 </code></dt>
@@ -120,6 +182,7 @@ See <a href="https://stackoverflow.com/questions/11351032/namedtuple-and-default
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="mbed_tools.lib.python_helpers.flatten_nested" href="#mbed_tools.lib.python_helpers.flatten_nested">flatten_nested</a></code></li>
 <li><code><a title="mbed_tools.lib.python_helpers.minimum_python_version" href="#mbed_tools.lib.python_helpers.minimum_python_version">minimum_python_version</a></code></li>
 <li><code><a title="mbed_tools.lib.python_helpers.named_tuple_with_defaults" href="#mbed_tools.lib.python_helpers.named_tuple_with_defaults">named_tuple_with_defaults</a></code></li>
 </ul>

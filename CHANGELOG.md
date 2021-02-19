@@ -12,6 +12,22 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.1.1 (2021-02-19)
+==================
+
+Bugfixes
+--------
+
+- Support use of user@host:directory syntax with the import subcommand. (#169)
+- Clean up handling of config settings that have nested lists as values. (#20210217152408)
+
+
+Misc
+----
+
+- #20210217153419
+
+
 7.1.0 (2021-02-17)
 ==================
 
