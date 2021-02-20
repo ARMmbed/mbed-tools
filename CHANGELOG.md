@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.1.2 (2021-02-20)
+==================
+
+Bugfixes
+--------
+
+- Raise a nicer error from mbed-tools detect when running on an unrecognised OS. (#20210218112043)
+- Fix for create a new Mbed OS project in current directory bug. (#20210218122316)
+
+
 7.1.1 (2021-02-19)
 ==================
 

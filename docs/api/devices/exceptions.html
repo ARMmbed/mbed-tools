@@ -44,7 +44,11 @@ class DeviceLookupFailed(MbedDevicesError):
 
 
 class NoDevicesFound(MbedDevicesError):
-    &#34;&#34;&#34;No Mbed Enabled devices were found.&#34;&#34;&#34;</code></pre>
+    &#34;&#34;&#34;No Mbed Enabled devices were found.&#34;&#34;&#34;
+
+
+class UnknownOSError(MbedDevicesError):
+    &#34;&#34;&#34;The current OS is not supported.&#34;&#34;&#34;</code></pre>
 </details>
 </section>
 <section>
@@ -100,6 +104,7 @@ class NoDevicesFound(MbedDevicesError):
 <ul class="hlist">
 <li><a title="mbed_tools.devices.exceptions.DeviceLookupFailed" href="#mbed_tools.devices.exceptions.DeviceLookupFailed">DeviceLookupFailed</a></li>
 <li><a title="mbed_tools.devices.exceptions.NoDevicesFound" href="#mbed_tools.devices.exceptions.NoDevicesFound">NoDevicesFound</a></li>
+<li><a title="mbed_tools.devices.exceptions.UnknownOSError" href="#mbed_tools.devices.exceptions.UnknownOSError">UnknownOSError</a></li>
 </ul>
 </dd>
 <dt id="mbed_tools.devices.exceptions.NoDevicesFound"><code class="flex name class">
@@ -114,6 +119,27 @@ class NoDevicesFound(MbedDevicesError):
 </summary>
 <pre><code class="python">class NoDevicesFound(MbedDevicesError):
     &#34;&#34;&#34;No Mbed Enabled devices were found.&#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="mbed_tools.devices.exceptions.MbedDevicesError" href="#mbed_tools.devices.exceptions.MbedDevicesError">MbedDevicesError</a></li>
+<li><a title="mbed_tools.lib.exceptions.ToolsError" href="../lib/exceptions.html#mbed_tools.lib.exceptions.ToolsError">ToolsError</a></li>
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="mbed_tools.devices.exceptions.UnknownOSError"><code class="flex name class">
+<span>class <span class="ident">UnknownOSError</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>The current OS is not supported.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class UnknownOSError(MbedDevicesError):
+    &#34;&#34;&#34;The current OS is not supported.&#34;&#34;&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -147,6 +173,9 @@ class NoDevicesFound(MbedDevicesError):
 </li>
 <li>
 <h4><code><a title="mbed_tools.devices.exceptions.NoDevicesFound" href="#mbed_tools.devices.exceptions.NoDevicesFound">NoDevicesFound</a></code></h4>
+</li>
+<li>
+<h4><code><a title="mbed_tools.devices.exceptions.UnknownOSError" href="#mbed_tools.devices.exceptions.UnknownOSError">UnknownOSError</a></code></h4>
 </li>
 </ul>
 </li>

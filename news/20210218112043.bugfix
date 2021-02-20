@@ -1,1 +1,0 @@
-Raise a nicer error from mbed-tools detect when running on an unrecognised OS.
