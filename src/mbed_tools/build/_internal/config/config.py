@@ -43,7 +43,9 @@ class Config(UserDict):
                 _apply_override(self.data, override)
                 continue
 
-            setting = self._find_config_setting(lambda x: x.name == override.name and x.namespace == override.namespace)
+            setting = self._find_first_config_setting(
+                lambda x: x.name == override.name and x.namespace == override.namespace
+            )
             setting.value = override.value
 
     def _update_config_section(self, config_settings: List[ConfigSetting]) -> None:
@@ -56,14 +58,14 @@ class Config(UserDict):
 
         self.data[CONFIG_SECTION] = self.data.get(CONFIG_SECTION, []) + config_settings
 
-    def _find_config_setting(self, predicate: Callable) -> Any:
-        """Find a config setting based on `predicate`.
+    def _find_first_config_setting(self, predicate: Callable) -> Any:
+        """Find first config setting based on `predicate`.
 
         `predicate` is a callable that gets a config setting passed in as an argument. This callable must define the
         condition for identifying a config setting.
 
         Example:
-            The following call will find a ConfigSetting whose name is "foo":
+            The following call will find the first ConfigSetting whose name is "foo":
             `config._find_config_setting(lambda x: x.name == "foo")`
 
         Args:
