@@ -385,14 +385,14 @@ def test_target_list_params_can_be_removed(
     assert expected_output not in config_text
 
 
-def test_raises_when_attempting_to_override_nonexistent_param(matching_target_and_filter, program):
+def test_warns_when_attempting_to_override_nonexistent_param(matching_target_and_filter, program, caplog):
     target, target_filter = matching_target_and_filter
-    create_mbed_app_json(
-        program.root, target_overrides={target_filter: {"target.some-nonexistent-config-param": 999999}}
-    )
+    override_name = "target.some-nonexistent-config-param"
+    create_mbed_app_json(program.root, target_overrides={target_filter: {override_name: 999999}})
 
-    with pytest.raises(ValueError):
-        generate_config(target, "GCC_ARM", program)
+    generate_config(target, "GCC_ARM", program)
+
+    assert override_name in caplog.text
 
 
 def test_settings_from_multiple_libs_included(matching_target_and_filter, program):

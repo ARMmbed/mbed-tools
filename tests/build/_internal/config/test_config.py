@@ -111,11 +111,12 @@ class TestConfig:
 
         assert conf["macros"] == {"A", "B"}
 
-    def test_raises_when_override_not_already_defined(self):
+    def test_warns_and_skips_override_for_undefined_config_parameter(self, caplog):
         conf = Config()
-
-        with pytest.raises(ValueError):
-            conf.update(prepare({"target_overrides": {"*": {"this-does-not-exist": ""}}}))
+        override_name = "this-does-not-exist"
+        conf.update(prepare({"target_overrides": {"*": {override_name: ""}}}))
+        assert override_name in caplog.text
+        assert not conf
 
     def test_ignores_present_option(self):
         source = prepare({"name": "mbed_component", "config": {"present": {"help": "Mbed Component", "value": True}}})
