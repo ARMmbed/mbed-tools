@@ -43,10 +43,19 @@ class Config(UserDict):
                 _apply_override(self.data, override)
                 continue
 
-            setting = self._find_first_config_setting(
-                lambda x: x.name == override.name and x.namespace == override.namespace
-            )
-            setting.value = override.value
+            try:
+                setting = self._find_first_config_setting(
+                    lambda x: x.name == override.name and x.namespace == override.namespace
+                )
+                setting.value = override.value
+            except ValueError:
+                logger.warning(
+                    f"You are attempting to override an undefined config parameter "
+                    f"`{override.namespace}.{override.name}`.\n"
+                    "It is an error to override an undefined configuration parameter. "
+                    "Please check your target_overrides are correct.\n"
+                    f"The parameter `{override.namespace}.{override.name}` will not be added to the configuration."
+                )
 
     def _update_config_section(self, config_settings: List[ConfigSetting]) -> None:
         for setting in config_settings:
