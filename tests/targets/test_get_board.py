@@ -5,6 +5,8 @@
 """Tests for `mbed_tools.targets.get_board`."""
 from unittest import mock, TestCase
 
+from mbed_tools.targets._internal.exceptions import BoardAPIError
+
 # Import from top level as this is the expected interface for users
 from mbed_tools.targets import get_board_by_online_id, get_board_by_product_code
 from mbed_tools.targets.get_board import (
@@ -56,6 +58,17 @@ class TestGetBoard(TestCase):
         subject = get_board(fn)
 
         self.assertEqual(subject, mocked_boards.from_online_database().get_board.return_value)
+        mocked_boards.from_offline_database().get_board.assert_called_once_with(fn)
+        mocked_boards.from_online_database().get_board.assert_called_once_with(fn)
+
+    def test_auto_mode_raises_when_board_not_found_offline_with_no_network(self, env, mocked_boards):
+        env.MBED_DATABASE_MODE = "AUTO"
+        mocked_boards.from_offline_database().get_board.side_effect = UnknownBoard
+        mocked_boards.from_online_database().get_board.side_effect = BoardAPIError
+        fn = mock.Mock()
+
+        with self.assertRaises(UnknownBoard):
+            get_board(fn)
         mocked_boards.from_offline_database().get_board.assert_called_once_with(fn)
         mocked_boards.from_online_database().get_board.assert_called_once_with(fn)
 

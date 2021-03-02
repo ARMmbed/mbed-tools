@@ -11,7 +11,7 @@ from enum import Enum
 from typing import Callable
 
 from mbed_tools.targets.env import env
-from mbed_tools.targets.exceptions import UnknownBoard, UnsupportedMode
+from mbed_tools.targets.exceptions import UnknownBoard, UnsupportedMode, BoardDatabaseError
 from mbed_tools.targets.board import Board
 from mbed_tools.targets.boards import Boards
 
@@ -70,7 +70,11 @@ def get_board(matching: Callable) -> Board:
         return Boards.from_offline_database().get_board(matching)
     except UnknownBoard:
         logger.info("Unable to identify a board using the offline database, trying the online database.")
-        return Boards.from_online_database().get_board(matching)
+        try:
+            return Boards.from_online_database().get_board(matching)
+        except BoardDatabaseError:
+            logger.error("Unable to access the online database to identify a board.")
+            raise UnknownBoard()
 
 
 class _DatabaseMode(Enum):
