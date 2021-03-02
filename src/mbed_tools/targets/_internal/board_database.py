@@ -106,5 +106,5 @@ def _get_request() -> requests.Response:
     try:
         return requests.get(_BOARD_API, headers=header)
     except requests.exceptions.ConnectionError as connection_error:
-        logger.warning("There was an error connecting to the online database. Please check your internet connection.")
+        logger.warning("Unable to connect to the online database. Please check your internet connection.")
         raise BoardAPIError("Failed to connect to the online database.") from connection_error
