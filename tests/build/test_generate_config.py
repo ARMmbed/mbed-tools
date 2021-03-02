@@ -71,6 +71,19 @@ def program(tmp_path):
     return prog
 
 
+@pytest.fixture
+def program_in_mbed_os_subdir(tmp_path):
+    mbed_os_path = tmp_path / "mbed-os"
+    targets_json = mbed_os_path / "targets" / "targets.json"
+    program_root = mbed_os_path / "test-prog"
+    build_subdir = program_root / "__build" / "k64f"
+    program_root.mkdir(parents=True, exist_ok=True)
+    # Create program mbed-os directory and fake targets.json
+    targets_json.parent.mkdir(exist_ok=True, parents=True)
+    targets_json.write_text(json.dumps({target: TARGET_DATA for target in TARGETS}))
+    return MbedProgram.from_existing(program_root, build_subdir, mbed_os_path=mbed_os_path)
+
+
 @pytest.fixture(
     params=[(TARGETS[0], TARGETS[0]), (TARGETS[1], TARGETS[1]), (TARGETS[0], "*")],
     ids=lambda fixture_val: f"target: {fixture_val[0]}, filter: {fixture_val[1]}",
@@ -456,3 +469,23 @@ def test_target_requires_config_option(program):
 
     assert "MBED_CONF_PLATFORM_STDIO_BAUD_RATE=9600" in config_text
     assert "MBED_LFS_READ_SIZE=64" not in config_text
+
+
+def test_config_parsed_when_mbed_os_outside_project_root(program_in_mbed_os_subdir, matching_target_and_filter):
+    program = program_in_mbed_os_subdir
+    target, target_filter = matching_target_and_filter
+    create_mbed_lib_json(
+        program.mbed_os.root / "mbed_lib.json", "platform", config={"stdio-baud-rate": {"value": 9600}},
+    )
+    create_mbed_lib_json(
+        program.mbed_os.root / "storage" / "mbed_lib.json",
+        "filesystem",
+        config={"read_size": {"macro_name": "MBED_LFS_READ_SIZE", "value": 64}},
+    )
+
+    generate_config("K64F", "GCC_ARM", program)
+
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
+
+    assert "MBED_CONF_PLATFORM_STDIO_BAUD_RATE=9600" in config_text
+    assert "MBED_LFS_READ_SIZE=64" in config_text

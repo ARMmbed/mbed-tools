@@ -1,0 +1,1 @@
+Search mbed-os for config files when mbed-os-path is used and mbed-os is not a subdirectory of the project.
