@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 """Configuration assembly algorithm."""
+import itertools
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, List, Optional, Set
@@ -12,7 +14,7 @@ from mbed_tools.build._internal.config import source
 from mbed_tools.build._internal.find_files import LabelFilter, RequiresFilter, filter_files, find_files
 
 
-def assemble_config(target_attributes: dict, mbed_program_directory: Path, mbed_app_file: Optional[Path]) -> Config:
+def assemble_config(target_attributes: dict, search_paths: Iterable[Path], mbed_app_file: Optional[Path]) -> Config:
     """Assemble config for given target and program directory.
 
     Mbed library and application specific config parameters are parsed from mbed_lib.json and mbed_app.json files
@@ -24,8 +26,15 @@ def assemble_config(target_attributes: dict, mbed_program_directory: Path, mbed_
     Unfortunately, mbed_app.json may also contain filter labels to tell us which mbed libs we're depending on.
     This means we have to collect the filter labels from mbed_app.json before parsing any other config files.
     Then we parse all the required mbed_lib config and finally apply the app overrides.
+
+    Args:
+        target_attributes: Mapping of target specific config parameters.
+        search_paths: Iterable of paths to search for mbed_lib.json files.
+        mbed_app_file: The path to mbed_app.json. This can be None.
     """
-    mbed_lib_files = find_files("mbed_lib.json", mbed_program_directory)
+    mbed_lib_files = list(
+        set(itertools.chain.from_iterable(find_files("mbed_lib.json", path) for path in search_paths))
+    )
     return _assemble_config_from_sources(target_attributes, mbed_lib_files, mbed_app_file)
 
 
