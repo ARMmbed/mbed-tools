@@ -91,6 +91,22 @@ class TestGetOnlineBoardData(TestCase):
         with self.assertRaises(board_database.BoardAPIError):
             board_database._get_request()
 
+    @mock.patch("mbed_tools.targets._internal.board_database.logger.warning", autospec=True)
+    @mock.patch("mbed_tools.targets._internal.board_database.requests.get")
+    def test_logs_error_on_requests_ssl_error(self, get, logger_warning):
+        get.side_effect = board_database.requests.exceptions.SSLError
+        with self.assertRaises(board_database.BoardAPIError):
+            board_database._get_request()
+        self.assertTrue("verify an SSL" in str(logger_warning.call_args_list))
+
+    @mock.patch("mbed_tools.targets._internal.board_database.logger.warning", autospec=True)
+    @mock.patch("mbed_tools.targets._internal.board_database.requests.get")
+    def test_logs_error_on_requests_proxy_error(self, get, logger_warning):
+        get.side_effect = board_database.requests.exceptions.ProxyError
+        with self.assertRaises(board_database.BoardAPIError):
+            board_database._get_request()
+        self.assertTrue("connect to proxy" in str(logger_warning.call_args_list))
+
 
 class TestGetOfflineTargetData(TestCase):
     """Tests for the method get_offline_target_data."""

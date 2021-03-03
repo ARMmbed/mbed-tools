@@ -106,5 +106,10 @@ def _get_request() -> requests.Response:
     try:
         return requests.get(_BOARD_API, headers=header)
     except requests.exceptions.ConnectionError as connection_error:
+        if isinstance(connection_error, requests.exceptions.SSLError):
+            logger.warning("Unable to verify an SSL certificate with requests.")
+        elif isinstance(connection_error, requests.exceptions.ProxyError):
+            logger.warning("Failed to connect to proxy. Please check your proxy configuration.")
+
         logger.warning("Unable to connect to the online database. Please check your internet connection.")
         raise BoardAPIError("Failed to connect to the online database.") from connection_error
