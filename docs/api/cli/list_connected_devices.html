@@ -35,7 +35,7 @@
 import click
 import json
 from operator import attrgetter
-from typing import Iterable
+from typing import Iterable, List, Optional, Tuple
 from tabulate import tabulate
 
 from mbed_tools.devices import get_connected_devices, Device
@@ -78,17 +78,32 @@ def _sort_devices(devices: Iterable[Device]) -&gt; Iterable[Device]:
     return sorted(devices, key=attrgetter(&#34;mbed_board.board_name&#34;, &#34;serial_number&#34;))
 
 
+def _get_devices_ids(devices: Iterable[Device]) -&gt; List[Tuple[Optional[int], Device]]:
+    &#34;&#34;&#34;Create tuple of ID and Device for each Device. ID is None when only one Device exists with a given board name.&#34;&#34;&#34;
+    devices_ids: List[Tuple[Optional[int], Device]] = []
+    n = 0
+    for device in devices:
+        board_name = device.mbed_board.board_name
+        if len([dev for dev in devices if dev.mbed_board.board_name == board_name]) &gt; 1:
+            devices_ids.append((n, device))
+            n += 1
+        else:
+            devices_ids.append((None, device))
+            n = 0
+    return devices_ids
+
+
 def _build_tabular_output(devices: Iterable[Device]) -&gt; str:
     headers = [&#34;Board name&#34;, &#34;Serial number&#34;, &#34;Serial port&#34;, &#34;Mount point(s)&#34;, &#34;Build target(s)&#34;]
     devices_data = []
-    for device in devices:
+    for id, device in _get_devices_ids(devices):
         devices_data.append(
             [
                 device.mbed_board.board_name or &#34;&lt;unknown&gt;&#34;,
                 device.serial_number,
                 device.serial_port or &#34;&lt;unknown&gt;&#34;,
                 &#34;\n&#34;.join(str(mount_point) for mount_point in device.mount_points),
-                &#34;\n&#34;.join(_get_build_targets(device.mbed_board)),
+                &#34;\n&#34;.join(_get_build_targets(device.mbed_board, id)),
             ]
         )
     return tabulate(devices_data, headers=headers)
@@ -96,7 +111,7 @@ def _build_tabular_output(devices: Iterable[Device]) -&gt; str:
 
 def _build_json_output(devices: Iterable[Device]) -&gt; str:
     devices_data = []
-    for device in devices:
+    for id, device in _get_devices_ids(devices):
         board = device.mbed_board
         devices_data.append(
             {
@@ -109,15 +124,20 @@ def _build_json_output(devices: Iterable[Device]) -&gt; str:
                     &#34;board_name&#34;: board.board_name,
                     &#34;mbed_os_support&#34;: board.mbed_os_support,
                     &#34;mbed_enabled&#34;: board.mbed_enabled,
-                    &#34;build_targets&#34;: _get_build_targets(board),
+                    &#34;build_targets&#34;: _get_build_targets(board, id),
                 },
             }
         )
     return json.dumps(devices_data, indent=4)
 
 
-def _get_build_targets(board: Board) -&gt; Iterable[str]:
-    return [f&#34;{board.board_type}_{variant}&#34; for variant in board.build_variant] + [board.board_type]</code></pre>
+def _get_build_targets(board: Board, identifier: Optional[int]) -&gt; List[str]:
+    if identifier is not None:
+        return [f&#34;{board.board_type}_{variant}[{identifier}]&#34; for variant in board.build_variant] + [
+            f&#34;{board.board_type}[{identifier}]&#34;
+        ]
+    else:
+        return [f&#34;{board.board_type}_{variant}&#34; for variant in board.build_variant] + [board.board_type]</code></pre>
 </details>
 </section>
 <section>

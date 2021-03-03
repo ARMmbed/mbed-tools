@@ -33,7 +33,8 @@
 #
 &#34;&#34;&#34;API for listing devices.&#34;&#34;&#34;
 
-from typing import Optional
+from operator import attrgetter
+from typing import List, Optional
 
 from mbed_tools.targets.exceptions import MbedTargetsError
 from mbed_tools.targets import Board
@@ -71,8 +72,44 @@ def get_connected_devices() -&gt; ConnectedDevices:
     return connected_devices
 
 
-def find_connected_device(target_name: str) -&gt; Device:
-    &#34;&#34;&#34;Find a connected device matching the given target_name.
+def find_connected_device(target_name: str, identifier: Optional[int] = None) -&gt; Device:
+    &#34;&#34;&#34;Find a connected device matching the given target_name, if there is only one.
+
+    Args:
+        target_name: The Mbed target name of the device.
+        identifier: Where multiple of the same Mbed device are connected, the associated [id].
+
+    Raise:
+        DeviceLookupFailed: Could not find device matching target_name.
+
+    Returns:
+        The first Device found matching target_name.
+    &#34;&#34;&#34;
+    devices = find_all_connected_devices(target_name)
+    if identifier is None and len(devices) == 1:
+        return devices[0]
+    elif identifier is not None and len(devices) &gt; identifier:
+        return devices[identifier]
+
+    detected_targets = &#34;\n&#34;.join(
+        f&#34;target: {dev.mbed_board.board_type}[{i}],&#34; f&#34; port: {dev.serial_port}, mount point(s): {dev.mount_points}&#34;
+        for i, dev in enumerate(devices)
+    )
+    if identifier is None:
+        msg = (
+            f&#34;`Multiple matching, please select a connected target with [n] identifier.\n&#34;
+            f&#34;The following {target_name}s were detected:\n{detected_targets}&#34;
+        )
+    else:
+        msg = (
+            f&#34;`{target_name}[{identifier}]` is not a valid connected target.\n&#34;
+            f&#34;The following {target_name}s were detected:\n{detected_targets}&#34;
+        )
+    raise DeviceLookupFailed(msg)
+
+
+def find_all_connected_devices(target_name: str) -&gt; List[Device]:
+    &#34;&#34;&#34;Find all connected devices matching the given target_name.
 
     Args:
         target_name: The Mbed target name of the device.
@@ -82,23 +119,27 @@ def find_connected_device(target_name: str) -&gt; Device:
         DeviceLookupFailed: Could not find a connected device matching target_name.
 
     Returns:
-        Device matching target_name.
+        List of Devices matching target_name.
     &#34;&#34;&#34;
     connected = get_connected_devices()
     if not connected.identified_devices:
         raise NoDevicesFound(&#34;No Mbed enabled devices found.&#34;)
 
-    for device in connected.identified_devices:
-        if device.mbed_board.board_type == target_name.upper():
-            return device
+    matching_devices = sorted(
+        [device for device in connected.identified_devices if device.mbed_board.board_type == target_name.upper()],
+        key=attrgetter(&#34;serial_number&#34;),
+    )
+    if matching_devices:
+        return matching_devices
 
     detected_targets = &#34;\n&#34;.join(
         f&#34;target: {dev.mbed_board.board_type}, port: {dev.serial_port}, mount point(s): {dev.mount_points}&#34;
         for dev in connected.identified_devices
     )
     msg = (
-        f&#34;Target &#39;{target_name}&#39; was not detected. Connect the device to the USB, or enter the target name correctly!\n&#34;
-        f&#34;The following devices were detected:\n\t {detected_targets}&#34;
+        f&#34;Target &#39;{target_name}&#39; was not detected.\n&#34;
+        &#34;Check the device is connected by USB, and that the name is entered correctly.\n&#34;
+        f&#34;The following devices were detected:\n{detected_targets}&#34;
     )
     raise DeviceLookupFailed(msg)</code></pre>
 </details>
@@ -110,11 +151,11 @@ def find_connected_device(target_name: str) -&gt; Device:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="mbed_tools.devices.devices.find_connected_device"><code class="name flex">
-<span>def <span class="ident">find_connected_device</span></span>(<span>target_name: str) ‑> <a title="mbed_tools.devices.device.Device" href="device.html#mbed_tools.devices.device.Device">Device</a></span>
+<dt id="mbed_tools.devices.devices.find_all_connected_devices"><code class="name flex">
+<span>def <span class="ident">find_all_connected_devices</span></span>(<span>target_name: str) ‑> List[<a title="mbed_tools.devices.device.Device" href="device.html#mbed_tools.devices.device.Device">Device</a>]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Find a connected device matching the given target_name.</p>
+<div class="desc"><p>Find all connected devices matching the given target_name.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>target_name</code></strong></dt>
@@ -128,13 +169,13 @@ def find_connected_device(target_name: str) -&gt; Device:
 <dd>Could not find a connected device matching target_name.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<p>Device matching target_name.</p></div>
+<p>List of Devices matching target_name.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def find_connected_device(target_name: str) -&gt; Device:
-    &#34;&#34;&#34;Find a connected device matching the given target_name.
+<pre><code class="python">def find_all_connected_devices(target_name: str) -&gt; List[Device]:
+    &#34;&#34;&#34;Find all connected devices matching the given target_name.
 
     Args:
         target_name: The Mbed target name of the device.
@@ -144,24 +185,84 @@ def find_connected_device(target_name: str) -&gt; Device:
         DeviceLookupFailed: Could not find a connected device matching target_name.
 
     Returns:
-        Device matching target_name.
+        List of Devices matching target_name.
     &#34;&#34;&#34;
     connected = get_connected_devices()
     if not connected.identified_devices:
         raise NoDevicesFound(&#34;No Mbed enabled devices found.&#34;)
 
-    for device in connected.identified_devices:
-        if device.mbed_board.board_type == target_name.upper():
-            return device
+    matching_devices = sorted(
+        [device for device in connected.identified_devices if device.mbed_board.board_type == target_name.upper()],
+        key=attrgetter(&#34;serial_number&#34;),
+    )
+    if matching_devices:
+        return matching_devices
 
     detected_targets = &#34;\n&#34;.join(
         f&#34;target: {dev.mbed_board.board_type}, port: {dev.serial_port}, mount point(s): {dev.mount_points}&#34;
         for dev in connected.identified_devices
     )
     msg = (
-        f&#34;Target &#39;{target_name}&#39; was not detected. Connect the device to the USB, or enter the target name correctly!\n&#34;
-        f&#34;The following devices were detected:\n\t {detected_targets}&#34;
+        f&#34;Target &#39;{target_name}&#39; was not detected.\n&#34;
+        &#34;Check the device is connected by USB, and that the name is entered correctly.\n&#34;
+        f&#34;The following devices were detected:\n{detected_targets}&#34;
     )
+    raise DeviceLookupFailed(msg)</code></pre>
+</details>
+</dd>
+<dt id="mbed_tools.devices.devices.find_connected_device"><code class="name flex">
+<span>def <span class="ident">find_connected_device</span></span>(<span>target_name: str, identifier: Union[int, NoneType] = None) ‑> <a title="mbed_tools.devices.device.Device" href="device.html#mbed_tools.devices.device.Device">Device</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Find a connected device matching the given target_name, if there is only one.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>target_name</code></strong></dt>
+<dd>The Mbed target name of the device.</dd>
+<dt><strong><code>identifier</code></strong></dt>
+<dd>Where multiple of the same Mbed device are connected, the associated [id].</dd>
+</dl>
+<h2 id="raise">Raise</h2>
+<p>DeviceLookupFailed: Could not find device matching target_name.</p>
+<h2 id="returns">Returns</h2>
+<p>The first Device found matching target_name.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def find_connected_device(target_name: str, identifier: Optional[int] = None) -&gt; Device:
+    &#34;&#34;&#34;Find a connected device matching the given target_name, if there is only one.
+
+    Args:
+        target_name: The Mbed target name of the device.
+        identifier: Where multiple of the same Mbed device are connected, the associated [id].
+
+    Raise:
+        DeviceLookupFailed: Could not find device matching target_name.
+
+    Returns:
+        The first Device found matching target_name.
+    &#34;&#34;&#34;
+    devices = find_all_connected_devices(target_name)
+    if identifier is None and len(devices) == 1:
+        return devices[0]
+    elif identifier is not None and len(devices) &gt; identifier:
+        return devices[identifier]
+
+    detected_targets = &#34;\n&#34;.join(
+        f&#34;target: {dev.mbed_board.board_type}[{i}],&#34; f&#34; port: {dev.serial_port}, mount point(s): {dev.mount_points}&#34;
+        for i, dev in enumerate(devices)
+    )
+    if identifier is None:
+        msg = (
+            f&#34;`Multiple matching, please select a connected target with [n] identifier.\n&#34;
+            f&#34;The following {target_name}s were detected:\n{detected_targets}&#34;
+        )
+    else:
+        msg = (
+            f&#34;`{target_name}[{identifier}]` is not a valid connected target.\n&#34;
+            f&#34;The following {target_name}s were detected:\n{detected_targets}&#34;
+        )
     raise DeviceLookupFailed(msg)</code></pre>
 </details>
 </dd>
@@ -224,6 +325,7 @@ Mbed Boards (but not could not be identified in the database) are returned.</p>
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="mbed_tools.devices.devices.find_all_connected_devices" href="#mbed_tools.devices.devices.find_all_connected_devices">find_all_connected_devices</a></code></li>
 <li><code><a title="mbed_tools.devices.devices.find_connected_device" href="#mbed_tools.devices.devices.find_connected_device">find_connected_device</a></code></li>
 <li><code><a title="mbed_tools.devices.devices.get_connected_devices" href="#mbed_tools.devices.devices.get_connected_devices">get_connected_devices</a></code></li>
 </ul>

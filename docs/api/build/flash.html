@@ -76,7 +76,7 @@ def _build_binary_file_path(program_path: pathlib.Path, build_dir: pathlib.Path,
 
 def flash_binary(
     mount_point: pathlib.Path, program_path: pathlib.Path, build_dir: pathlib.Path, mbed_target: str, hex_file: bool
-) -&gt; None:
+) -&gt; pathlib.Path:
     &#34;&#34;&#34;Flash binary onto a device.
 
     Look through the connected devices and flash the binary if the connected and built target matches.
@@ -89,7 +89,8 @@ def flash_binary(
        hex_file: Use hex file.
     &#34;&#34;&#34;
     fw_file = _build_binary_file_path(program_path, build_dir, hex_file)
-    _flash_dev(mount_point, fw_file)</code></pre>
+    _flash_dev(mount_point, fw_file)
+    return fw_file</code></pre>
 </details>
 </section>
 <section>
@@ -100,7 +101,7 @@ def flash_binary(
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="mbed_tools.build.flash.flash_binary"><code class="name flex">
-<span>def <span class="ident">flash_binary</span></span>(<span>mount_point: pathlib.Path, program_path: pathlib.Path, build_dir: pathlib.Path, mbed_target: str, hex_file: bool) ‑> NoneType</span>
+<span>def <span class="ident">flash_binary</span></span>(<span>mount_point: pathlib.Path, program_path: pathlib.Path, build_dir: pathlib.Path, mbed_target: str, hex_file: bool) ‑> pathlib.Path</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Flash binary onto a device.</p>
@@ -124,7 +125,7 @@ def flash_binary(
 </summary>
 <pre><code class="python">def flash_binary(
     mount_point: pathlib.Path, program_path: pathlib.Path, build_dir: pathlib.Path, mbed_target: str, hex_file: bool
-) -&gt; None:
+) -&gt; pathlib.Path:
     &#34;&#34;&#34;Flash binary onto a device.
 
     Look through the connected devices and flash the binary if the connected and built target matches.
@@ -137,7 +138,8 @@ def flash_binary(
        hex_file: Use hex file.
     &#34;&#34;&#34;
     fw_file = _build_binary_file_path(program_path, build_dir, hex_file)
-    _flash_dev(mount_point, fw_file)</code></pre>
+    _flash_dev(mount_point, fw_file)
+    return fw_file</code></pre>
 </details>
 </dd>
 </dl>

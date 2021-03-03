@@ -1,1 +1,0 @@
-Emit a warning instead of an error when the user attempts to override an undefined configuration parameter.

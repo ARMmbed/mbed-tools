@@ -36,7 +36,8 @@ from typing import Any, Optional
 
 import click
 
-from mbed_tools.devices import get_connected_devices, find_connected_device
+from mbed_tools.cli.build import _get_target_id
+from mbed_tools.devices import find_connected_device, get_connected_devices
 from mbed_tools.devices.exceptions import MbedDevicesError
 from mbed_tools.sterm import terminal
 
@@ -81,8 +82,8 @@ def _find_target_serial_port_or_default(target: Optional[str]) -&gt; Any:
         # just return the first valid device found
         device, *_ = _get_connected_mbed_devices()
     else:
-        device = find_connected_device(target.upper())
-
+        target_name, target_id = _get_target_id(target)
+        device = find_connected_device(target_name.upper(), target_id)
     return device.serial_port</code></pre>
 </details>
 </section>

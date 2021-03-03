@@ -36,10 +36,12 @@ import os
 import pathlib
 import shutil
 
+from typing import Optional, Tuple
+
 import click
 
 from mbed_tools.build import build_project, generate_build_system, generate_config, flash_binary
-from mbed_tools.devices import find_connected_device
+from mbed_tools.devices import find_connected_device, find_all_connected_devices
 from mbed_tools.project import MbedProgram
 from mbed_tools.sterm import terminal
 
@@ -113,6 +115,8 @@ def build(
        baudrate: Change the serial baud rate (ignored unless --sterm is also given).
     &#34;&#34;&#34;
     _validate_target_and_toolchain_args(mbed_target, toolchain)
+    mbed_target, target_id = _get_target_id(mbed_target)
+
     cmake_build_subdir = pathlib.Path(mbed_target.upper(), profile.lower(), toolchain.upper())
     if mbed_os_path is None:
         program = MbedProgram.from_existing(pathlib.Path(program_path), cmake_build_subdir)
@@ -132,14 +136,20 @@ def build(
     build_project(build_tree)
 
     if flash or sterm:
-        dev = find_connected_device(mbed_target)
+        if target_id is not None or sterm:
+            devices = [find_connected_device(mbed_target, target_id)]
+        else:
+            devices = find_all_connected_devices(mbed_target)
 
     if flash:
-        flash_binary(dev.mount_points[0].resolve(), program.root, build_tree, mbed_target, hex_file)
+        for dev in devices:
+            flashed_path = flash_binary(dev.mount_points[0].resolve(), program.root, build_tree, mbed_target, hex_file)
+        click.echo(f&#34;Copied {str(flashed_path.resolve())} to {len(devices)} device(s).&#34;)
     elif hex_file:
         click.echo(&#34;&#39;--hex-file&#39; option should be used with &#39;-f/--flash&#39; option&#34;)
 
     if sterm:
+        dev = devices[0]
         if dev.serial_port is None:
             raise click.ClickException(
                 f&#34;The connected device {dev.mbed_board.board_name} does not have an associated serial port.&#34;
@@ -153,7 +163,16 @@ def _validate_target_and_toolchain_args(target: str, toolchain: str) -&gt; None:
     if not all([toolchain, target]):
         raise click.UsageError(
             &#34;Both --toolchain and --mbed-target arguments are required when using the compile subcommand.&#34;
-        )</code></pre>
+        )
+
+
+def _get_target_id(target: str) -&gt; Tuple[str, Optional[int]]:
+    if &#34;[&#34; in target:
+        target_name, target_id = target.replace(&#34;]&#34;, &#34;&#34;).split(&#34;[&#34;, maxsplit=1)
+        if target_id.isdigit() and int(target_id) &gt;= 0:
+            return (target_name, int(target_id))
+        raise click.ClickException(&#34;When using the format mbed-target[ID], ID must be a positive integer or 0.&#34;)
+    return (target, None)</code></pre>
 </details>
 </section>
 <section>
