@@ -7,6 +7,7 @@
 This information is parsed from the targets.json configuration file
 found in the mbed-os repo.
 """
+import logging
 import pathlib
 from typing import Dict, Any, Set, Optional
 
@@ -20,10 +21,11 @@ from mbed_tools.targets._internal.targets_json_parsers.overriding_attribute_pars
     get_overriding_attributes_for_target,
     get_labels_for_target,
 )
-from mbed_tools.targets._internal.exceptions import TargetsJsonConfigurationError
 
 INTERNAL_PACKAGE_DIR = pathlib.Path(__file__).parent
 MBED_OS_METADATA_FILE = pathlib.Path(INTERNAL_PACKAGE_DIR, "data", "targets_metadata.json")
+
+logger = logging.getLogger(__name__)
 
 
 class TargetAttributesError(ToolsError):
@@ -126,5 +128,7 @@ def _apply_config_overrides(config: Dict[str, Any], overrides: Dict[str, Any]) -
         try:
             config[key]["value"] = overrides[key]
         except KeyError:
-            raise TargetsJsonConfigurationError("Cannot override config setting that is not defined.")
+            logger.warning(
+                f"Cannot apply override {key}={overrides[key]}, there is no config setting defined matching that name."
+            )
     return config

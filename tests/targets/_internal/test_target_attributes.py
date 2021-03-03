@@ -5,7 +5,6 @@
 """Tests for `mbed_tools.targets.target_attributes`."""
 from unittest import TestCase, mock
 
-from mbed_tools.targets._internal.exceptions import TargetsJsonConfigurationError
 from mbed_tools.targets._internal.target_attributes import (
     TargetNotFoundError,
     get_target_attributes,
@@ -109,8 +108,11 @@ class TestApplyConfigOverrides(TestCase):
 
         self.assertEqual(config, _apply_config_overrides(config, overrides))
 
-    def test_overriding_non_existing_config(self):
+    def test_warns_when_attempting_to_override_undefined_config_parameter(self):
         config = {"foo": {"help": "Do a foo", "value": 0}}
         overrides = {"bar": 9}
-        with self.assertRaises(TargetsJsonConfigurationError):
+
+        with self.assertLogs(level="WARNING") as logger:
             _apply_config_overrides(config, overrides)
+
+        self.assertIn("bar=9", logger.output[0])
