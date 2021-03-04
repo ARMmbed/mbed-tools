@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.2.1 (2021-03-04)
+==================
+
+Bugfixes
+--------
+
+- Define a board as unknown if it cannot be identified locally when unable to access the online database. (#201)
+- Improve error messaging in targets module when an invalid override is detected. (#20210303115502)
+
+
 7.2.0 (2021-03-03)
 ==================
 

@@ -41,7 +41,7 @@ from enum import Enum
 from typing import Callable
 
 from mbed_tools.targets.env import env
-from mbed_tools.targets.exceptions import UnknownBoard, UnsupportedMode
+from mbed_tools.targets.exceptions import UnknownBoard, UnsupportedMode, BoardDatabaseError
 from mbed_tools.targets.board import Board
 from mbed_tools.targets.boards import Boards
 
@@ -100,7 +100,11 @@ def get_board(matching: Callable) -&gt; Board:
         return Boards.from_offline_database().get_board(matching)
     except UnknownBoard:
         logger.info(&#34;Unable to identify a board using the offline database, trying the online database.&#34;)
-        return Boards.from_online_database().get_board(matching)
+        try:
+            return Boards.from_online_database().get_board(matching)
+        except BoardDatabaseError:
+            logger.error(&#34;Unable to access the online database to identify a board.&#34;)
+            raise UnknownBoard()
 
 
 class _DatabaseMode(Enum):
@@ -171,7 +175,11 @@ def _get_database_mode() -&gt; _DatabaseMode:
         return Boards.from_offline_database().get_board(matching)
     except UnknownBoard:
         logger.info(&#34;Unable to identify a board using the offline database, trying the online database.&#34;)
-        return Boards.from_online_database().get_board(matching)</code></pre>
+        try:
+            return Boards.from_online_database().get_board(matching)
+        except BoardDatabaseError:
+            logger.error(&#34;Unable to access the online database to identify a board.&#34;)
+            raise UnknownBoard()</code></pre>
 </details>
 </dd>
 <dt id="mbed_tools.targets.get_board.get_board_by_online_id"><code class="name flex">
