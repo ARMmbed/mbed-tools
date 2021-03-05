@@ -42,6 +42,8 @@ class TestUsbDeviceId(TestCase):
                 "UID": WindowsUID(uid="6&38e4ccb6&0", raw_uid="6&38E4CCB6&0&4", serial_number=None),
             }.items(),
         )
+        self.assertEqual(parse_device_id("USB\\4&38EF038C&0&0").product_id, "")
+        self.assertEqual(parse_device_id("USB\\4&38EF038C&0&0").vendor_id, "")
 
     def test_multiple_interface_usb_device(self):
         from mbed_tools.devices._internal.windows.usb_device_identifier import parse_device_id
@@ -94,6 +96,8 @@ class TestUsbDeviceId(TestCase):
         self.assertEqual(a, a)
         self.assertEqual(a, b)
         self.assertEqual(b, a)
+        # Checks that identifier and other type are not equal
+        self.assertFalse(a == 1)
 
     def test_hashing(self):
         from mbed_tools.devices._internal.windows.usb_device_identifier import UsbIdentifier, KEY_UID

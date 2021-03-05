@@ -5,55 +5,40 @@
 """Defines a USB Identifier."""
 
 import re
-from enum import Enum
-from typing import Optional, Pattern, Any, List, cast
+from typing import Dict, List, NamedTuple, Optional, Pattern, Any, cast
 
-from mbed_tools.devices._internal.utils.python_helpers import named_tuple_with_defaults
 from mbed_tools.devices._internal.windows.component_descriptor_utils import is_undefined_data_object
 from mbed_tools.devices._internal.windows.windows_identifier import WindowsUID
 
 KEY_UID = "UID"
 
 
-class USBIdentifierToken(Enum):
-    """Tokens used in the device Id field.
+class UsbIdentifier(NamedTuple):
+    """Object describing the different elements present in the device ID.
 
-    See https://docs.microsoft.com/en-us/windows-hardware/drivers/install/standard-usb-identifiers
+    Attributes:
+        UID: Universal ID, either the serial number or device instance ID.
+        VID: Vendor ID, 4 digit.
+        PID: Product ID assigned to the devices, 4 digit.
+        REV: Revision code.
+        MI: Multiple Interface, a 2 digit interface number.
     """
 
-    VID = 1
-    PID = 2
-    REV = 3
-    MI = 4
-
-    @property
-    def pattern(self) -> Pattern:
-        """Gets the regex pattern for the corresponding part."""
-        return re.compile(f"^{self.name}_(.*)$")
+    UID: Optional[str] = None
+    VID: Optional[str] = None
+    PID: Optional[str] = None
+    REV: Optional[str] = None
+    MI: Optional[str] = None
 
     @staticmethod
-    def get_patterns_dict() -> dict:
+    def get_patterns_dict() -> Dict[str, Pattern]:
         """Returns a dictionary of all the regexes."""
-        return {p: p.pattern for p in USBIdentifierToken}
-
-
-class UsbIdentifier(
-    named_tuple_with_defaults(  # type:ignore
-        typename="UsbIdentifier",
-        field_names=[KEY_UID] + [part.name for part in USBIdentifierToken],
-        defaults=[None] * (len(USBIdentifierToken) + 1),
-    )
-):
-    """Object describing the different elements present in a the device Id."""
-
-    def get(self, key: USBIdentifierToken) -> str:
-        """Returns the value corresponding to a specific token."""
-        return str(getattr(self, key.name))
+        return {p: re.compile(f"^{p}_(.*)$") for p in UsbIdentifier._fields[1:]}
 
     @property
     def uid(self) -> WindowsUID:
         """Gets the USB ID."""
-        return cast(WindowsUID, getattr(self, KEY_UID))
+        return cast(WindowsUID, self.UID)
 
     def contains_genuine_serial_number(self) -> bool:
         """Contains a genuine serial number and not an instance ID."""
@@ -62,12 +47,12 @@ class UsbIdentifier(
     @property
     def product_id(self) -> str:
         """Returns the product id field."""
-        return self.get(USBIdentifierToken.PID)
+        return self.PID or ""
 
     @property
     def vendor_id(self) -> str:
         """Returns the product id field."""
-        return self.get(USBIdentifierToken.VID)
+        return self.VID or ""
 
     def __eq__(self, other: Any) -> bool:
         """States whether the other id equals to self."""
@@ -85,7 +70,7 @@ class UsbIdentifier(
     @property
     def is_undefined(self) -> bool:
         """States whether none of the elements present in DeviceId were defined."""
-        return is_undefined_data_object(self)
+        return is_undefined_data_object(cast(NamedTuple, self))
 
 
 class Win32DeviceIdParser:
@@ -120,14 +105,14 @@ class Win32DeviceIdParser:
         for k, p in patterns_dict.items():
             match = p.fullmatch(element)
             if match:
-                valuable_information[k.name] = match.group(1)
+                valuable_information[k] = match.group(1)
 
     def split_id_elements(self, parts: List[str], serial_number: str = None) -> dict:
         """Splits the different elements of an Device ID."""
         information = dict()
         information[KEY_UID] = self.parse_uid(parts[-1], serial_number)
         other_elements = parts[-2].split("&")
-        patterns_dict = USBIdentifierToken.get_patterns_dict()
+        patterns_dict = UsbIdentifier.get_patterns_dict()
         for element in other_elements:
             self.record_id_element(element, information, patterns_dict)
         return information
