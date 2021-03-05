@@ -90,10 +90,17 @@ class TestGetOnlineBoardData:
         requests.get.assert_called_once_with(board_database._BOARD_API, headers=None)
 
     @mock.patch("mbed_tools.targets._internal.board_database.requests.get")
-    def test_raises_tools_error_on_connection_error(self, get):
+    def test_logs_no_warning_on_success(self, get, caplog):
+        board_database._get_request()
+        assert not caplog.records
+
+    @mock.patch("mbed_tools.targets._internal.board_database.requests.get")
+    def test_raises_tools_error_on_connection_error(self, get, caplog):
         get.side_effect = board_database.requests.exceptions.ConnectionError
         with pytest.raises(board_database.BoardAPIError):
             board_database._get_request()
+        assert "Unable to connect" in caplog.text
+        assert len(caplog.records) == 1
 
     @mock.patch("mbed_tools.targets._internal.board_database.requests.get")
     def test_logs_error_on_requests_ssl_error(self, get, caplog):
