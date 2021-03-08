@@ -1,0 +1,1 @@
+Fix the nightly release pipeline in the case where no API documentation is generated.
