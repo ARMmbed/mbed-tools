@@ -1,0 +1,1 @@
+Remove Mbed OS's Python dependencies as they are now optional within Mbed OS.
