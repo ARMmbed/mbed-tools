@@ -4818,16 +4818,6 @@
         ]
     },
     {
-        "board_type": "MTS_MDOT_F405RG",
-        "board_name": "DEPRECATED!",
-        "product_code": "0305",
-        "target_type": "platform",
-        "slug": "MTS-mDot-F405",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
         "board_type": "SSCI824",
         "board_name": "Switch Science mbed LPC824",
         "product_code": "1018",

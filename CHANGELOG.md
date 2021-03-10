@@ -12,6 +12,29 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.3.0 (2021-03-10)
+==================
+
+Features
+--------
+
+- Speed up obtaining library dependencies by obtaining only the requested library
+  revision and no other revision. (#20210224162840)
+- Targets removed: DEPRECATED!. (#20210310052057)
+
+
+Bugfixes
+--------
+
+- Improve error messaging when unable to access the online database. (#20210304131741)
+
+
+Misc
+----
+
+- #200, #20210308162221
+
+
 7.2.1 (2021-03-04)
 ==================
 
