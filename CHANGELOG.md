@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.3.1 (2021-03-11)
+==================
+
+Bugfixes
+--------
+
+- Remove Mbed OS's Python dependencies as they are now optional within Mbed OS. (#171)
+
+
 7.3.0 (2021-03-10)
 ==================
 
