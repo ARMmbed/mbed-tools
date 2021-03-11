@@ -36,7 +36,12 @@ def get_connected_devices() -> ConnectedDevices:
         except NoBoardForCandidate:
             board = None
         except MbedTargetsError as err:
-            raise DeviceLookupFailed("A problem occurred when looking up board data for connected devices.") from err
+            raise DeviceLookupFailed(
+                f"We found a potential connected device ({candidate_device!r}) but could not identify it as being "
+                "Mbed enabled. This is because we couldn't find a known product code from the available data on your "
+                "device. Check your device contains a valid HTM file with a product code, and that it is added as an "
+                "Mbed enabled device on os.mbed.com."
+            ) from err
 
         connected_devices.add_device(candidate_device, board)
 
