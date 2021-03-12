@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.3.2 (2021-03-12)
+==================
+
+Bugfixes
+--------
+
+- Windows USB identification refactored to remove Python version specific behaviour. (#202)
+
+
+Misc
+----
+
+- #20210311092039
+
+
 7.3.1 (2021-03-11)
 ==================
 

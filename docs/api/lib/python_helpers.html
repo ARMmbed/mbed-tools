@@ -32,28 +32,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 &#34;&#34;&#34;Helpers for python language related functions.&#34;&#34;&#34;
-import sys
-from collections import namedtuple
-from typing import NamedTuple, Iterable, Any, List, cast
-
-
-def minimum_python_version(major: int, minor: int) -&gt; bool:
-    &#34;&#34;&#34;States whether the python in use is more recent than set major,minor versions.&#34;&#34;&#34;
-    return sys.version_info.major &gt;= major and sys.version_info.minor &gt;= minor
-
-
-def named_tuple_with_defaults(typename: str, field_names: Iterable[str], defaults: Iterable[Any]) -&gt; NamedTuple:
-    &#34;&#34;&#34;Gets a named tuple set with default values.
-
-    defaults field only appeared in Python 3.7.
-    See https://stackoverflow.com/questions/11351032/namedtuple-and-default-values-for-optional-keyword-arguments
-    &#34;&#34;&#34;
-    if minimum_python_version(3, 7):
-        return namedtuple(typename=typename, field_names=field_names, defaults=defaults)  # type: ignore
-    else:
-        a_tuple: NamedTuple = namedtuple(typename=typename, field_names=field_names)  # type: ignore
-        a_tuple.__new__.__defaults__ = tuple(defaults)  # type: ignore
-        return cast(NamedTuple, a_tuple)
+from typing import Iterable, List
 
 
 def flatten_nested(input_iter: Iterable) -&gt; List:
@@ -125,45 +104,6 @@ If input_iter has no nesting its elements are appended to a list and returned.</
     return output</code></pre>
 </details>
 </dd>
-<dt id="mbed_tools.lib.python_helpers.minimum_python_version"><code class="name flex">
-<span>def <span class="ident">minimum_python_version</span></span>(<span>major: int, minor: int) ‑> bool</span>
-</code></dt>
-<dd>
-<div class="desc"><p>States whether the python in use is more recent than set major,minor versions.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def minimum_python_version(major: int, minor: int) -&gt; bool:
-    &#34;&#34;&#34;States whether the python in use is more recent than set major,minor versions.&#34;&#34;&#34;
-    return sys.version_info.major &gt;= major and sys.version_info.minor &gt;= minor</code></pre>
-</details>
-</dd>
-<dt id="mbed_tools.lib.python_helpers.named_tuple_with_defaults"><code class="name flex">
-<span>def <span class="ident">named_tuple_with_defaults</span></span>(<span>typename: str, field_names: Iterable[str], defaults: Iterable[Any]) ‑> <class 'NamedTuple'></span>
-</code></dt>
-<dd>
-<div class="desc"><p>Gets a named tuple set with default values.</p>
-<p>defaults field only appeared in Python 3.7.
-See <a href="https://stackoverflow.com/questions/11351032/namedtuple-and-default-values-for-optional-keyword-arguments">https://stackoverflow.com/questions/11351032/namedtuple-and-default-values-for-optional-keyword-arguments</a></p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def named_tuple_with_defaults(typename: str, field_names: Iterable[str], defaults: Iterable[Any]) -&gt; NamedTuple:
-    &#34;&#34;&#34;Gets a named tuple set with default values.
-
-    defaults field only appeared in Python 3.7.
-    See https://stackoverflow.com/questions/11351032/namedtuple-and-default-values-for-optional-keyword-arguments
-    &#34;&#34;&#34;
-    if minimum_python_version(3, 7):
-        return namedtuple(typename=typename, field_names=field_names, defaults=defaults)  # type: ignore
-    else:
-        a_tuple: NamedTuple = namedtuple(typename=typename, field_names=field_names)  # type: ignore
-        a_tuple.__new__.__defaults__ = tuple(defaults)  # type: ignore
-        return cast(NamedTuple, a_tuple)</code></pre>
-</details>
-</dd>
 </dl>
 </section>
 <section>
@@ -183,8 +123,6 @@ See <a href="https://stackoverflow.com/questions/11351032/namedtuple-and-default
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="mbed_tools.lib.python_helpers.flatten_nested" href="#mbed_tools.lib.python_helpers.flatten_nested">flatten_nested</a></code></li>
-<li><code><a title="mbed_tools.lib.python_helpers.minimum_python_version" href="#mbed_tools.lib.python_helpers.minimum_python_version">minimum_python_version</a></code></li>
-<li><code><a title="mbed_tools.lib.python_helpers.named_tuple_with_defaults" href="#mbed_tools.lib.python_helpers.named_tuple_with_defaults">named_tuple_with_defaults</a></code></li>
 </ul>
 </li>
 </ul>
