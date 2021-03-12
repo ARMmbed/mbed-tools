@@ -122,12 +122,6 @@ class TestGetOnlineBoardData:
         board_database._get_request()
         assert requests_mock.last_request.proxies == {"http": "http://proxy:8080", "https": "https://proxy:8080"}
 
-    @mock.patch.dict("os.environ", {"http_proxy": "http://proxy:8080", "https_proxy": "https://proxy:8080"})
-    def test_raises_proxy_error_with_invalid_proxy(self, caplog):
-        with pytest.raises(board_database.BoardAPIError):
-            board_database._get_request()
-        assert "connect to proxy" in caplog.text
-
 
 class TestGetOfflineTargetData:
     """Tests for the method get_offline_target_data."""
