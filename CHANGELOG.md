@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.3.3 (2021-03-13)
+==================
+
+Bugfixes
+--------
+
+- Improve error message when we fail to find a valid product code in a connected device's HTM file. (#229)
+
+
+Misc
+----
+
+- #20210311162000, #20210312114544
+
+
 7.3.2 (2021-03-12)
 ==================
 
