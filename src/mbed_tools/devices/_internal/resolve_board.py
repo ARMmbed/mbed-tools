@@ -18,7 +18,7 @@ from typing import Iterable, List, Optional
 from mbed_tools.targets import Board, get_board_by_product_code, get_board_by_online_id
 from mbed_tools.targets.exceptions import UnknownBoard
 
-from mbed_tools.devices._internal.htm_file import OnlineId, read_online_id, read_product_code
+from mbed_tools.devices._internal.file_parser import OnlineId, read_online_id, read_product_code
 from mbed_tools.devices._internal.candidate_device import CandidateDevice
 from mbed_tools.devices._internal.exceptions import NoBoardForCandidate
 
