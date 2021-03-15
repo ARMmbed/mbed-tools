@@ -2,9 +2,6 @@
 # Copyright (c) 2020-2021 Arm Limited and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-import pathlib
-import tempfile
-
 from unittest import mock
 
 import pytest
@@ -16,35 +13,23 @@ from mbed_tools.devices._internal.file_parser import OnlineId
 from mbed_tools.devices._internal.resolve_board import (
     NoBoardForCandidate,
     resolve_board,
-    _get_all_htm_files_contents,
-    _read_htm_file_contents,
-    _is_htm_file,
 )
 
 
-@mock.patch(
-    "mbed_tools.devices._internal.resolve_board._get_all_htm_files_contents",
-    autospec=True,
-    return_value=["some file contents"],
-)
-@mock.patch("mbed_tools.devices._internal.resolve_board.read_product_code", autospec=True)
+@mock.patch("mbed_tools.devices._internal.resolve_board.extract_product_code_from_htm", autospec=True)
 @mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_product_code", autospec=True)
 class TestResolveBoardUsingProductCodeFromHTM:
-    def test_returns_resolved_target(self, get_board_by_product_code, read_product_code, _get_all_htm_files_contents):
-        read_product_code.return_value = "0123"
+    def test_returns_resolved_target(self, get_board_by_product_code, extract_product_code_from_htm):
+        extract_product_code_from_htm.return_value = "0123"
         candidate = CandidateDeviceFactory()
 
         subject = resolve_board(candidate)
 
         assert subject == get_board_by_product_code.return_value
-        get_board_by_product_code.assert_called_once_with(read_product_code.return_value)
-        read_product_code.assert_called_once_with(_get_all_htm_files_contents.return_value[0])
-        _get_all_htm_files_contents.assert_called_once_with(candidate.mount_points)
+        get_board_by_product_code.assert_called_once_with(extract_product_code_from_htm.return_value)
 
-    def test_raises_when_board_not_found(
-        self, get_board_by_product_code, read_product_code, _get_all_htm_files_contents
-    ):
-        read_product_code.return_value = "1234"
+    def test_raises_when_board_not_found(self, get_board_by_product_code, extract_product_code_from_htm):
+        extract_product_code_from_htm.return_value = "1234"
         get_board_by_product_code.side_effect = UnknownBoard
         candidate = CandidateDeviceFactory()
 
@@ -53,31 +38,27 @@ class TestResolveBoardUsingProductCodeFromHTM:
 
 
 @mock.patch(
-    "mbed_tools.devices._internal.resolve_board._get_all_htm_files_contents",
-    autospec=True,
-    return_value=["other file contents"],
+    "mbed_tools.devices._internal.resolve_board.extract_product_code_from_htm", autospec=True, return_value=None
 )
-@mock.patch("mbed_tools.devices._internal.resolve_board.read_product_code", autospec=True, return_value=None)
-@mock.patch("mbed_tools.devices._internal.resolve_board.read_online_id", autospec=True)
+@mock.patch("mbed_tools.devices._internal.resolve_board.extract_online_id_from_htm", autospec=True)
 @mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_online_id", autospec=True)
 class TestResolveBoardUsingOnlineIdFromHTM:
     def test_returns_resolved_board(
-        self, get_board_by_online_id, read_online_id, read_product_code, _get_all_htm_files_contents
+        self, get_board_by_online_id, extract_online_id_from_htm, extract_product_code_from_htm,
     ):
         online_id = OnlineId(target_type="hat", slug="boat")
-        read_online_id.return_value = online_id
+        extract_online_id_from_htm.return_value = online_id
         candidate = CandidateDeviceFactory()
 
         subject = resolve_board(candidate)
 
         assert subject == get_board_by_online_id.return_value
-        read_online_id.assert_called_with(_get_all_htm_files_contents.return_value[0])
         get_board_by_online_id.assert_called_once_with(target_type=online_id.target_type, slug=online_id.slug)
 
     def test_raises_when_board_not_found(
-        self, get_board_by_online_id, read_online_id, read_product_code, _get_all_htm_files_contents
+        self, get_board_by_online_id, extract_online_id_from_htm, extract_product_code_from_htm,
     ):
-        read_online_id.return_value = OnlineId(target_type="hat", slug="boat")
+        extract_online_id_from_htm.return_value = OnlineId(target_type="hat", slug="boat")
         get_board_by_online_id.side_effect = UnknownBoard
         candidate = CandidateDeviceFactory()
 
@@ -86,16 +67,13 @@ class TestResolveBoardUsingOnlineIdFromHTM:
 
 
 @mock.patch(
-    "mbed_tools.devices._internal.resolve_board._get_all_htm_files_contents",
-    autospec=True,
-    return_value=["who knows file contents"],
+    "mbed_tools.devices._internal.resolve_board.extract_product_code_from_htm", autospec=True, return_value=None
 )
-@mock.patch("mbed_tools.devices._internal.resolve_board.read_product_code", autospec=True, return_value=None)
-@mock.patch("mbed_tools.devices._internal.resolve_board.read_online_id", autospec=True, return_value=None)
+@mock.patch("mbed_tools.devices._internal.resolve_board.extract_online_id_from_htm", autospec=True, return_value=None)
 @mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_product_code", autospec=True)
 class TestResolveBoardUsingProductCodeFromSerial:
     def test_resolves_board_using_product_code_when_available(
-        self, get_board_by_product_code, read_online_id, read_product_code, _get_all_htm_files_contents
+        self, get_board_by_product_code, extract_online_id_from_htm, extract_product_code_from_htm,
     ):
         candidate = CandidateDeviceFactory()
 
@@ -105,56 +83,10 @@ class TestResolveBoardUsingProductCodeFromSerial:
         get_board_by_product_code.assert_called_once_with(candidate.serial_number[:4])
 
     def test_raises_when_board_not_found(
-        self, get_board_by_product_code, read_online_id, read_product_code, _get_all_htm_files_contents
+        self, get_board_by_product_code, extract_online_id_from_htm, extract_product_code_from_htm,
     ):
         get_board_by_product_code.side_effect = UnknownBoard
         candidate = CandidateDeviceFactory()
 
         with pytest.raises(NoBoardForCandidate):
             resolve_board(candidate)
-
-
-class TestGetAllHtmFilesContents:
-    def test_returns_contents_of_all_htm_files_in_given_directories(self):
-        with tempfile.TemporaryDirectory() as directory:
-            directory_1 = pathlib.Path(directory, "test-1")
-            directory_1.mkdir()
-            directory_2 = pathlib.Path(directory, "test-2")
-            directory_2.mkdir()
-            pathlib.Path(directory_1, "mbed.htm").write_text("foo")
-            pathlib.Path(directory_2, "whatever.htm").write_text("bar")
-            pathlib.Path(directory_1, "file.txt").write_text("txt files should not be read")
-            pathlib.Path(directory_1, "._MBED.HTM").write_text("hidden files should not be read")
-
-            result = _get_all_htm_files_contents([directory_1, directory_2])
-
-        assert result == ["foo", "bar"]
-
-
-class TestReadHtmFilesContents:
-    def test_handles_unreadable_htm_file(self):
-        with tempfile.TemporaryDirectory() as directory:
-            htm_file = pathlib.Path(directory, "mbed.htm")
-            htm_file.write_text("foo")
-
-            result = _read_htm_file_contents([htm_file, pathlib.Path("error.htm")])
-
-        assert result == ["foo"]
-
-
-class TestIsHtmFile:
-    def test_lower_case_htm(self):
-        result = _is_htm_file(pathlib.Path("mbed.htm"))
-        assert result is True
-
-    def test_upper_case_htm(self):
-        result = _is_htm_file(pathlib.Path("MBED.HTM"))
-        assert result is True
-
-    def test_hidden_htm(self):
-        result = _is_htm_file(pathlib.Path(".htm"))
-        assert result is False
-
-    def test_text_file(self):
-        result = _is_htm_file(pathlib.Path("mbed.txt"))
-        assert result is False
