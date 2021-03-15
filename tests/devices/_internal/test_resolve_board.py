@@ -4,7 +4,11 @@
 #
 import pathlib
 import tempfile
-from unittest import TestCase, mock
+
+from unittest import mock
+
+import pytest
+
 from mbed_tools.targets.exceptions import UnknownBoard
 
 from tests.devices.factories import CandidateDeviceFactory
@@ -25,14 +29,14 @@ from mbed_tools.devices._internal.resolve_board import (
 )
 @mock.patch("mbed_tools.devices._internal.resolve_board.read_product_code", autospec=True)
 @mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_product_code", autospec=True)
-class TestResolveBoardUsingProductCodeFromHTM(TestCase):
+class TestResolveBoardUsingProductCodeFromHTM:
     def test_returns_resolved_target(self, get_board_by_product_code, read_product_code, _get_all_htm_files_contents):
         read_product_code.return_value = "0123"
         candidate = CandidateDeviceFactory()
 
         subject = resolve_board(candidate)
 
-        self.assertEqual(subject, get_board_by_product_code.return_value)
+        assert subject == get_board_by_product_code.return_value
         get_board_by_product_code.assert_called_once_with(read_product_code.return_value)
         read_product_code.assert_called_once_with(_get_all_htm_files_contents.return_value[0])
         _get_all_htm_files_contents.assert_called_once_with(candidate.mount_points)
@@ -44,7 +48,7 @@ class TestResolveBoardUsingProductCodeFromHTM(TestCase):
         get_board_by_product_code.side_effect = UnknownBoard
         candidate = CandidateDeviceFactory()
 
-        with self.assertRaises(NoBoardForCandidate):
+        with pytest.raises(NoBoardForCandidate):
             resolve_board(candidate)
 
 
@@ -56,7 +60,7 @@ class TestResolveBoardUsingProductCodeFromHTM(TestCase):
 @mock.patch("mbed_tools.devices._internal.resolve_board.read_product_code", autospec=True, return_value=None)
 @mock.patch("mbed_tools.devices._internal.resolve_board.read_online_id", autospec=True)
 @mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_online_id", autospec=True)
-class TestResolveBoardUsingOnlineIdFromHTM(TestCase):
+class TestResolveBoardUsingOnlineIdFromHTM:
     def test_returns_resolved_board(
         self, get_board_by_online_id, read_online_id, read_product_code, _get_all_htm_files_contents
     ):
@@ -66,7 +70,7 @@ class TestResolveBoardUsingOnlineIdFromHTM(TestCase):
 
         subject = resolve_board(candidate)
 
-        self.assertEqual(subject, get_board_by_online_id.return_value)
+        assert subject == get_board_by_online_id.return_value
         read_online_id.assert_called_with(_get_all_htm_files_contents.return_value[0])
         get_board_by_online_id.assert_called_once_with(target_type=online_id.target_type, slug=online_id.slug)
 
@@ -77,7 +81,7 @@ class TestResolveBoardUsingOnlineIdFromHTM(TestCase):
         get_board_by_online_id.side_effect = UnknownBoard
         candidate = CandidateDeviceFactory()
 
-        with self.assertRaises(NoBoardForCandidate):
+        with pytest.raises(NoBoardForCandidate):
             resolve_board(candidate)
 
 
@@ -89,7 +93,7 @@ class TestResolveBoardUsingOnlineIdFromHTM(TestCase):
 @mock.patch("mbed_tools.devices._internal.resolve_board.read_product_code", autospec=True, return_value=None)
 @mock.patch("mbed_tools.devices._internal.resolve_board.read_online_id", autospec=True, return_value=None)
 @mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_product_code", autospec=True)
-class TestResolveBoardUsingProductCodeFromSerial(TestCase):
+class TestResolveBoardUsingProductCodeFromSerial:
     def test_resolves_board_using_product_code_when_available(
         self, get_board_by_product_code, read_online_id, read_product_code, _get_all_htm_files_contents
     ):
@@ -97,7 +101,7 @@ class TestResolveBoardUsingProductCodeFromSerial(TestCase):
 
         subject = resolve_board(candidate)
 
-        self.assertEqual(subject, get_board_by_product_code.return_value)
+        assert subject == get_board_by_product_code.return_value
         get_board_by_product_code.assert_called_once_with(candidate.serial_number[:4])
 
     def test_raises_when_board_not_found(
@@ -106,11 +110,11 @@ class TestResolveBoardUsingProductCodeFromSerial(TestCase):
         get_board_by_product_code.side_effect = UnknownBoard
         candidate = CandidateDeviceFactory()
 
-        with self.assertRaises(NoBoardForCandidate):
+        with pytest.raises(NoBoardForCandidate):
             resolve_board(candidate)
 
 
-class TestGetAllHtmFilesContents(TestCase):
+class TestGetAllHtmFilesContents:
     def test_returns_contents_of_all_htm_files_in_given_directories(self):
         with tempfile.TemporaryDirectory() as directory:
             directory_1 = pathlib.Path(directory, "test-1")
@@ -124,10 +128,10 @@ class TestGetAllHtmFilesContents(TestCase):
 
             result = _get_all_htm_files_contents([directory_1, directory_2])
 
-        self.assertEqual(result, ["foo", "bar"])
+        assert result == ["foo", "bar"]
 
 
-class TestReadHtmFilesContents(TestCase):
+class TestReadHtmFilesContents:
     def test_handles_unreadable_htm_file(self):
         with tempfile.TemporaryDirectory() as directory:
             htm_file = pathlib.Path(directory, "mbed.htm")
@@ -135,22 +139,22 @@ class TestReadHtmFilesContents(TestCase):
 
             result = _read_htm_file_contents([htm_file, pathlib.Path("error.htm")])
 
-        self.assertEqual(result, ["foo"])
+        assert result == ["foo"]
 
 
-class TestIsHtmFile(TestCase):
+class TestIsHtmFile:
     def test_lower_case_htm(self):
         result = _is_htm_file(pathlib.Path("mbed.htm"))
-        self.assertEqual(True, result)
+        assert result is True
 
     def test_upper_case_htm(self):
         result = _is_htm_file(pathlib.Path("MBED.HTM"))
-        self.assertEqual(True, result)
+        assert result is True
 
     def test_hidden_htm(self):
         result = _is_htm_file(pathlib.Path(".htm"))
-        self.assertEqual(False, result)
+        assert result is False
 
     def test_text_file(self):
         result = _is_htm_file(pathlib.Path("mbed.txt"))
-        self.assertEqual(False, result)
+        assert result is False
