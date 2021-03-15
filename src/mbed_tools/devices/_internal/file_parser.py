@@ -65,8 +65,14 @@ We support many flavours of MBED.HTM files. The list of examples below is not ex
     </html>
 
 """
+import itertools
+import logging
+import pathlib
 import re
-from typing import Optional, NamedTuple
+from typing import Optional, NamedTuple, Iterable, List
+
+
+logger = logging.getLogger(__name__)
 
 
 class OnlineId(NamedTuple):
@@ -104,3 +110,45 @@ def read_online_id(file_contents: str) -> Optional[OnlineId]:
     if match:
         return OnlineId(target_type=match["target_type"], slug=match["slug"])
     return None
+
+
+def extract_product_code_from_htm(all_files_contents: Iterable[str]) -> Optional[str]:
+    """Return first product code found in files contents, None if not found."""
+    for contents in all_files_contents:
+        product_code = read_product_code(contents)
+        if product_code:
+            return product_code
+    return None
+
+
+def extract_online_id_from_htm(all_files_contents: Iterable[str]) -> Optional[OnlineId]:
+    """Return first online id found in files contents, None if not found."""
+    for contents in all_files_contents:
+        online_id = read_online_id(contents)
+        if online_id:
+            return online_id
+    return None
+
+
+def get_all_htm_files_contents(directories: Iterable[pathlib.Path]) -> List[str]:
+    """Yields all htm files contents found in the list of given directories."""
+    files_in_each_directory = (directory.iterdir() for directory in directories)
+    all_files = itertools.chain.from_iterable(files_in_each_directory)
+    return _read_htm_file_contents(all_files)
+
+
+def _read_htm_file_contents(all_files: Iterable[pathlib.Path]) -> List[str]:
+    htm_files_contents = []
+    for file in all_files:
+        if _is_htm_file(file):
+            try:
+                htm_files_contents.append(file.read_text())
+            except OSError:
+                logger.warning(f"The file '{file}' could not be read from the device, target may not be identified.")
+    return htm_files_contents
+
+
+def _is_htm_file(file: pathlib.Path) -> bool:
+    """Checks whether the file looks like an Mbed HTM file."""
+    extensions = [".htm", ".HTM"]
+    return file.suffix in extensions and not file.name.startswith(".")

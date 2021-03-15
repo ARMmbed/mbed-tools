@@ -9,16 +9,16 @@ located on an "Mbed Enabled" device's USB MSD.
 
 For more information on the mbed-targets package visit https://github.com/ARMmbed/mbed-targets
 """
-import itertools
 import logging
-import pathlib
-
-from typing import Iterable, List, Optional
 
 from mbed_tools.targets import Board, get_board_by_product_code, get_board_by_online_id
 from mbed_tools.targets.exceptions import UnknownBoard
 
-from mbed_tools.devices._internal.file_parser import OnlineId, read_online_id, read_product_code
+from mbed_tools.devices._internal.file_parser import (
+    extract_product_code_from_htm,
+    extract_online_id_from_htm,
+    get_all_htm_files_contents,
+)
 from mbed_tools.devices._internal.candidate_device import CandidateDevice
 from mbed_tools.devices._internal.exceptions import NoBoardForCandidate
 
@@ -39,9 +39,9 @@ def resolve_board(candidate: CandidateDevice) -> Board:
     The specification of HTM files is that they redirect to board's product page on os.mbed.com.
     Information about Mbed Enabled requirements: https://www.mbed.com/en/about-mbed/mbed-enabled/requirements/
     """
-    all_files_contents = _get_all_htm_files_contents(candidate.mount_points)
+    all_files_contents = get_all_htm_files_contents(candidate.mount_points)
 
-    product_code = _extract_product_code(all_files_contents)
+    product_code = extract_product_code_from_htm(all_files_contents)
     if product_code:
         try:
             return get_board_by_product_code(product_code)
@@ -49,7 +49,7 @@ def resolve_board(candidate: CandidateDevice) -> Board:
             logger.error(f"Could not identify a board with the product code: '{product_code}'.")
             raise NoBoardForCandidate
 
-    online_id = _extract_online_id(all_files_contents)
+    online_id = extract_online_id_from_htm(all_files_contents)
     if online_id:
         slug = online_id.slug
         target_type = online_id.target_type
@@ -70,45 +70,3 @@ def resolve_board(candidate: CandidateDevice) -> Board:
             f"does not appear to be an Mbed development board."
         )
         raise NoBoardForCandidate
-
-
-def _extract_product_code(all_files_contents: Iterable[str]) -> Optional[str]:
-    """Return first product code found in files contents, None if not found."""
-    for contents in all_files_contents:
-        product_code = read_product_code(contents)
-        if product_code:
-            return product_code
-    return None
-
-
-def _extract_online_id(all_files_contents: Iterable[str]) -> Optional[OnlineId]:
-    """Return first online id found in files contents, None if not found."""
-    for contents in all_files_contents:
-        online_id = read_online_id(contents)
-        if online_id:
-            return online_id
-    return None
-
-
-def _get_all_htm_files_contents(directories: Iterable[pathlib.Path]) -> List[str]:
-    """Yields all htm files contents found in the list of given directories."""
-    files_in_each_directory = (directory.iterdir() for directory in directories)
-    all_files = itertools.chain.from_iterable(files_in_each_directory)
-    return _read_htm_file_contents(all_files)
-
-
-def _read_htm_file_contents(all_files: Iterable[pathlib.Path]) -> List[str]:
-    htm_files_contents = []
-    for file in all_files:
-        if _is_htm_file(file):
-            try:
-                htm_files_contents.append(file.read_text())
-            except OSError:
-                logger.warning(f"The file '{file}' could not be read from the device, target may not be identified.")
-    return htm_files_contents
-
-
-def _is_htm_file(file: pathlib.Path) -> bool:
-    """Checks whether the file looks like an Mbed HTM file."""
-    extensions = [".htm", ".HTM"]
-    return file.suffix in extensions and not file.name.startswith(".")
