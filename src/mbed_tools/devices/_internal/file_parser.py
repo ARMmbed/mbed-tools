@@ -2,11 +2,14 @@
 # Copyright (c) 2020-2021 Arm Limited and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-"""Facilitates parsing MBED.HTM files found on the Mbed devices.
+"""Parses files found on Mbed enabled devices.
 
-For legacy reasons, we support many flavours of MBED.HTM files. The list of examples below is not exhaustive,
-as at the time of writing it's not feasible to gather all examples in one place.
-Its main goal is to provide a taste of different flavours of HTM files we need to support.
+There are a number of data files stored on an mbed enabled device's USB MSD filesystem.
+
+The schema and content of these files are described in detail below.
+
+- MBED.HTM File
+We support many flavours of MBED.HTM files. The list of examples below is not exhaustive.
 
     <!-- mbed Microcontroller Website and Authentication Shortcut -->
     <!-- Version: 0200 Build: Feb  3 2014 14:03:10 -->
