@@ -8,7 +8,7 @@ from unittest import TestCase, mock
 from mbed_tools.targets.exceptions import UnknownBoard
 
 from tests.devices.factories import CandidateDeviceFactory
-from mbed_tools.devices._internal.htm_file import OnlineId
+from mbed_tools.devices._internal.file_parser import OnlineId
 from mbed_tools.devices._internal.resolve_board import (
     NoBoardForCandidate,
     resolve_board,

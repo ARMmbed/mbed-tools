@@ -2,7 +2,7 @@
 # Copyright (c) 2020-2021 Arm Limited and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-from mbed_tools.devices._internal.htm_file import read_product_code, read_online_id, OnlineId
+from mbed_tools.devices._internal.file_parser import read_product_code, read_online_id, OnlineId
 
 
 class TestReadProductCode:
