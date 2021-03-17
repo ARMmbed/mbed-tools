@@ -8,47 +8,47 @@ import pytest
 from click.testing import CliRunner
 from mbed_tools.devices.device import ConnectedDevices
 from mbed_tools.targets import Board
-from tabulate import tabulate
 from unittest import mock
 
-from mbed_tools.cli.list_connected_devices import (
-    list_connected_devices,
-    _build_tabular_output,
-    _build_json_output,
-    _get_build_targets,
-    _sort_devices,
-)
+from mbed_tools.cli.list_connected_devices import list_connected_devices
 from mbed_tools.devices import Device
-
-identified_devices = [mock.Mock(spec_set=Device)]
-unidentified_devices = [mock.Mock(spec_set=Device)]
 
 
 @pytest.fixture
 def get_connected_devices():
     with mock.patch("mbed_tools.cli.list_connected_devices.get_connected_devices") as cd:
-        cd.return_value = ConnectedDevices(
-            identified_devices=identified_devices, unidentified_devices=unidentified_devices
-        )
         yield cd
 
 
-@pytest.fixture
-def _sort_devices_mock():
-    with mock.patch("mbed_tools.cli.list_connected_devices._sort_devices") as sd:
-        yield sd
-
-
-@pytest.fixture
-def _build_tabular_output_mock():
-    with mock.patch("mbed_tools.cli.list_connected_devices._build_tabular_output") as bto:
-        yield bto
-
-
-@pytest.fixture
-def _build_json_output_mock():
-    with mock.patch("mbed_tools.cli.list_connected_devices._build_json_output") as bjo:
-        yield bjo
+def create_fake_device(
+    serial_number="A8675309",
+    serial_port="/dev/ttyUSB/default",
+    mount_points=(pathlib.Path("/media/you/DISCO"), pathlib.Path("/media/you/NUCLEO")),
+    board_type="BoardType",
+    board_name="BoardName",
+    product_code="0786",
+    target_type="TargetType",
+    slug="slug",
+    build_variant=("NS", "S"),
+    mbed_os_support=("mbed1", "mbed2"),
+    mbed_enabled=("baseline", "extended"),
+):
+    device_attrs = {
+        "serial_number": serial_number,
+        "serial_port": serial_port,
+        "mount_points": mount_points,
+    }
+    board_attrs = {
+        "board_type": board_type,
+        "board_name": board_name,
+        "product_code": product_code,
+        "target_type": target_type,
+        "slug": slug,
+        "build_variant": build_variant,
+        "mbed_os_support": mbed_os_support,
+        "mbed_enabled": mbed_enabled,
+    }
+    return Device(Board(**board_attrs), **device_attrs)
 
 
 class TestListConnectedDevices:
@@ -60,286 +60,218 @@ class TestListConnectedDevices:
         assert result.exit_code == 0
         assert "No connected Mbed devices found." in result.output
 
-    def test_by_default_lists_devices_using_tabular_output(
-        self, _build_tabular_output_mock, _sort_devices_mock, get_connected_devices
-    ):
-        _build_tabular_output_mock.return_value = "some output"
+
+class TestListConnectedDevicesTabularOutput:
+    @pytest.mark.parametrize(
+        "header, device_attr", [("Serial number", "serial_number"), ("Serial port", "serial_port")],
+    )
+    def test_device_attr_included(self, header, device_attr, get_connected_devices):
+        heading_name = header
+        device = create_fake_device()
+        get_connected_devices.return_value = ConnectedDevices(identified_devices=[device])
+        attr = getattr(device, device_attr)
 
         result = CliRunner().invoke(list_connected_devices)
 
-        assert result.exit_code == 0
-        assert _build_tabular_output_mock.return_value in result.output
-        _build_tabular_output_mock.assert_called_once_with(_sort_devices_mock.return_value)
-        _sort_devices_mock.assert_called_once_with(identified_devices)
+        output_lines = result.output.splitlines()
 
-    def test_given_json_flag_lists_devices_using_json_output(
-        self, _build_json_output_mock, _sort_devices_mock, get_connected_devices
-    ):
-        _build_json_output_mock.return_value = "some output"
+        assert result.exit_code == 0
+        assert heading_name in output_lines[0]
+        assert attr in output_lines[2]
+        assert output_lines[0].find(heading_name) == output_lines[2].find(attr)
+
+    @pytest.mark.parametrize("header, board_attr", [("Board name", "board_name")])
+    def test_board_attr_included(self, header, board_attr, get_connected_devices):
+        heading_name = header
+        device = create_fake_device()
+        get_connected_devices.return_value = ConnectedDevices(identified_devices=[device])
+        attr = getattr(device.mbed_board, board_attr)
+
+        result = CliRunner().invoke(list_connected_devices)
+
+        output_lines = result.output.splitlines()
+        assert result.exit_code == 0
+        assert heading_name in output_lines[0]
+        assert attr in output_lines[2]
+        assert output_lines[0].find(heading_name) == output_lines[2].find(attr)
+
+    @pytest.mark.parametrize("header, device_attr", [("Mount point(s)", "mount_points")])
+    def test_multiline_device_attr_included(self, header, device_attr, get_connected_devices):
+        heading_name = header
+        device = create_fake_device()
+        get_connected_devices.return_value = ConnectedDevices(identified_devices=[device])
+        attr = getattr(device, device_attr)
+
+        result = CliRunner().invoke(list_connected_devices)
+
+        output_lines = result.output.splitlines()
+        assert result.exit_code == 0
+        assert heading_name in output_lines[0]
+        for i, a in enumerate(attr):
+            assert str(a) in output_lines[2 + i]
+            assert output_lines[0].find(heading_name) == output_lines[2 + i].find(str(a))
+
+    def test_build_target_included(self, get_connected_devices):
+        heading_name = "Build target(s)"
+        device = create_fake_device()
+        board = device.mbed_board
+        get_connected_devices.return_value = ConnectedDevices(identified_devices=[device])
+        build_targets = [
+            f"{board.board_type}_{board.build_variant[0]}",
+            f"{board.board_type}_{board.build_variant[1]}",
+            f"{board.board_type}",
+        ]
+
+        result = CliRunner().invoke(list_connected_devices)
+
+        output_lines = result.output.splitlines()
+        assert result.exit_code == 0
+        assert heading_name in output_lines[0]
+        for i, bt in enumerate(build_targets):
+            assert bt in output_lines[2 + i]
+            assert output_lines[0].find(heading_name) == output_lines[2 + i].find(bt)
+
+    def test_appends_identifier_when_identical_boards_found(self, get_connected_devices):
+        heading_name = "Build target(s)"
+        device_a = create_fake_device()
+        device_b = create_fake_device()
+        board = device_a.mbed_board
+        get_connected_devices.return_value = ConnectedDevices(identified_devices=[device_a, device_b])
+        build_targets = [
+            f"{board.board_type}_{board.build_variant[0]}[0]",
+            f"{board.board_type}_{board.build_variant[1]}[0]",
+            f"{board.board_type}[0]",
+            f"{board.board_type}_{board.build_variant[0]}[1]",
+            f"{board.board_type}_{board.build_variant[1]}[1]",
+            f"{board.board_type}[1]",
+        ]
+
+        result = CliRunner().invoke(list_connected_devices)
+
+        output_lines = result.output.splitlines()
+        assert result.exit_code == 0
+        assert heading_name in output_lines[0]
+        for i, bt in enumerate(build_targets):
+            assert bt in output_lines[2 + i]
+            assert output_lines[0].find(heading_name) == output_lines[2 + i].find(bt)
+
+    def test_sort_order(self, get_connected_devices):
+        devices = [
+            create_fake_device(
+                serial_number="11111111",
+                board_name="AAAAAAA1FirstBoard",
+                build_variant=(),
+                mount_points=(pathlib.Path("/media/you/First"),),
+            ),
+            create_fake_device(
+                serial_number="22222222",
+                board_name="SameBoard[0]",
+                build_variant=(),
+                mount_points=(pathlib.Path("/media/you/Second"),),
+            ),
+            create_fake_device(
+                serial_number="33333333",
+                board_name="SameBoard[1]",
+                build_variant=(),
+                mount_points=(pathlib.Path("/media/you/Third"),),
+            ),
+        ]
+        get_connected_devices.return_value = ConnectedDevices(identified_devices=[devices[2], devices[0], devices[1]])
+
+        result = CliRunner().invoke(list_connected_devices, "--show-all")
+        output_lines = result.output.splitlines()
+        assert devices[0].mbed_board.board_name in output_lines[2]
+        assert devices[1].mbed_board.board_name in output_lines[3]
+        assert devices[2].mbed_board.board_name in output_lines[4]
+
+    def test_displays_unknown_serial_port_value(self, get_connected_devices):
+        heading_name = "Serial port"
+        device = create_fake_device(serial_port=None)
+        get_connected_devices.return_value = ConnectedDevices(identified_devices=[device])
+
+        result = CliRunner().invoke(list_connected_devices)
+
+        output_lines = result.output.splitlines()
+        assert result.exit_code == 0
+        assert heading_name in output_lines[0]
+        assert output_lines[0].find(heading_name) == output_lines[2].find("<unknown>")
+
+
+class TestListConnectedDevicesJSONOutput:
+    @pytest.mark.parametrize("device_attr", ("serial_number", "serial_port", "mount_points"))
+    def test_device_attr_included(self, device_attr, get_connected_devices):
+        device = create_fake_device()
+        get_connected_devices.return_value = ConnectedDevices(identified_devices=[device])
+        attr = getattr(device, device_attr)
+        # JSON encoder converts tuples to lists, so we need to convert the test data also to match
+        attr = [str(a) for a in attr] if isinstance(attr, tuple) else str(attr)
 
         result = CliRunner().invoke(list_connected_devices, "--format=json")
 
         assert result.exit_code == 0
-        assert _build_json_output_mock.return_value in result.output
-        _build_json_output_mock.assert_called_once_with(_sort_devices_mock.return_value)
-        _sort_devices_mock.assert_called_once_with(identified_devices)
+        assert attr == json.loads(result.output)[0][device_attr]
 
-    def test_given_show_all(self, _build_tabular_output_mock, _sort_devices_mock, get_connected_devices):
-        _build_tabular_output_mock.return_value = "some output"
+    @pytest.mark.parametrize(
+        "board_attr", ("product_code", "board_type", "board_name", "mbed_os_support", "mbed_enabled")
+    )
+    def test_board_attr_included(self, board_attr, get_connected_devices):
+        device = create_fake_device()
+        get_connected_devices.return_value = ConnectedDevices(identified_devices=[device])
+        attr = getattr(device.mbed_board, board_attr)
+        # JSON encoder converts tuples to lists, so we need to convert the test data also to match
+        attr = [str(a) for a in attr] if isinstance(attr, tuple) else str(attr)
 
-        result = CliRunner().invoke(list_connected_devices, "--show-all")
+        result = CliRunner().invoke(list_connected_devices, "--format=json")
 
         assert result.exit_code == 0
-        assert _build_tabular_output_mock.return_value in result.output
-        _build_tabular_output_mock.assert_called_once_with(_sort_devices_mock.return_value)
-        _sort_devices_mock.assert_called_once_with(identified_devices + unidentified_devices)
+        assert attr == json.loads(result.output)[0]["mbed_board"][board_attr]
 
+    def test_build_targets_included(self, get_connected_devices):
+        device = create_fake_device()
+        board = device.mbed_board
+        get_connected_devices.return_value = ConnectedDevices(identified_devices=[device])
 
-class TestSortDevices:
-    def test_sorts_devices_by_board_name(self):
-        device_1 = mock.create_autospec(
-            Device, mbed_board=mock.create_autospec(Board, board_name="A"), serial_number="123"
-        )
-        device_2 = mock.create_autospec(
-            Device, mbed_board=mock.create_autospec(Board, board_name="B"), serial_number="456"
-        )
-        device_3 = mock.create_autospec(
-            Device, mbed_board=mock.create_autospec(Board, board_name="C"), serial_number="789"
-        )
+        result = CliRunner().invoke(list_connected_devices, "--format=json")
 
-        result = _sort_devices([device_3, device_1, device_2])
-
-        assert list(result) == [device_1, device_2, device_3]
-
-    def test_sorts_devices_by_serial_number(self):
-        device_1 = mock.create_autospec(
-            Device, mbed_board=mock.create_autospec(Board, board_name=""), serial_number="123"
-        )
-        device_2 = mock.create_autospec(
-            Device, mbed_board=mock.create_autospec(Board, board_name=""), serial_number="456"
-        )
-        device_3 = mock.create_autospec(
-            Device, mbed_board=mock.create_autospec(Board, board_name=""), serial_number="789"
-        )
-
-        result = _sort_devices([device_3, device_1, device_2])
-
-        assert list(result) == [device_1, device_2, device_3]
-
-    def test_sorts_devices_by_board_name_then_serial_number(self):
-        device_1 = mock.create_autospec(
-            Device, mbed_board=mock.create_autospec(Board, board_name=""), serial_number="123"
-        )
-        device_2 = mock.create_autospec(
-            Device, mbed_board=mock.create_autospec(Board, board_name="Mbed"), serial_number="456"
-        )
-        device_3 = mock.create_autospec(
-            Device, mbed_board=mock.create_autospec(Board, board_name=""), serial_number="789"
-        )
-
-        result = _sort_devices([device_3, device_1, device_2])
-
-        assert list(result) == [device_1, device_3, device_2]
-
-
-class TestBuildTableOutput:
-    def test_returns_tabularised_representation_of_devices(self):
-        device = Device(
-            mbed_board=mock.create_autospec(
-                Board, board_name="board-name", build_variant=("S", "NS"), board_type="board-type",
-            ),
-            serial_number="serial-number",
-            serial_port="serial-port",
-            mount_points=[pathlib.Path("/Volumes/FOO"), pathlib.Path("/Volumes/BAR")],
-        )
-
-        output = _build_tabular_output([device])
-
-        expected_output = tabulate(
-            [
-                [
-                    device.mbed_board.board_name,
-                    device.serial_number,
-                    device.serial_port,
-                    "\n".join(map(str, device.mount_points)),
-                    "\n".join(_get_build_targets(device.mbed_board, None)),
-                ]
-            ],
-            headers=["Board name", "Serial number", "Serial port", "Mount point(s)", "Build target(s)"],
-        )
-        assert output == expected_output
-
-    def test_returns_tabularised_with_identifier(self):
-        board = mock.create_autospec(
-            Board, board_name="board-name", build_variant=("S", "NS"), board_type="board-type",
-        )
-        device = Device(
-            mbed_board=board,
-            serial_number="123",
-            serial_port="serial-port",
-            mount_points=[pathlib.Path("/Volumes/FOO"), pathlib.Path("/Volumes/BAR")],
-        )
-        device_2 = Device(
-            mbed_board=board,
-            serial_number="456",
-            serial_port="serial-port",
-            mount_points=[pathlib.Path("/Volumes/FOO"), pathlib.Path("/Volumes/BAR")],
-        )
-
-        output = _build_tabular_output([device, device_2])
-
-        expected_output = tabulate(
-            [
-                [
-                    f"{device.mbed_board.board_name}",
-                    device.serial_number,
-                    device.serial_port,
-                    "\n".join(map(str, device.mount_points)),
-                    "\n".join(_get_build_targets(board, 0)),
+        expected_output = [
+            {
+                "build_targets": [
+                    f"{board.board_type}_{board.build_variant[0]}",
+                    f"{board.board_type}_{board.build_variant[1]}",
+                    f"{board.board_type}",
                 ],
-                [
-                    f"{device_2.mbed_board.board_name}",
-                    device_2.serial_number,
-                    device_2.serial_port,
-                    "\n".join(map(str, device_2.mount_points)),
-                    "\n".join(_get_build_targets(board, 1)),
+            },
+        ]
+
+        assert result.exit_code == 0
+        for actual, expected in zip(json.loads(result.output), expected_output):
+            assert actual["mbed_board"]["build_targets"] == expected["build_targets"]
+
+    def test_identifiers_appended_when_identical_boards_found(self, get_connected_devices):
+        device = create_fake_device()
+        device_2 = create_fake_device()
+        board = device.mbed_board
+        get_connected_devices.return_value = ConnectedDevices(identified_devices=[device, device_2])
+
+        result = CliRunner().invoke(list_connected_devices, "--format=json")
+
+        expected_output = [
+            {
+                "build_targets": [
+                    f"{board.board_type}_{board.build_variant[0]}[0]",
+                    f"{board.board_type}_{board.build_variant[1]}[0]",
+                    f"{board.board_type}[0]",
                 ],
-            ],
-            headers=["Board name", "Serial number", "Serial port", "Mount point(s)", "Build target(s)"],
-        )
-        assert output == expected_output
+            },
+            {
+                "build_targets": [
+                    f"{board.board_type}_{board.build_variant[0]}[1]",
+                    f"{board.board_type}_{board.build_variant[1]}[1]",
+                    f"{board.board_type}[1]",
+                ],
+            },
+        ]
 
-    def test_displays_unknown_serial_port_value(self):
-        device = Device(
-            mbed_board=Board.from_offline_board_entry({}),
-            serial_number="serial",
-            serial_port=None,
-            mount_points=[pathlib.Path("somepath")],
-        )
-
-        output = _build_tabular_output([device])
-
-        expected_output = tabulate(
-            [
-                [
-                    "<unknown>",
-                    device.serial_number,
-                    "<unknown>",
-                    "\n".join(map(str, device.mount_points)),
-                    "\n".join(_get_build_targets(device.mbed_board, None)),
-                ]
-            ],
-            headers=["Board name", "Serial number", "Serial port", "Mount point(s)", "Build target(s)"],
-        )
-        assert output == expected_output
-
-
-class TestBuildJsonOutput:
-    def test_returns_json_representation_of_devices(self):
-        board = mock.create_autospec(
-            Board,
-            product_code="0021",
-            board_type="HAT-BOAT",
-            board_name="HAT Boat",
-            mbed_os_support=["0.2"],
-            mbed_enabled=["potentially"],
-            build_variant=("S", "NS"),
-        )
-        device = Device(
-            mbed_board=board, serial_number="09887654", serial_port="COM1", mount_points=[pathlib.Path("somepath")],
-        )
-
-        output = _build_json_output([device])
-        expected_output = json.dumps(
-            [
-                {
-                    "serial_number": device.serial_number,
-                    "serial_port": device.serial_port,
-                    "mount_points": [str(m) for m in device.mount_points],
-                    "mbed_board": {
-                        "product_code": board.product_code,
-                        "board_type": board.board_type,
-                        "board_name": board.board_name,
-                        "mbed_os_support": board.mbed_os_support,
-                        "mbed_enabled": board.mbed_enabled,
-                        "build_targets": _get_build_targets(board, None),
-                    },
-                }
-            ],
-            indent=4,
-        )
-
-        assert output == expected_output
-
-    def test_returns_json_representation_with_identifier(self):
-        board = mock.create_autospec(
-            Board,
-            product_code="0021",
-            board_type="HAT-BOAT",
-            board_name="HAT Boat",
-            mbed_os_support=["0.2"],
-            mbed_enabled=["potentially"],
-            build_variant=("S", "NS"),
-        )
-        device = Device(
-            mbed_board=board, serial_number="09887654", serial_port="COM1", mount_points=[pathlib.Path("somepath")],
-        )
-        device_2 = Device(
-            mbed_board=board, serial_number="09884321", serial_port="COM2", mount_points=[pathlib.Path("anotherpath")],
-        )
-
-        output = _build_json_output([device, device_2])
-        expected_output = json.dumps(
-            [
-                {
-                    "serial_number": device.serial_number,
-                    "serial_port": device.serial_port,
-                    "mount_points": [str(m) for m in device.mount_points],
-                    "mbed_board": {
-                        "product_code": board.product_code,
-                        "board_type": board.board_type,
-                        "board_name": board.board_name,
-                        "mbed_os_support": board.mbed_os_support,
-                        "mbed_enabled": board.mbed_enabled,
-                        "build_targets": _get_build_targets(board, 0),
-                    },
-                },
-                {
-                    "serial_number": device_2.serial_number,
-                    "serial_port": device_2.serial_port,
-                    "mount_points": [str(m) for m in device_2.mount_points],
-                    "mbed_board": {
-                        "product_code": board.product_code,
-                        "board_type": board.board_type,
-                        "board_name": board.board_name,
-                        "mbed_os_support": board.mbed_os_support,
-                        "mbed_enabled": board.mbed_enabled,
-                        "build_targets": _get_build_targets(board, 1),
-                    },
-                },
-            ],
-            indent=4,
-        )
-
-        assert output == expected_output
-
-    def test_empty_values_keys_are_always_present(self):
-        """Asserts that keys are present even if value is None."""
-        device = Device(
-            mbed_board=Board.from_offline_board_entry({}), serial_number="foo", serial_port=None, mount_points=[],
-        )
-
-        output = json.loads(_build_json_output([device]))
-
-        assert output[0]["serial_port"] is None
-
-
-class TestGetBuildTargets:
-    def test_returns_base_target_and_all_variants(self):
-        board = mock.create_autospec(Board, build_variant=("S", "NS"), board_type="FOO")
-
-        assert _get_build_targets(board, None) == ["FOO_S", "FOO_NS", "FOO"]
-
-    def test_returns_base_and_variants_identifier(self):
-        board = mock.create_autospec(Board, build_variant=("S", "NS"), board_type="FOO")
-        assert _get_build_targets(board, 2) == ["FOO_S[2]", "FOO_NS[2]", "FOO[2]"]
+        assert result.exit_code == 0
+        for actual, expected in zip(json.loads(result.output), expected_output):
+            assert actual["mbed_board"]["build_targets"] == expected["build_targets"]
