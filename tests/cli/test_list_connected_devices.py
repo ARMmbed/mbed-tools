@@ -24,6 +24,7 @@ def create_fake_device(
     serial_number="8675309",
     serial_port="/dev/ttyUSB/default",
     mount_points=(pathlib.Path("/media/you/DISCO"), pathlib.Path("/media/you/NUCLEO")),
+    interface_version="VA3JME",
     board_type="BoardType",
     board_name="BoardName",
     product_code="0786",
@@ -37,6 +38,7 @@ def create_fake_device(
         "serial_number": serial_number,
         "serial_port": serial_port,
         "mount_points": mount_points,
+        "interface_version": interface_version,
     }
     board_attrs = {
         "board_type": board_type,
@@ -63,7 +65,12 @@ class TestListConnectedDevices:
 
 class TestListConnectedDevicesTabularOutput:
     @pytest.mark.parametrize(
-        "header, device_attr", [("Serial number", "serial_number"), ("Serial port", "serial_port")],
+        "header, device_attr",
+        [
+            ("Serial number", "serial_number"),
+            ("Serial port", "serial_port"),
+            ("Interface Version", "interface_version"),
+        ],
     )
     def test_device_attr_included(self, header, device_attr, get_connected_devices):
         heading_name = header
@@ -198,7 +205,7 @@ class TestListConnectedDevicesTabularOutput:
 
 
 class TestListConnectedDevicesJSONOutput:
-    @pytest.mark.parametrize("device_attr", ("serial_number", "serial_port", "mount_points"))
+    @pytest.mark.parametrize("device_attr", ("serial_number", "serial_port", "mount_points", "interface_version"))
     def test_device_attr_included(self, device_attr, get_connected_devices):
         device = create_fake_device()
         get_connected_devices.return_value = ConnectedDevices(identified_devices=[device])
