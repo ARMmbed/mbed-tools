@@ -65,7 +65,7 @@ def _get_devices_ids(devices: Iterable[Device]) -> List[Tuple[Optional[int], Dev
 
 
 def _build_tabular_output(devices: Iterable[Device]) -> str:
-    headers = ["Board name", "Serial number", "Serial port", "Mount point(s)", "Build target(s)"]
+    headers = ["Board name", "Serial number", "Serial port", "Mount point(s)", "Build target(s)", "Interface Version"]
     devices_data = []
     for id, device in _get_devices_ids(devices):
         devices_data.append(
@@ -75,6 +75,7 @@ def _build_tabular_output(devices: Iterable[Device]) -> str:
                 device.serial_port or "<unknown>",
                 "\n".join(str(mount_point) for mount_point in device.mount_points),
                 "\n".join(_get_build_targets(device.mbed_board, id)),
+                device.interface_version,
             ]
         )
     return tabulate(devices_data, headers=headers, numalign="left")
@@ -89,6 +90,7 @@ def _build_json_output(devices: Iterable[Device]) -> str:
                 "serial_number": device.serial_number,
                 "serial_port": device.serial_port,
                 "mount_points": [str(m) for m in device.mount_points],
+                "interface_version": device.interface_version,
                 "mbed_board": {
                     "product_code": board.product_code,
                     "board_type": board.board_type,
