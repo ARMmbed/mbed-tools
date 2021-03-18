@@ -14,9 +14,9 @@ import logging
 from typing import Optional
 
 from mbed_tools.targets import Board, get_board_by_product_code, get_board_by_online_id
-from mbed_tools.targets.exceptions import UnknownBoard
+from mbed_tools.targets.exceptions import UnknownBoard, MbedTargetsError
 
-from mbed_tools.devices._internal.exceptions import NoBoardForCandidate
+from mbed_tools.devices._internal.exceptions import NoBoardForCandidate, ResolveBoardError
 from mbed_tools.devices._internal.file_parser import OnlineId
 
 
@@ -44,6 +44,11 @@ def resolve_board(
             return get_board_by_product_code(product_code)
         except UnknownBoard:
             logger.error(f"Could not identify a board with the product code: '{product_code}'.")
+        except MbedTargetsError as e:
+            logger.error(
+                f"There was an error looking up the product code `{product_code}` from the target database.\nError: {e}"
+            )
+            raise ResolveBoardError() from e
 
     if online_id:
         slug = online_id.slug
@@ -52,6 +57,11 @@ def resolve_board(
             return get_board_by_online_id(slug=slug, target_type=target_type)
         except UnknownBoard:
             logger.error(f"Could not identify a board with the slug: '{slug}' and target type: '{target_type}'.")
+        except MbedTargetsError as e:
+            logger.error(
+                f"There was an error looking up the online ID `{online_id!r}` from the target database.\nError: {e}"
+            )
+            raise ResolveBoardError() from e
 
     # Product code might be the first 4 characters of the serial number
     product_code = serial_number[:4]
@@ -64,5 +74,10 @@ def resolve_board(
                 f"The device with the Serial Number: '{serial_number}' (Product Code: '{product_code}') "
                 f"does not appear to be an Mbed development board."
             )
+        except MbedTargetsError as e:
+            logger.error(
+                f"There was an error looking up the product code `{product_code}` from the target database.\nError: {e}"
+            )
+            raise ResolveBoardError() from e
 
     raise NoBoardForCandidate

@@ -10,11 +10,10 @@ from unittest import mock
 import pytest
 
 from mbed_tools.targets import Board
-from mbed_tools.targets.exceptions import MbedTargetsError
 
 from tests.devices.factories import CandidateDeviceFactory
 from mbed_tools.devices.device import Device
-from mbed_tools.devices._internal.exceptions import NoBoardForCandidate
+from mbed_tools.devices._internal.exceptions import NoBoardForCandidate, ResolveBoardError
 
 from mbed_tools.devices.devices import (
     get_connected_devices,
@@ -65,11 +64,13 @@ class TestGetConnectedDevices:
             )
         ]
 
-    def test_raises_device_lookup_failed_on_internal_error(self, resolve_board, detect_candidate_devices):
-        resolve_board.side_effect = MbedTargetsError
-        detect_candidate_devices.return_value = [CandidateDeviceFactory()]
+    @mock.patch("mbed_tools.devices.device.read_device_files")
+    def test_raises_when_resolve_board_fails(self, read_device_files, resolve_board, detect_candidate_devices):
+        candidate = CandidateDeviceFactory()
+        resolve_board.side_effect = ResolveBoardError
+        detect_candidate_devices.return_value = [candidate]
 
-        with pytest.raises(DeviceLookupFailed):
+        with pytest.raises(DeviceLookupFailed, match="candidate"):
             get_connected_devices()
 
 
