@@ -21,7 +21,7 @@ def get_connected_devices():
 
 
 def create_fake_device(
-    serial_number="A8675309",
+    serial_number="8675309",
     serial_port="/dev/ttyUSB/default",
     mount_points=(pathlib.Path("/media/you/DISCO"), pathlib.Path("/media/you/NUCLEO")),
     board_type="BoardType",
