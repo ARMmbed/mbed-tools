@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Tuple, Optional, List
 from mbed_tools.targets import Board
 from mbed_tools.devices._internal.detect_candidate_devices import CandidateDevice
+from mbed_tools.devices._internal.resolve_board import resolve_board, NoBoardForCandidate
 
 
 @dataclass(frozen=True, order=True)
@@ -28,6 +29,34 @@ class Device:
     serial_number: str
     serial_port: Optional[str]
     mount_points: Tuple[Path, ...]
+    mbed_enabled: bool = False
+
+    @classmethod
+    def from_candidate(cls, candidate: CandidateDevice) -> "Device":
+        """Contruct a Device from a CandidateDevice.
+
+        We try to resolve a board using data files that may be stored on the CandidateDevice.
+        If this fails we set the board to `None` which means we couldn't verify this Device
+        as being an Mbed enabled device.
+
+        Args:
+            candidate: The CandidateDevice we're using to create the Device.
+        """
+        try:
+            mbed_board = resolve_board(candidate)
+            mbed_enabled = True
+        except NoBoardForCandidate:
+            # Create an empty Board to ensure the device is fully populated and rendering is simple
+            mbed_board = Board.from_offline_board_entry({})
+            mbed_enabled = False
+
+        return Device(
+            serial_port=candidate.serial_port,
+            serial_number=candidate.serial_number,
+            mount_points=candidate.mount_points,
+            mbed_board=mbed_board,
+            mbed_enabled=mbed_enabled,
+        )
 
 
 @dataclass(order=True)
@@ -48,24 +77,15 @@ class ConnectedDevices:
     identified_devices: List[Device] = field(default_factory=list)
     unidentified_devices: List[Device] = field(default_factory=list)
 
-    def add_device(self, candidate_device: CandidateDevice, mbed_board: Optional[Board] = None) -> None:
-        """Add a candidate device and optionally an Mbed Target to the connected devices.
+    def add_device(self, device: Device) -> None:
+        """Add a device to the connected devices.
 
         Args:
-            candidate_device: a CandidateDevice object containing the device information.
-            mbed_board: a Board object for identified devices, for unidentified devices this will be None.
+            device: a Device object containing the device information.
         """
-        new_device = Device(
-            serial_port=candidate_device.serial_port,
-            serial_number=candidate_device.serial_number,
-            mount_points=candidate_device.mount_points,
-            # Create an empty Board to ensure the device is fully populated and rendering is simple
-            mbed_board=mbed_board if mbed_board is not None else Board.from_offline_board_entry({}),
-        )
-
-        if mbed_board is None:
+        if not device.mbed_enabled:
             # Keep a list of devices that could not be identified but are Mbed Boards
-            self.unidentified_devices.append(new_device)
+            self.unidentified_devices.append(device)
         else:
             # Keep a list of devices that have been identified as Mbed Boards
-            self.identified_devices.append(new_device)
+            self.identified_devices.append(device)

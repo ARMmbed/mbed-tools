@@ -8,11 +8,8 @@ from operator import attrgetter
 from typing import List, Optional
 
 from mbed_tools.targets.exceptions import MbedTargetsError
-from mbed_tools.targets import Board
 
 from mbed_tools.devices._internal.detect_candidate_devices import detect_candidate_devices
-from mbed_tools.devices._internal.resolve_board import resolve_board
-from mbed_tools.devices._internal.exceptions import NoBoardForCandidate
 
 from mbed_tools.devices.device import ConnectedDevices, Device
 from mbed_tools.devices.exceptions import DeviceLookupFailed, NoDevicesFound
@@ -29,12 +26,9 @@ def get_connected_devices() -> ConnectedDevices:
     """
     connected_devices = ConnectedDevices()
 
-    board: Optional["Board"]
     for candidate_device in detect_candidate_devices():
         try:
-            board = resolve_board(candidate_device)
-        except NoBoardForCandidate:
-            board = None
+            device = Device.from_candidate(candidate_device)
         except MbedTargetsError as err:
             raise DeviceLookupFailed(
                 f"We found a potential connected device ({candidate_device!r}) but could not identify it as being "
@@ -42,8 +36,7 @@ def get_connected_devices() -> ConnectedDevices:
                 "device. Check your device contains a valid HTM file with a product code, and that it is added as an "
                 "Mbed enabled device on os.mbed.com."
             ) from err
-
-        connected_devices.add_device(candidate_device, board)
+        connected_devices.add_device(device)
 
     return connected_devices
 

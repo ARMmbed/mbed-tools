@@ -25,7 +25,7 @@ from mbed_tools.devices.exceptions import DeviceLookupFailed, NoDevicesFound
 
 
 @mock.patch("mbed_tools.devices.devices.detect_candidate_devices")
-@mock.patch("mbed_tools.devices.devices.resolve_board")
+@mock.patch("mbed_tools.devices.device.resolve_board")
 class TestGetConnectedDevices:
     def test_builds_devices_from_candidates(self, resolve_board, detect_candidate_devices):
         candidate = CandidateDeviceFactory()
@@ -38,10 +38,10 @@ class TestGetConnectedDevices:
                 serial_number=candidate.serial_number,
                 mount_points=candidate.mount_points,
                 mbed_board=resolve_board.return_value,
+                mbed_enabled=True,
             )
         ]
         assert not connected_devices.unidentified_devices
-        resolve_board.assert_called_once_with(candidate)
 
     @mock.patch.object(Board, "from_offline_board_entry")
     def test_skips_candidates_without_a_board(self, board, resolve_board, detect_candidate_devices):
