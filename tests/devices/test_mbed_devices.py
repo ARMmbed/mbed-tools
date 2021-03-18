@@ -5,7 +5,9 @@
 import pathlib
 import re
 
-from unittest import TestCase, mock
+from unittest import mock
+
+import pytest
 
 from mbed_tools.targets import Board
 from mbed_tools.targets.exceptions import MbedTargetsError
@@ -24,24 +26,21 @@ from mbed_tools.devices.exceptions import DeviceLookupFailed, NoDevicesFound
 
 @mock.patch("mbed_tools.devices.devices.detect_candidate_devices")
 @mock.patch("mbed_tools.devices.devices.resolve_board")
-class TestGetConnectedDevices(TestCase):
+class TestGetConnectedDevices:
     def test_builds_devices_from_candidates(self, resolve_board, detect_candidate_devices):
         candidate = CandidateDeviceFactory()
         detect_candidate_devices.return_value = [candidate]
 
         connected_devices = get_connected_devices()
-        self.assertEqual(
-            connected_devices.identified_devices,
-            [
-                Device(
-                    serial_port=candidate.serial_port,
-                    serial_number=candidate.serial_number,
-                    mount_points=candidate.mount_points,
-                    mbed_board=resolve_board.return_value,
-                )
-            ],
-        )
-        self.assertEqual(connected_devices.unidentified_devices, [])
+        assert connected_devices.identified_devices == [
+            Device(
+                serial_port=candidate.serial_port,
+                serial_number=candidate.serial_number,
+                mount_points=candidate.mount_points,
+                mbed_board=resolve_board.return_value,
+            )
+        ]
+        assert not connected_devices.unidentified_devices
         resolve_board.assert_called_once_with(candidate)
 
     @mock.patch.object(Board, "from_offline_board_entry")
@@ -52,29 +51,26 @@ class TestGetConnectedDevices(TestCase):
         board.return_value = None
 
         connected_devices = get_connected_devices()
-        self.assertEqual(connected_devices.identified_devices, [])
-        self.assertEqual(
-            connected_devices.unidentified_devices,
-            [
-                Device(
-                    serial_port=candidate.serial_port,
-                    serial_number=candidate.serial_number,
-                    mount_points=candidate.mount_points,
-                    mbed_board=None,
-                )
-            ],
-        )
+        assert connected_devices.identified_devices == []
+        assert connected_devices.unidentified_devices == [
+            Device(
+                serial_port=candidate.serial_port,
+                serial_number=candidate.serial_number,
+                mount_points=candidate.mount_points,
+                mbed_board=None,
+            )
+        ]
 
     def test_raises_device_lookup_failed_on_internal_error(self, resolve_board, detect_candidate_devices):
         resolve_board.side_effect = MbedTargetsError
         detect_candidate_devices.return_value = [CandidateDeviceFactory()]
 
-        with self.assertRaises(DeviceLookupFailed):
+        with pytest.raises(DeviceLookupFailed):
             get_connected_devices()
 
 
 @mock.patch("mbed_tools.devices.devices.find_all_connected_devices")
-class TestFindConnectedDevice(TestCase):
+class TestFindConnectedDevice:
     def test_finds_device_with_matching_name(self, mock_find_connected_devices):
         target_name = "K64F"
         mock_find_connected_devices.return_value = [
@@ -83,7 +79,7 @@ class TestFindConnectedDevice(TestCase):
 
         dev = find_connected_device(target_name)
 
-        self.assertEqual(target_name, dev.mbed_board.board_type)
+        assert target_name == dev.mbed_board.board_type
 
     def test_finds_device_with_matching_name_identifier(self, mock_find_connected_devices):
         target_name = "K64F"
@@ -95,7 +91,7 @@ class TestFindConnectedDevice(TestCase):
 
         dev = find_connected_device(target_name, target_identifier)
 
-        self.assertEqual(dev.serial_number, "456")
+        assert dev.serial_number == "456"
 
     def test_raises_when_multiple_matching_name_no_identifier(self, mock_find_connected_devices):
         target_name = "K64F"
@@ -116,9 +112,8 @@ class TestFindConnectedDevice(TestCase):
             ),
         ]
 
-        with self.assertRaises(DeviceLookupFailed) as ex:
+        with pytest.raises(DeviceLookupFailed, match="Multiple"):
             find_connected_device("K64F", None)
-        self.assertTrue("Multiple" in ex.exception.args[0])
 
     def test_raises_when_identifier_out_of_bounds(self, mock_find_connected_devices):
         target_name = "K64F"
@@ -139,13 +134,12 @@ class TestFindConnectedDevice(TestCase):
             ),
         ]
 
-        with self.assertRaises(DeviceLookupFailed) as ex:
+        with pytest.raises(DeviceLookupFailed, match="valid"):
             find_connected_device("K64F", 2)
-        self.assertTrue("valid" in ex.exception.args[0])
 
 
 @mock.patch("mbed_tools.devices.devices.get_connected_devices")
-class TestFindAllConnectedDevices(TestCase):
+class TestFindAllConnectedDevices:
     def test_finds_all_devices_with_matching_name(self, mock_get_connected_devices):
         target_name = "K64F"
         mock_get_connected_devices.return_value = mock.Mock(
@@ -159,14 +153,14 @@ class TestFindAllConnectedDevices(TestCase):
 
         devices = find_all_connected_devices(target_name)
 
-        self.assertEqual(len(devices), 2)
-        self.assertEqual(devices[0].serial_number, "123")
-        self.assertEqual(devices[1].serial_number, "456")
+        assert len(devices) == 2
+        assert devices[0].serial_number == "123"
+        assert devices[1].serial_number == "456"
 
     def test_raises_when_no_mbed_enabled_devices_found(self, mock_get_connected_devices):
         mock_get_connected_devices.return_value = mock.Mock(identified_devices=[], spec=True)
 
-        with self.assertRaises(NoDevicesFound):
+        with pytest.raises(NoDevicesFound):
             find_all_connected_devices("K64F")
 
     def test_raises_when_device_matching_target_name_not_found(self, mock_get_connected_devices):
@@ -186,9 +180,11 @@ class TestFindAllConnectedDevices(TestCase):
             spec=True,
         )
 
-        with self.assertRaisesRegex(
+        with pytest.raises(
             DeviceLookupFailed,
-            f".*(target: {re.escape(connected_target_name)}).*(port: {re.escape(connected_target_serial_port)}).*"
-            f"(mount point.*: {re.escape(str(connected_target_mount_point))})",
+            match=(
+                f".*(target: {re.escape(connected_target_name)}).*(port: {re.escape(connected_target_serial_port)}).*"
+                f"(mount point.*: {re.escape(str(connected_target_mount_point))})"
+            ),
         ):
             find_all_connected_devices(target_name)
