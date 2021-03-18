@@ -13,3 +13,7 @@ class SystemException(ToolsError):
 
 class NoBoardForCandidate(ToolsError):
     """Raised when board data cannot be determined for a candidate."""
+
+
+class ResolveBoardError(ToolsError):
+    """There was an error resolving the board for a device."""

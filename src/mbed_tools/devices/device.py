@@ -8,8 +8,9 @@ from pathlib import Path
 from typing import Tuple, Optional, List
 from mbed_tools.targets import Board
 from mbed_tools.devices._internal.detect_candidate_devices import CandidateDevice
-from mbed_tools.devices._internal.resolve_board import resolve_board, NoBoardForCandidate
+from mbed_tools.devices._internal.resolve_board import resolve_board, NoBoardForCandidate, ResolveBoardError
 from mbed_tools.devices._internal.file_parser import read_device_files
+from mbed_tools.devices.exceptions import DeviceLookupFailed
 
 
 @dataclass(frozen=True, order=True)
@@ -54,6 +55,11 @@ class Device:
             # Create an empty Board to ensure the device is fully populated and rendering is simple
             mbed_board = Board.from_offline_board_entry({})
             mbed_enabled = False
+        except ResolveBoardError:
+            raise DeviceLookupFailed(
+                f"Failed to resolve the board for candidate device {candidate!r}. There was a problem looking up the "
+                "board data in the database."
+            )
 
         return Device(
             serial_port=candidate.serial_port,

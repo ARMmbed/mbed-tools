@@ -6,13 +6,10 @@ from unittest import mock
 
 import pytest
 
-from mbed_tools.targets.exceptions import UnknownBoard
+from mbed_tools.targets.exceptions import UnknownBoard, MbedTargetsError
 
 from mbed_tools.devices._internal.file_parser import OnlineId, DeviceFileInfo
-from mbed_tools.devices._internal.resolve_board import (
-    NoBoardForCandidate,
-    resolve_board,
-)
+from mbed_tools.devices._internal.resolve_board import NoBoardForCandidate, resolve_board, ResolveBoardError
 
 
 @pytest.fixture
@@ -42,6 +39,16 @@ class TestResolveBoardUsingProductCodeFromHTM:
         with pytest.raises(NoBoardForCandidate):
             resolve_board(product_code="0123")
 
+    def test_raises_when_database_lookup_fails(self, get_board_by_product_code_mock, caplog):
+        get_board_by_product_code_mock.side_effect = MbedTargetsError
+        product_code = "0123"
+
+        with pytest.raises(ResolveBoardError):
+            resolve_board(product_code=product_code)
+
+        assert product_code in caplog.text
+        assert caplog.records[-1].levelname == "ERROR"
+
 
 class TestResolveBoardUsingOnlineIdFromHTM:
     def test_returns_resolved_board(self, get_board_by_online_id_mock):
@@ -58,6 +65,16 @@ class TestResolveBoardUsingOnlineIdFromHTM:
         with pytest.raises(NoBoardForCandidate):
             resolve_board(online_id=OnlineId(target_type="hat", slug="boat"))
 
+    def test_raises_when_database_lookup_fails(self, get_board_by_online_id_mock, caplog):
+        get_board_by_online_id_mock.side_effect = MbedTargetsError
+        online_id = OnlineId(target_type="hat", slug="boat")
+
+        with pytest.raises(ResolveBoardError):
+            resolve_board(online_id=online_id)
+
+        assert repr(online_id) in caplog.text
+        assert caplog.records[-1].levelname == "ERROR"
+
 
 class TestResolveBoardUsingProductCodeFromSerial:
     def test_resolves_board_using_product_code_when_available(self, get_board_by_product_code_mock):
@@ -72,3 +89,13 @@ class TestResolveBoardUsingProductCodeFromSerial:
 
         with pytest.raises(NoBoardForCandidate):
             resolve_board(serial_number="0")
+
+    def test_raises_when_database_lookup_fails(self, get_board_by_product_code_mock, caplog):
+        get_board_by_product_code_mock.side_effect = MbedTargetsError
+        serial_number = "0123456"
+
+        with pytest.raises(ResolveBoardError):
+            resolve_board(serial_number=serial_number)
+
+        assert serial_number[:4] in caplog.text
+        assert caplog.records[-1].levelname == "ERROR"

@@ -7,8 +7,6 @@
 from operator import attrgetter
 from typing import List, Optional
 
-from mbed_tools.targets.exceptions import MbedTargetsError
-
 from mbed_tools.devices._internal.detect_candidate_devices import detect_candidate_devices
 
 from mbed_tools.devices.device import ConnectedDevices, Device
@@ -20,22 +18,11 @@ def get_connected_devices() -> ConnectedDevices:
 
     Connected devices which have been identified as Mbed Boards and also connected devices which are potentially
     Mbed Boards (but not could not be identified in the database) are returned.
-
-    Raises:
-        DeviceLookupFailed: If there is a problem with the process of identifying Mbed Boards from connected devices.
     """
     connected_devices = ConnectedDevices()
 
     for candidate_device in detect_candidate_devices():
-        try:
-            device = Device.from_candidate(candidate_device)
-        except MbedTargetsError as err:
-            raise DeviceLookupFailed(
-                f"We found a potential connected device ({candidate_device!r}) but could not identify it as being "
-                "Mbed enabled. This is because we couldn't find a known product code from the available data on your "
-                "device. Check your device contains a valid HTM file with a product code, and that it is added as an "
-                "Mbed enabled device on os.mbed.com."
-            ) from err
+        device = Device.from_candidate(candidate_device)
         connected_devices.add_device(device)
 
     return connected_devices
