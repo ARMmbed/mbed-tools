@@ -77,7 +77,7 @@ def _build_tabular_output(devices: Iterable[Device]) -> str:
                 "\n".join(_get_build_targets(device.mbed_board, id)),
             ]
         )
-    return tabulate(devices_data, headers=headers)
+    return tabulate(devices_data, headers=headers, numalign="left")
 
 
 def _build_json_output(devices: Iterable[Device]) -> str:
