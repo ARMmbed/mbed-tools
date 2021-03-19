@@ -8,85 +8,67 @@ import pytest
 
 from mbed_tools.targets.exceptions import UnknownBoard
 
-from tests.devices.factories import CandidateDeviceFactory
-from mbed_tools.devices._internal.file_parser import OnlineId
+from mbed_tools.devices._internal.file_parser import OnlineId, DeviceFileInfo
 from mbed_tools.devices._internal.resolve_board import (
     NoBoardForCandidate,
     resolve_board,
 )
 
 
-@mock.patch("mbed_tools.devices._internal.resolve_board.extract_product_code_from_htm", autospec=True)
-@mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_product_code", autospec=True)
+@pytest.fixture
+def get_board_by_product_code_mock():
+    with mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_product_code", autospec=True) as gbp:
+        yield gbp
+
+
+@pytest.fixture
+def get_board_by_online_id_mock():
+    with mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_online_id", autospec=True) as gbp:
+        yield gbp
+
+
 class TestResolveBoardUsingProductCodeFromHTM:
-    def test_returns_resolved_target(self, get_board_by_product_code, extract_product_code_from_htm):
-        extract_product_code_from_htm.return_value = "0123"
-        candidate = CandidateDeviceFactory()
+    def test_returns_resolved_target(self, get_board_by_product_code_mock):
+        dev_info = DeviceFileInfo("0123", None)
 
-        subject = resolve_board(candidate)
+        subject = resolve_board(product_code=dev_info.product_code)
 
-        assert subject == get_board_by_product_code.return_value
-        get_board_by_product_code.assert_called_once_with(extract_product_code_from_htm.return_value)
+        assert subject == get_board_by_product_code_mock.return_value
+        get_board_by_product_code_mock.assert_called_once_with(dev_info.product_code)
 
-    def test_raises_when_board_not_found(self, get_board_by_product_code, extract_product_code_from_htm):
-        extract_product_code_from_htm.return_value = "1234"
-        get_board_by_product_code.side_effect = UnknownBoard
-        candidate = CandidateDeviceFactory()
+    def test_raises_when_board_not_found(self, get_board_by_product_code_mock):
+        get_board_by_product_code_mock.side_effect = UnknownBoard
 
         with pytest.raises(NoBoardForCandidate):
-            resolve_board(candidate)
+            resolve_board(product_code="0123")
 
 
-@mock.patch(
-    "mbed_tools.devices._internal.resolve_board.extract_product_code_from_htm", autospec=True, return_value=None
-)
-@mock.patch("mbed_tools.devices._internal.resolve_board.extract_online_id_from_htm", autospec=True)
-@mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_online_id", autospec=True)
 class TestResolveBoardUsingOnlineIdFromHTM:
-    def test_returns_resolved_board(
-        self, get_board_by_online_id, extract_online_id_from_htm, extract_product_code_from_htm,
-    ):
+    def test_returns_resolved_board(self, get_board_by_online_id_mock):
         online_id = OnlineId(target_type="hat", slug="boat")
-        extract_online_id_from_htm.return_value = online_id
-        candidate = CandidateDeviceFactory()
 
-        subject = resolve_board(candidate)
+        subject = resolve_board(online_id=online_id)
 
-        assert subject == get_board_by_online_id.return_value
-        get_board_by_online_id.assert_called_once_with(target_type=online_id.target_type, slug=online_id.slug)
+        assert subject == get_board_by_online_id_mock.return_value
+        get_board_by_online_id_mock.assert_called_once_with(target_type=online_id.target_type, slug=online_id.slug)
 
-    def test_raises_when_board_not_found(
-        self, get_board_by_online_id, extract_online_id_from_htm, extract_product_code_from_htm,
-    ):
-        extract_online_id_from_htm.return_value = OnlineId(target_type="hat", slug="boat")
-        get_board_by_online_id.side_effect = UnknownBoard
-        candidate = CandidateDeviceFactory()
+    def test_raises_when_board_not_found(self, get_board_by_online_id_mock):
+        get_board_by_online_id_mock.side_effect = UnknownBoard
 
         with pytest.raises(NoBoardForCandidate):
-            resolve_board(candidate)
+            resolve_board(online_id=OnlineId(target_type="hat", slug="boat"))
 
 
-@mock.patch(
-    "mbed_tools.devices._internal.resolve_board.extract_product_code_from_htm", autospec=True, return_value=None
-)
-@mock.patch("mbed_tools.devices._internal.resolve_board.extract_online_id_from_htm", autospec=True, return_value=None)
-@mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_product_code", autospec=True)
 class TestResolveBoardUsingProductCodeFromSerial:
-    def test_resolves_board_using_product_code_when_available(
-        self, get_board_by_product_code, extract_online_id_from_htm, extract_product_code_from_htm,
-    ):
-        candidate = CandidateDeviceFactory()
+    def test_resolves_board_using_product_code_when_available(self, get_board_by_product_code_mock):
+        serial_number = "0A9KJFKD0993WJKUFS0KLJ329090"
+        subject = resolve_board(serial_number=serial_number)
 
-        subject = resolve_board(candidate)
+        assert subject == get_board_by_product_code_mock.return_value
+        get_board_by_product_code_mock.assert_called_once_with(serial_number[:4])
 
-        assert subject == get_board_by_product_code.return_value
-        get_board_by_product_code.assert_called_once_with(candidate.serial_number[:4])
-
-    def test_raises_when_board_not_found(
-        self, get_board_by_product_code, extract_online_id_from_htm, extract_product_code_from_htm,
-    ):
-        get_board_by_product_code.side_effect = UnknownBoard
-        candidate = CandidateDeviceFactory()
+    def test_raises_when_board_not_found(self, get_board_by_product_code_mock):
+        get_board_by_product_code_mock.side_effect = UnknownBoard
 
         with pytest.raises(NoBoardForCandidate):
-            resolve_board(candidate)
+            resolve_board(serial_number="0")
