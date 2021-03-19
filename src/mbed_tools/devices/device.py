@@ -9,6 +9,7 @@ from typing import Tuple, Optional, List
 from mbed_tools.targets import Board
 from mbed_tools.devices._internal.detect_candidate_devices import CandidateDevice
 from mbed_tools.devices._internal.resolve_board import resolve_board, NoBoardForCandidate
+from mbed_tools.devices._internal.file_parser import read_device_files
 
 
 @dataclass(frozen=True, order=True)
@@ -42,8 +43,11 @@ class Device:
         Args:
             candidate: The CandidateDevice we're using to create the Device.
         """
+        device_file_info = read_device_files(candidate.mount_points)
         try:
-            mbed_board = resolve_board(candidate)
+            mbed_board = resolve_board(
+                device_file_info.product_code, device_file_info.online_id, candidate.serial_number
+            )
             mbed_enabled = True
         except NoBoardForCandidate:
             # Create an empty Board to ensure the device is fully populated and rendering is simple

@@ -11,45 +11,40 @@ For more information on the mbed-targets package visit https://github.com/ARMmbe
 """
 import logging
 
+from typing import Optional
+
 from mbed_tools.targets import Board, get_board_by_product_code, get_board_by_online_id
 from mbed_tools.targets.exceptions import UnknownBoard
 
-from mbed_tools.devices._internal.file_parser import (
-    extract_product_code_from_htm,
-    extract_online_id_from_htm,
-    get_all_htm_files_contents,
-)
-from mbed_tools.devices._internal.candidate_device import CandidateDevice
 from mbed_tools.devices._internal.exceptions import NoBoardForCandidate
+from mbed_tools.devices._internal.file_parser import OnlineId
 
 
 logger = logging.getLogger(__name__)
 
 
-def resolve_board(candidate: CandidateDevice) -> Board:
-    """Resolves board for a given CandidateDevice.
+def resolve_board(
+    product_code: Optional[str] = None, online_id: Optional[OnlineId] = None, serial_number: str = ""
+) -> Board:
+    """Resolves a board object from the platform database.
 
-    This function interrogates CandidateDevice, attempting to establish the best method to resolve a Board,
-    the rules are as follows:
+    We have multiple ways to identify boards from various metadata sources Mbed provides. This is because there are
+    many supported Mbed device families, each with slightly different ways of identifying themselves as Mbed enabled.
+    Because of this we need to try each input in turn, falling back to the next lookup method in the priority order if
+    the previous one was unsuccessful.
 
-    1. Use product code retrieved from one of HTM files in the mass storage if available.
-    2. Use online id retrieved from one of the HTM files in the mass storage if available.
-    3. Fallback to product code retrieved from serial number.
+    The rules are as follows:
 
-    The specification of HTM files is that they redirect to board's product page on os.mbed.com.
-    Information about Mbed Enabled requirements: https://www.mbed.com/en/about-mbed/mbed-enabled/requirements/
+    1. Use the product code from the mbed.htm file or details.txt if available
+    2. Use online ID from the htm file if available
+    3. Try to use the first 4 chars of the USB serial number as the product code
     """
-    all_files_contents = get_all_htm_files_contents(candidate.mount_points)
-
-    product_code = extract_product_code_from_htm(all_files_contents)
     if product_code:
         try:
             return get_board_by_product_code(product_code)
         except UnknownBoard:
             logger.error(f"Could not identify a board with the product code: '{product_code}'.")
-            raise NoBoardForCandidate
 
-    online_id = extract_online_id_from_htm(all_files_contents)
     if online_id:
         slug = online_id.slug
         target_type = online_id.target_type
@@ -57,16 +52,17 @@ def resolve_board(candidate: CandidateDevice) -> Board:
             return get_board_by_online_id(slug=slug, target_type=target_type)
         except UnknownBoard:
             logger.error(f"Could not identify a board with the slug: '{slug}' and target type: '{target_type}'.")
-            raise NoBoardForCandidate
 
     # Product code might be the first 4 characters of the serial number
-    try:
-        product_code = candidate.serial_number[:4]
-        return get_board_by_product_code(product_code)
-    except UnknownBoard:
-        # Most devices have a serial number so this may not be a problem
-        logger.info(
-            f"The device with the Serial Number: '{candidate.serial_number}' (Product Code: '{product_code}') "
-            f"does not appear to be an Mbed development board."
-        )
-        raise NoBoardForCandidate
+    product_code = serial_number[:4]
+    if product_code:
+        try:
+            return get_board_by_product_code(product_code)
+        except UnknownBoard:
+            # Most devices have a serial number so this may not be a problem
+            logger.info(
+                f"The device with the Serial Number: '{serial_number}' (Product Code: '{product_code}') "
+                f"does not appear to be an Mbed development board."
+            )
+
+    raise NoBoardForCandidate
