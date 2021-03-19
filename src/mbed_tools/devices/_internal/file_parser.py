@@ -94,6 +94,7 @@ class DeviceFileInfo:
 
     product_code: Optional[str]
     online_id: Optional[OnlineId]
+    interface_details: dict
 
 
 def read_device_files(directory_paths: Iterable[pathlib.Path]) -> DeviceFileInfo:
@@ -114,12 +115,18 @@ def read_device_files(directory_paths: Iterable[pathlib.Path]) -> DeviceFileInfo
             "\nThis device may not be identifiable as Mbed enabled. Check the files exist, are not hidden and are not "
             "corrupted."
         )
-        return DeviceFileInfo(None, None)
+        return DeviceFileInfo(None, None, {})
 
     htm_file_contents = _read_htm_file_contents(device_file_paths)
-    code = _extract_product_code_from_htm(htm_file_contents)
+    details_txt_contents = _read_first_details_txt_contents(device_file_paths)
+    # details.txt is the "preferred" source of truth for the product_code
+    code = details_txt_contents.get("code")
+    if code is None:
+        # erk! well, let's get it from the mbed.htm file instead...
+        code = _extract_product_code_from_htm(htm_file_contents)
+
     online_id = _extract_online_id_from_htm(htm_file_contents)
-    return DeviceFileInfo(code, online_id)
+    return DeviceFileInfo(code, online_id, details_txt_contents)
 
 
 def _read_product_code(file_contents: str) -> Optional[str]:
@@ -145,6 +152,39 @@ def _read_online_id(file_contents: str) -> Optional[OnlineId]:
     if match:
         return OnlineId(target_type=match["target_type"], slug=match["slug"])
     return None
+
+
+def _read_first_details_txt_contents(file_paths: Iterable[pathlib.Path]) -> dict:
+    for path in file_paths:
+        if _is_details_txt(path):
+            contents = _try_read_file_text(path)
+            if contents:
+                return _read_details_txt(contents)
+
+    logger.warning(f"Could not find DETAILS.TXT in {file_paths!r}.")
+    return {}
+
+
+def _read_details_txt(file_contents: str) -> dict:
+    """Parse the contents of a daplink-compatible device's details.txt.
+
+    Args:
+        file_contents: The contents of the details.txt file.
+    """
+    output = {}
+    for line in file_contents.splitlines():
+        # Ignore any comments in the file contents
+        if line.startswith("#"):
+            continue
+
+        key, value = line.split(":", maxsplit=1)
+        output[key.strip()] = value.strip()
+
+    # Some forms of details.txt use Interface Version instead of Version as the key for the version number field
+    if "Interface Version" in output and "Version" not in output:
+        output["Version"] = output.pop("Interface Version")
+
+    return output
 
 
 def _extract_product_code_from_htm(all_files_contents: Iterable[str]) -> Optional[str]:
@@ -194,3 +234,7 @@ def _is_hidden_file(file: pathlib.Path) -> bool:
 
 def _is_htm_file(path: pathlib.Path) -> bool:
     return path.suffix.lower() == ".htm"
+
+
+def _is_details_txt(path: pathlib.Path) -> bool:
+    return path.name.lower() == "details.txt"
