@@ -31,6 +31,7 @@ class Device:
     serial_port: Optional[str]
     mount_points: Tuple[Path, ...]
     mbed_enabled: bool = False
+    interface_version: Optional[str] = None
 
     @classmethod
     def from_candidate(cls, candidate: CandidateDevice) -> "Device":
@@ -60,6 +61,7 @@ class Device:
             mount_points=candidate.mount_points,
             mbed_board=mbed_board,
             mbed_enabled=mbed_enabled,
+            interface_version=device_file_info.interface_details.get("Version"),
         )
 
 

@@ -27,9 +27,12 @@ from mbed_tools.devices.exceptions import DeviceLookupFailed, NoDevicesFound
 @mock.patch("mbed_tools.devices.devices.detect_candidate_devices")
 @mock.patch("mbed_tools.devices.device.resolve_board")
 class TestGetConnectedDevices:
-    def test_builds_devices_from_candidates(self, resolve_board, detect_candidate_devices):
+    @mock.patch("mbed_tools.devices.device.read_device_files")
+    def test_builds_devices_from_candidates(self, read_device_files, resolve_board, detect_candidate_devices):
         candidate = CandidateDeviceFactory()
         detect_candidate_devices.return_value = [candidate]
+        iface_details = {"Version": "0222"}
+        read_device_files.return_value = mock.Mock(interface_details=iface_details)
 
         connected_devices = get_connected_devices()
         assert connected_devices.identified_devices == [
@@ -39,6 +42,7 @@ class TestGetConnectedDevices:
                 mount_points=candidate.mount_points,
                 mbed_board=resolve_board.return_value,
                 mbed_enabled=True,
+                interface_version=iface_details["Version"],
             )
         ]
         assert not connected_devices.unidentified_devices

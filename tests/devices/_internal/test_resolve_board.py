@@ -29,7 +29,7 @@ def get_board_by_online_id_mock():
 
 class TestResolveBoardUsingProductCodeFromHTM:
     def test_returns_resolved_target(self, get_board_by_product_code_mock):
-        dev_info = DeviceFileInfo("0123", None)
+        dev_info = DeviceFileInfo("0123", None, None)
 
         subject = resolve_board(product_code=dev_info.product_code)
 

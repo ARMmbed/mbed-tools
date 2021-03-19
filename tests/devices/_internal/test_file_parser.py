@@ -6,6 +6,8 @@ import pathlib
 
 from unittest import mock
 
+import pytest
+
 from mbed_tools.devices._internal.file_parser import (
     OnlineId,
     read_device_files,
@@ -14,12 +16,15 @@ from mbed_tools.devices._internal.file_parser import (
 
 class TestReadDeviceFiles:
     def test_finds_daplink_compatible_device_files(self, tmp_path):
+        details = pathlib.Path(tmp_path, "details.txt")
         htm = pathlib.Path(tmp_path, "mbed.htm")
         htm.write_text("code=2222")
+        details.write_text("Version: 2")
 
         info = read_device_files([tmp_path])
 
         assert info.product_code is not None
+        assert info.interface_details is not None
 
     def test_warns_if_no_device_files_found(self, caplog, tmp_path):
         read_device_files([tmp_path])
@@ -33,8 +38,10 @@ class TestReadDeviceFiles:
             f'content="0; url=http://mbed.org/start?auth={auth}&loader=11972&firmware=16457&configuration=4" />'
         )
         pathlib.Path(tmp_path, "._MBED.HTM").write_text(file_contents)
+        pathlib.Path(tmp_path, "._DETAILS.TXT").write_text("Version: 2222")
 
         assert read_device_files([tmp_path]).product_code is None
+        assert not read_device_files([tmp_path]).interface_details
 
     def test_handles_os_error_with_warning(self, tmp_path, caplog, monkeypatch):
         bad_htm = pathlib.Path(tmp_path, "MBED.HTM")
@@ -102,3 +109,74 @@ class TestExtractOnlineIDFromHTM:
         pathlib.Path(tmp_path, "MBED.HTM").write_text(file_contents)
 
         assert read_device_files([tmp_path]).online_id is None
+
+
+# Helpers to build test data
+def build_short_details_txt(version="0226", build="Aug 24 2015 17:06:30", commit_sha="27a2367", local_mods="Yes"):
+    return (
+        f"""Version: {version}
+Build:   {build}
+Git Commit SHA: {commit_sha}
+Git Local mods: {local_mods}
+""",
+        {"Version": version, "Build": build, "Git Commit SHA": commit_sha, "Git Local mods": local_mods},
+    )
+
+
+def build_long_details_txt(
+    interface_version="0226",
+    uid="0240000029164e45002f0012706e0006f301000097969900",
+    hif_id="97969900",
+    auto_reset="0",
+    auto_allow="0",
+    daplink_mode="Interface",
+    commit_sha="c76899838",
+    local_mods="0",
+    usb_ifaces="MSD, CDC, HID",
+    iface_crc="0x26764ebf",
+):
+    return (
+        f"""# DAPLink Firmware - see https://mbed.com/daplink
+Unique ID: {uid}
+HIF ID: {hif_id}
+Auto Reset: {auto_reset}
+Automation allowed: {auto_allow}
+Daplink Mode: {daplink_mode}
+Interface Version: {interface_version}
+Git SHA: {commit_sha}
+Local Mods: {local_mods}
+USB Interfaces: {usb_ifaces}
+Interface CRC: {iface_crc}
+""",
+        {
+            "Unique ID": uid,
+            "HIF ID": hif_id,
+            "Auto Reset": auto_reset,
+            "Automation allowed": auto_allow,
+            "Daplink Mode": daplink_mode,
+            "Version": interface_version,
+            "Git SHA": commit_sha,
+            "Local Mods": local_mods,
+            "USB Interfaces": usb_ifaces,
+            "Interface CRC": iface_crc,
+        },
+    )
+
+
+class TestReadDetailsTxt:
+    @pytest.mark.parametrize(
+        "content, expected",
+        (
+            build_short_details_txt(),
+            build_short_details_txt(version="0777", commit_sha="99789s", local_mods="No"),
+            build_long_details_txt(),
+            ("", {}),
+        ),
+        ids=("short", "short2", "long", "empty"),
+    )
+    def test_parses_details_txt(self, content, expected, tmp_path):
+        details_file_path = pathlib.Path(tmp_path, "DETAILS.txt")
+        details_file_path.write_text(content)
+
+        result = read_device_files([tmp_path]).interface_details
+        assert result == expected
