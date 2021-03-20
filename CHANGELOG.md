@@ -12,6 +12,17 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.4.0 (2021-03-20)
+==================
+
+Features
+--------
+
+- Targets added: DISCO-WB5MM.
+  Targets removed: STM32WB5MM-DK.
+  Targets modified: NUMAKER-M2354. (#20210320050210)
+
+
 7.3.3 (2021-03-13)
 ==================
 

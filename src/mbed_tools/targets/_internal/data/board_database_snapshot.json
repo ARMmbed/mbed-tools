@@ -329,16 +329,21 @@
         "mbed_os_support": [
             "Mbed OS 5.15"
         ],
-        "mbed_enabled": []
+        "mbed_enabled": [
+            "Advanced",
+            "Baseline"
+        ]
     },
     {
-        "board_type": "STM32WB5MM_DK",
-        "board_name": "STM32WB5MM-DK",
+        "board_type": "DISCO_WB5MM",
+        "board_name": "DISCO-WB5MM",
         "product_code": "0884",
         "target_type": "platform",
-        "slug": "STM32WB5MM-DK",
+        "slug": "DISCO-WB5MM",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 6.8"
+        ],
         "mbed_enabled": []
     },
     {
