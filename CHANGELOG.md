@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.5.0 (2021-03-23)
+==================
+
+Features
+--------
+
+- Targets added: DISCO-WB5MMG.
+  Targets removed: DISCO-WB5MM. (#20210323050222)
+
+
 7.4.0 (2021-03-20)
 ==================
 

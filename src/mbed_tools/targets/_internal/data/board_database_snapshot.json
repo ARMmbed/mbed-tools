@@ -335,11 +335,11 @@
         ]
     },
     {
-        "board_type": "DISCO_WB5MM",
-        "board_name": "DISCO-WB5MM",
+        "board_type": "DISCO_WB5MMG",
+        "board_name": "DISCO-WB5MMG",
         "product_code": "0884",
         "target_type": "platform",
-        "slug": "DISCO-WB5MM",
+        "slug": "DISCO-WB5MMG",
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 6.8"
