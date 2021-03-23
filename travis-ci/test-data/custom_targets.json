@@ -12,7 +12,7 @@
             "MX25R6435F"
         ],
         "supported_form_factors": [
-            "ARDUINO"
+            "ARDUINO_UNO"
         ],
         "detect_code": [
             "1234"
