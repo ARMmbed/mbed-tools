@@ -1,0 +1,1 @@
+Update form factor ARDUINO to ARDUINO_UNO in the custom targets travis test as ARDUINO has been deprecated.
