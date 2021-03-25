@@ -1,0 +1,1 @@
+Add a CMake variable `MBED_OUTPUT_EXT` for the output image extension.

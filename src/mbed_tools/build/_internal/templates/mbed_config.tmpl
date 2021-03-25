@@ -9,6 +9,7 @@ set(MBED_TARGET "{{target_name}}" CACHE STRING "")
 set(MBED_CPU_CORE "{{core}}" CACHE STRING "")
 set(MBED_C_LIB "{{c_lib}}" CACHE STRING "")
 set(MBED_PRINTF_LIB "{{printf_lib}}" CACHE STRING "")
+set(MBED_OUTPUT_EXT "{{OUTPUT_EXT}}" CACHE STRING "")
 
 list(APPEND MBED_TARGET_SUPPORTED_C_LIBS {% for supported_c_lib in supported_c_libs %}
     {{supported_c_lib}}
