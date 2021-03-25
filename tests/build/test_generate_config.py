@@ -47,6 +47,7 @@ TARGET_DATA = {
     "supported_form_factors": ["ARDUINO"],
     "supported_toolchains": ["ARM", "GCC_ARM", "IAR"],
     "trustzone": False,
+    "OUTPUT_EXT": "hex",
 }
 
 
@@ -288,6 +289,7 @@ def test_overrides_target_config_param_from_app(matching_target_and_filter, prog
         ("target.macros", ["DEFINE"], "DEFINE"),
         ("target.device_has", ["NOTHING"], "DEVICE_NOTHING"),
         ("target.features", ["ELECTRICITY"], "FEATURE_ELECTRICITY"),
+        ("OUTPUT_EXT", "hex", 'MBED_OUTPUT_EXT "hex"'),
     ],
 )
 def test_overrides_target_non_config_params_from_app(
