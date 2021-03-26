@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.5.1 (2021-03-26)
+==================
+
+Bugfixes
+--------
+
+- Add a CMake variable `MBED_OUTPUT_EXT` for the output image extension. (#216)
+
+
+Misc
+----
+
+- #20210323151402
+
+
 7.5.0 (2021-03-23)
 ==================
 
