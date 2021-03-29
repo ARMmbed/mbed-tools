@@ -45,6 +45,25 @@ def get_board_by_online_id(slug: str, target_type: str) -> Board:
     return get_board(lambda board: board.slug.casefold() == matched_slug and board.target_type == target_type)
 
 
+def get_board_by_jlink_slug(slug: str) -> Board:
+    """Returns first `mbed-tools.targets.board.Board` matching given slug.
+
+    With J-Link, the slug is extracted from a board manufacturer URL, and may not match
+    the Mbed slug. The J-Link slug is compared against the slug, board_name and
+    board_type of entries in the board database until a match is found.
+
+    Args:
+        slug: the J-Link slug to look up in the database.
+
+    Raises:
+        UnknownBoard: a board matching the slug was not found.
+    """
+    matched_slug = slug.casefold()
+    return get_board(
+        lambda board: any(matched_slug == c.casefold() for c in [board.slug, board.board_name, board.board_type])
+    )
+
+
 def get_board(matching: Callable) -> Board:
     """Returns first `mbed_tools.targets.board.Board` for which `matching` is True.
 

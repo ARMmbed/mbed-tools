@@ -10,7 +10,7 @@ from unittest import mock
 from mbed_tools.targets._internal.exceptions import BoardAPIError
 
 # Import from top level as this is the expected interface for users
-from mbed_tools.targets import get_board_by_online_id, get_board_by_product_code
+from mbed_tools.targets import get_board_by_online_id, get_board_by_product_code, get_board_by_jlink_slug
 from mbed_tools.targets.get_board import (
     _DatabaseMode,
     _get_database_mode,
@@ -122,6 +122,24 @@ class TestGetBoardByOnlineId:
 
         assert fn(matching_board_1)
         assert fn(matching_board_2)
+        assert not fn(not_matching_board)
+
+
+class TestGetBoardByJlinkSlug:
+    def test_matches_boards_by_online_id(self, mock_get_board):
+        assert get_board_by_jlink_slug(slug="slug") == mock_get_board.return_value
+
+        # Test callable matches correct boards
+        fn = mock_get_board.call_args[0][0]
+
+        matching_board_1 = make_board(slug="slug")
+        matching_board_2 = make_board(board_type="slug")
+        matching_board_3 = make_board(board_name="slug")
+        not_matching_board = make_board()
+
+        assert fn(matching_board_1)
+        assert fn(matching_board_2)
+        assert fn(matching_board_3)
         assert not fn(not_matching_board)
 
 

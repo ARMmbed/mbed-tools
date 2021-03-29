@@ -13,7 +13,12 @@ import logging
 
 from typing import Optional
 
-from mbed_tools.targets import Board, get_board_by_product_code, get_board_by_online_id
+from mbed_tools.targets import (
+    Board,
+    get_board_by_product_code,
+    get_board_by_online_id,
+    get_board_by_jlink_slug,
+)
 from mbed_tools.targets.exceptions import UnknownBoard, MbedTargetsError
 
 from mbed_tools.devices._internal.exceptions import NoBoardForCandidate, ResolveBoardError
@@ -36,7 +41,7 @@ def resolve_board(
     The rules are as follows:
 
     1. Use the product code from the mbed.htm file or details.txt if available
-    2. Use online ID from the htm file if available
+    2. Use online ID from the htm file or Board.html if available
     3. Try to use the first 4 chars of the USB serial number as the product code
     """
     if product_code:
@@ -54,7 +59,10 @@ def resolve_board(
         slug = online_id.slug
         target_type = online_id.target_type
         try:
-            return get_board_by_online_id(slug=slug, target_type=target_type)
+            if target_type == "jlink":
+                return get_board_by_jlink_slug(slug=slug)
+            else:
+                return get_board_by_online_id(slug=slug, target_type=target_type)
         except UnknownBoard:
             logger.error(f"Could not identify a board with the slug: '{slug}' and target type: '{target_type}'.")
         except MbedTargetsError as e:
