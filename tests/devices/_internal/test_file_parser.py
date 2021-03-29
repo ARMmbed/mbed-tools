@@ -8,10 +8,7 @@ from unittest import mock
 
 import pytest
 
-from mbed_tools.devices._internal.file_parser import (
-    OnlineId,
-    read_device_files,
-)
+from mbed_tools.devices._internal.file_parser import OnlineId, read_device_files
 
 
 class TestReadDeviceFiles:
@@ -24,6 +21,17 @@ class TestReadDeviceFiles:
         info = read_device_files([tmp_path])
 
         assert info.product_code is not None
+        assert info.interface_details is not None
+
+    def test_finds_jlink_device_files(self, tmp_path):
+        segger_html = pathlib.Path(tmp_path, "Segger.html")
+        board_html = pathlib.Path(tmp_path, "Board.html")
+        segger_html.write_text(build_segger_html())
+        board_html.write_text(build_board_html())
+
+        info = read_device_files([tmp_path])
+
+        assert info.online_id is not None
         assert info.interface_details is not None
 
     def test_warns_if_no_device_files_found(self, caplog, tmp_path):
@@ -111,6 +119,48 @@ class TestExtractOnlineIDFromHTM:
         assert read_device_files([tmp_path]).online_id is None
 
 
+class TestExtractsJlinkData:
+    def test_reads_board_slug(self, tmp_path):
+        board_html = pathlib.Path(tmp_path, "Board.html")
+        board_html.write_text(build_board_html("http://test.com/test/slug"))
+
+        info = read_device_files([tmp_path])
+
+        assert info.online_id == OnlineId(target_type="jlink", slug="slug")
+
+    def test_reads_board_slug_ignore_extension(self, tmp_path):
+        board_html = pathlib.Path(tmp_path, "Board.html")
+        board_html.write_text(build_board_html("http://test.com/slug.html"))
+
+        info = read_device_files([tmp_path])
+
+        assert info.online_id == OnlineId(target_type="jlink", slug="slug")
+
+    def test_id_none_if_no_board_slug(self, tmp_path):
+        board_html = pathlib.Path(tmp_path, "Board.html")
+        board_html.write_text(build_board_html("http://test.com"))
+
+        info = read_device_files([tmp_path])
+
+        assert info.online_id is None
+
+    def test_reads_segger_slug(self, tmp_path):
+        segger_html = pathlib.Path(tmp_path, "Segger.html")
+        segger_html.write_text(build_segger_html("variant"))
+
+        info = read_device_files([tmp_path])
+
+        assert info.interface_details.get("Version") == "variant"
+
+    def test_interface_empty_if_not_found(self, tmp_path):
+        board_html = pathlib.Path(tmp_path, "Board.html")
+        board_html.write_text("<html></html>")
+
+        info = read_device_files([tmp_path])
+
+        assert info.interface_details == {}
+
+
 # Helpers to build test data
 def build_short_details_txt(version="0226", build="Aug 24 2015 17:06:30", commit_sha="27a2367", local_mods="Yes"):
     return (
@@ -161,6 +211,18 @@ Interface CRC: {iface_crc}
             "Interface CRC": iface_crc,
         },
     )
+
+
+def build_segger_html(model="j-link-ob"):
+    return (
+        """<html><head><meta http-equiv="refresh" content="0;"""
+        f"""url=https://www.segger.com/products/debug-probes/j-link/models/{model}/"/>"""
+        """</head><body></body></html>"""
+    )
+
+
+def build_board_html(target_url="http://www.nxp.com/FRDM-K64F"):
+    return f"""<html><head><meta http-equiv="refresh" content="0; url={target_url}"/></head><body></body></html>"""
 
 
 class TestReadDetailsTxt:

@@ -64,6 +64,30 @@ We support many flavours of MBED.HTM files. The list of examples below is not ex
     </body>
     </html>
 
+---
+
+- Segger.html File
+This can be found on connected J-Link devices. An example is shown below.
+
+    <html>
+    <head>
+    <meta http-equiv="refresh" content="0; url=https://www.segger.com/products/debug-probes/j-link/models/j-link-ob/"/>
+    </head>
+    <body></body>
+    </html>
+---
+
+- Board.html File
+This can be found on connected J-Link devices. An example is shown below.
+
+    <html>
+    <head>
+    <meta http-equiv="refresh" content="0; url=http://www.nxp.com/FRDM-K64F"/>
+    <title>NXP Product Page</title>
+    </head>
+    <body></body>
+    </html>
+
 """
 import logging
 import pathlib
@@ -126,6 +150,10 @@ def read_device_files(directory_paths: Iterable[pathlib.Path]) -> DeviceFileInfo
         code = _extract_product_code_from_htm(htm_file_contents)
 
     online_id = _extract_online_id_from_htm(htm_file_contents)
+    if online_id is None:
+        # If no online ID available from .htm, may be a J-Link
+        online_id = _extract_online_id_jlink_html(device_file_paths)
+        details_txt_contents.update(_extract_version_jlink_html(device_file_paths))
     return DeviceFileInfo(code, online_id, details_txt_contents)
 
 
@@ -151,6 +179,15 @@ def _read_online_id(file_contents: str) -> Optional[OnlineId]:
     match = re.search(regex, file_contents, re.VERBOSE)
     if match:
         return OnlineId(target_type=match["target_type"], slug=match["slug"])
+    return None
+
+
+def _read_url_slug(file_contents: str) -> Optional[str]:
+    """Returns slug parsed from file contents, None if not found."""
+    regex = r"""url=[^"]+\.[^"]+\/(?P<slug>[-\w]+)(\/|[\w.]+)?\""""
+    match = re.search(regex, file_contents, re.VERBOSE)
+    if match:
+        return match["slug"]
     return None
 
 
@@ -205,6 +242,27 @@ def _extract_online_id_from_htm(all_files_contents: Iterable[str]) -> Optional[O
     return None
 
 
+def _extract_online_id_jlink_html(file_paths: Iterable[pathlib.Path]) -> Optional[OnlineId]:
+    """Return online ID found in Board.html, None if not found."""
+    contents = _get_board_html_contents(file_paths)
+    if contents is not None:
+        slug = _read_url_slug(contents)
+        if slug:
+            return OnlineId("jlink", slug)
+    return None
+
+
+def _extract_version_jlink_html(file_paths: Iterable[pathlib.Path]) -> dict:
+    """Return dict with version found in Segger.html, empty if not found."""
+    interface_data = {}
+    contents = _get_segger_html_content(file_paths)
+    if contents is not None:
+        segger_version = _read_url_slug(contents)
+        if segger_version:
+            interface_data["Version"] = segger_version
+    return interface_data
+
+
 def _get_device_file_paths(directories: Iterable[pathlib.Path]) -> List[pathlib.Path]:
     return [path for directory in directories for path in directory.iterdir() if not _is_hidden_file(path)]
 
@@ -225,6 +283,20 @@ def _read_htm_file_contents(all_files: Iterable[pathlib.Path]) -> List[str]:
             if contents:
                 htm_files_contents.append(contents)
     return htm_files_contents
+
+
+def _get_segger_html_content(file_paths: Iterable[pathlib.Path]) -> Optional[str]:
+    for fp in file_paths:
+        if fp.name.lower() == "segger.html":
+            return _try_read_file_text(fp)
+    return None
+
+
+def _get_board_html_contents(file_paths: Iterable[pathlib.Path]) -> Optional[str]:
+    for fp in file_paths:
+        if fp.name.lower() == "board.html":
+            return _try_read_file_text(fp)
+    return None
 
 
 def _is_hidden_file(file: pathlib.Path) -> bool:
