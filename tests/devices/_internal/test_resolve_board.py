@@ -19,6 +19,12 @@ def get_board_by_product_code_mock():
 
 
 @pytest.fixture
+def get_board_by_jlink_slug_mock():
+    with mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_jlink_slug", autospec=True) as gbp:
+        yield gbp
+
+
+@pytest.fixture
 def get_board_by_online_id_mock():
     with mock.patch("mbed_tools.devices._internal.resolve_board.get_board_by_online_id", autospec=True) as gbp:
         yield gbp
@@ -68,6 +74,33 @@ class TestResolveBoardUsingOnlineIdFromHTM:
     def test_raises_when_database_lookup_fails(self, get_board_by_online_id_mock, caplog):
         get_board_by_online_id_mock.side_effect = MbedTargetsError
         online_id = OnlineId(target_type="hat", slug="boat")
+
+        with pytest.raises(ResolveBoardError):
+            resolve_board(online_id=online_id)
+
+        assert repr(online_id) in caplog.text
+        assert caplog.records[-1].levelname == "ERROR"
+
+
+class TestResolveBoardUsingSlugFromJlink:
+    def test_returns_resolved_board(self, get_board_by_jlink_slug_mock):
+        online_id = OnlineId("jlink", "test-board")
+
+        subject = resolve_board(online_id=online_id)
+
+        assert subject == get_board_by_jlink_slug_mock.return_value
+        get_board_by_jlink_slug_mock.assert_called_once_with(online_id.slug)
+
+    def test_raises_when_board_not_found(self, get_board_by_jlink_slug_mock):
+        get_board_by_jlink_slug_mock.side_effect = UnknownBoard
+        online_id = OnlineId("jlink", "test-board")
+
+        with pytest.raises(NoBoardForCandidate):
+            resolve_board(online_id=online_id)
+
+    def test_raises_when_database_lookup_fails(self, get_board_by_jlink_slug_mock, caplog):
+        get_board_by_jlink_slug_mock.side_effect = MbedTargetsError
+        online_id = OnlineId("jlink", "test-board")
 
         with pytest.raises(ResolveBoardError):
             resolve_board(online_id=online_id)
