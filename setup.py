@@ -37,7 +37,7 @@ setup(
     include_package_data=True,
     install_requires=[
         "python-dotenv",
-        "Click==7.1",
+        "Click>=7.1,<8",
         "pdoc3",
         "GitPython",
         "tqdm",
