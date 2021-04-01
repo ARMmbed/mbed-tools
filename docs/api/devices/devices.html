@@ -36,12 +36,7 @@
 from operator import attrgetter
 from typing import List, Optional
 
-from mbed_tools.targets.exceptions import MbedTargetsError
-from mbed_tools.targets import Board
-
 from mbed_tools.devices._internal.detect_candidate_devices import detect_candidate_devices
-from mbed_tools.devices._internal.resolve_board import resolve_board
-from mbed_tools.devices._internal.exceptions import NoBoardForCandidate
 
 from mbed_tools.devices.device import ConnectedDevices, Device
 from mbed_tools.devices.exceptions import DeviceLookupFailed, NoDevicesFound
@@ -52,27 +47,12 @@ def get_connected_devices() -&gt; ConnectedDevices:
 
     Connected devices which have been identified as Mbed Boards and also connected devices which are potentially
     Mbed Boards (but not could not be identified in the database) are returned.
-
-    Raises:
-        DeviceLookupFailed: If there is a problem with the process of identifying Mbed Boards from connected devices.
     &#34;&#34;&#34;
     connected_devices = ConnectedDevices()
 
-    board: Optional[&#34;Board&#34;]
     for candidate_device in detect_candidate_devices():
-        try:
-            board = resolve_board(candidate_device)
-        except NoBoardForCandidate:
-            board = None
-        except MbedTargetsError as err:
-            raise DeviceLookupFailed(
-                f&#34;We found a potential connected device ({candidate_device!r}) but could not identify it as being &#34;
-                &#34;Mbed enabled. This is because we couldn&#39;t find a known product code from the available data on your &#34;
-                &#34;device. Check your device contains a valid HTM file with a product code, and that it is added as an &#34;
-                &#34;Mbed enabled device on os.mbed.com.&#34;
-            ) from err
-
-        connected_devices.add_device(candidate_device, board)
+        device = Device.from_candidate(candidate_device)
+        connected_devices.add_device(device)
 
     return connected_devices
 
@@ -277,12 +257,7 @@ def find_all_connected_devices(target_name: str) -&gt; List[Device]:
 <dd>
 <div class="desc"><p>Returns Mbed Devices connected to host computer.</p>
 <p>Connected devices which have been identified as Mbed Boards and also connected devices which are potentially
-Mbed Boards (but not could not be identified in the database) are returned.</p>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>DeviceLookupFailed</code></dt>
-<dd>If there is a problem with the process of identifying Mbed Boards from connected devices.</dd>
-</dl></div>
+Mbed Boards (but not could not be identified in the database) are returned.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -292,27 +267,12 @@ Mbed Boards (but not could not be identified in the database) are returned.</p>
 
     Connected devices which have been identified as Mbed Boards and also connected devices which are potentially
     Mbed Boards (but not could not be identified in the database) are returned.
-
-    Raises:
-        DeviceLookupFailed: If there is a problem with the process of identifying Mbed Boards from connected devices.
     &#34;&#34;&#34;
     connected_devices = ConnectedDevices()
 
-    board: Optional[&#34;Board&#34;]
     for candidate_device in detect_candidate_devices():
-        try:
-            board = resolve_board(candidate_device)
-        except NoBoardForCandidate:
-            board = None
-        except MbedTargetsError as err:
-            raise DeviceLookupFailed(
-                f&#34;We found a potential connected device ({candidate_device!r}) but could not identify it as being &#34;
-                &#34;Mbed enabled. This is because we couldn&#39;t find a known product code from the available data on your &#34;
-                &#34;device. Check your device contains a valid HTM file with a product code, and that it is added as an &#34;
-                &#34;Mbed enabled device on os.mbed.com.&#34;
-            ) from err
-
-        connected_devices.add_device(candidate_device, board)
+        device = Device.from_candidate(candidate_device)
+        connected_devices.add_device(device)
 
     return connected_devices</code></pre>
 </details>

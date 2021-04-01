@@ -37,6 +37,9 @@ from pathlib import Path
 from typing import Tuple, Optional, List
 from mbed_tools.targets import Board
 from mbed_tools.devices._internal.detect_candidate_devices import CandidateDevice
+from mbed_tools.devices._internal.resolve_board import resolve_board, NoBoardForCandidate, ResolveBoardError
+from mbed_tools.devices._internal.file_parser import read_device_files
+from mbed_tools.devices.exceptions import DeviceLookupFailed
 
 
 @dataclass(frozen=True, order=True)
@@ -57,6 +60,44 @@ class Device:
     serial_number: str
     serial_port: Optional[str]
     mount_points: Tuple[Path, ...]
+    mbed_enabled: bool = False
+    interface_version: Optional[str] = None
+
+    @classmethod
+    def from_candidate(cls, candidate: CandidateDevice) -&gt; &#34;Device&#34;:
+        &#34;&#34;&#34;Contruct a Device from a CandidateDevice.
+
+        We try to resolve a board using data files that may be stored on the CandidateDevice.
+        If this fails we set the board to `None` which means we couldn&#39;t verify this Device
+        as being an Mbed enabled device.
+
+        Args:
+            candidate: The CandidateDevice we&#39;re using to create the Device.
+        &#34;&#34;&#34;
+        device_file_info = read_device_files(candidate.mount_points)
+        try:
+            mbed_board = resolve_board(
+                device_file_info.product_code, device_file_info.online_id, candidate.serial_number
+            )
+            mbed_enabled = True
+        except NoBoardForCandidate:
+            # Create an empty Board to ensure the device is fully populated and rendering is simple
+            mbed_board = Board.from_offline_board_entry({})
+            mbed_enabled = False
+        except ResolveBoardError:
+            raise DeviceLookupFailed(
+                f&#34;Failed to resolve the board for candidate device {candidate!r}. There was a problem looking up the &#34;
+                &#34;board data in the database.&#34;
+            )
+
+        return Device(
+            serial_port=candidate.serial_port,
+            serial_number=candidate.serial_number,
+            mount_points=candidate.mount_points,
+            mbed_board=mbed_board,
+            mbed_enabled=mbed_enabled,
+            interface_version=device_file_info.interface_details.get(&#34;Version&#34;),
+        )
 
 
 @dataclass(order=True)
@@ -77,27 +118,18 @@ class ConnectedDevices:
     identified_devices: List[Device] = field(default_factory=list)
     unidentified_devices: List[Device] = field(default_factory=list)
 
-    def add_device(self, candidate_device: CandidateDevice, mbed_board: Optional[Board] = None) -&gt; None:
-        &#34;&#34;&#34;Add a candidate device and optionally an Mbed Target to the connected devices.
+    def add_device(self, device: Device) -&gt; None:
+        &#34;&#34;&#34;Add a device to the connected devices.
 
         Args:
-            candidate_device: a CandidateDevice object containing the device information.
-            mbed_board: a Board object for identified devices, for unidentified devices this will be None.
+            device: a Device object containing the device information.
         &#34;&#34;&#34;
-        new_device = Device(
-            serial_port=candidate_device.serial_port,
-            serial_number=candidate_device.serial_number,
-            mount_points=candidate_device.mount_points,
-            # Create an empty Board to ensure the device is fully populated and rendering is simple
-            mbed_board=mbed_board if mbed_board is not None else Board.from_offline_board_entry({}),
-        )
-
-        if mbed_board is None:
+        if not device.mbed_enabled:
             # Keep a list of devices that could not be identified but are Mbed Boards
-            self.unidentified_devices.append(new_device)
+            self.unidentified_devices.append(device)
         else:
             # Keep a list of devices that have been identified as Mbed Boards
-            self.identified_devices.append(new_device)</code></pre>
+            self.identified_devices.append(device)</code></pre>
 </details>
 </section>
 <section>
@@ -147,27 +179,18 @@ entry in the database then it will be included in the <code>unidentified_devices
     identified_devices: List[Device] = field(default_factory=list)
     unidentified_devices: List[Device] = field(default_factory=list)
 
-    def add_device(self, candidate_device: CandidateDevice, mbed_board: Optional[Board] = None) -&gt; None:
-        &#34;&#34;&#34;Add a candidate device and optionally an Mbed Target to the connected devices.
+    def add_device(self, device: Device) -&gt; None:
+        &#34;&#34;&#34;Add a device to the connected devices.
 
         Args:
-            candidate_device: a CandidateDevice object containing the device information.
-            mbed_board: a Board object for identified devices, for unidentified devices this will be None.
+            device: a Device object containing the device information.
         &#34;&#34;&#34;
-        new_device = Device(
-            serial_port=candidate_device.serial_port,
-            serial_number=candidate_device.serial_number,
-            mount_points=candidate_device.mount_points,
-            # Create an empty Board to ensure the device is fully populated and rendering is simple
-            mbed_board=mbed_board if mbed_board is not None else Board.from_offline_board_entry({}),
-        )
-
-        if mbed_board is None:
+        if not device.mbed_enabled:
             # Keep a list of devices that could not be identified but are Mbed Boards
-            self.unidentified_devices.append(new_device)
+            self.unidentified_devices.append(device)
         else:
             # Keep a list of devices that have been identified as Mbed Boards
-            self.identified_devices.append(new_device)</code></pre>
+            self.identified_devices.append(device)</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
@@ -183,49 +206,38 @@ entry in the database then it will be included in the <code>unidentified_devices
 <h3>Methods</h3>
 <dl>
 <dt id="mbed_tools.devices.device.ConnectedDevices.add_device"><code class="name flex">
-<span>def <span class="ident">add_device</span></span>(<span>self, candidate_device: mbed_tools.devices._internal.candidate_device.CandidateDevice, mbed_board: Union[<a title="mbed_tools.targets.board.Board" href="../targets/board.html#mbed_tools.targets.board.Board">Board</a>, NoneType] = None) ‑> NoneType</span>
+<span>def <span class="ident">add_device</span></span>(<span>self, device: <a title="mbed_tools.devices.device.Device" href="#mbed_tools.devices.device.Device">Device</a>) ‑> NoneType</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Add a candidate device and optionally an Mbed Target to the connected devices.</p>
+<div class="desc"><p>Add a device to the connected devices.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>candidate_device</code></strong></dt>
-<dd>a CandidateDevice object containing the device information.</dd>
-<dt><strong><code>mbed_board</code></strong></dt>
-<dd>a Board object for identified devices, for unidentified devices this will be None.</dd>
+<dt><strong><code>device</code></strong></dt>
+<dd>a Device object containing the device information.</dd>
 </dl></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_device(self, candidate_device: CandidateDevice, mbed_board: Optional[Board] = None) -&gt; None:
-    &#34;&#34;&#34;Add a candidate device and optionally an Mbed Target to the connected devices.
+<pre><code class="python">def add_device(self, device: Device) -&gt; None:
+    &#34;&#34;&#34;Add a device to the connected devices.
 
     Args:
-        candidate_device: a CandidateDevice object containing the device information.
-        mbed_board: a Board object for identified devices, for unidentified devices this will be None.
+        device: a Device object containing the device information.
     &#34;&#34;&#34;
-    new_device = Device(
-        serial_port=candidate_device.serial_port,
-        serial_number=candidate_device.serial_number,
-        mount_points=candidate_device.mount_points,
-        # Create an empty Board to ensure the device is fully populated and rendering is simple
-        mbed_board=mbed_board if mbed_board is not None else Board.from_offline_board_entry({}),
-    )
-
-    if mbed_board is None:
+    if not device.mbed_enabled:
         # Keep a list of devices that could not be identified but are Mbed Boards
-        self.unidentified_devices.append(new_device)
+        self.unidentified_devices.append(device)
     else:
         # Keep a list of devices that have been identified as Mbed Boards
-        self.identified_devices.append(new_device)</code></pre>
+        self.identified_devices.append(device)</code></pre>
 </details>
 </dd>
 </dl>
 </dd>
 <dt id="mbed_tools.devices.device.Device"><code class="flex name class">
 <span>class <span class="ident">Device</span></span>
-<span>(</span><span>mbed_board: <a title="mbed_tools.targets.board.Board" href="../targets/board.html#mbed_tools.targets.board.Board">Board</a>, serial_number: str, serial_port: Union[str, NoneType], mount_points: Tuple[pathlib.Path, ...])</span>
+<span>(</span><span>mbed_board: <a title="mbed_tools.targets.board.Board" href="../targets/board.html#mbed_tools.targets.board.Board">Board</a>, serial_number: str, serial_port: Union[str, NoneType], mount_points: Tuple[pathlib.Path, ...], mbed_enabled: bool = False, interface_version: Union[str, NoneType] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Definition of an Mbed Enabled Device.</p>
@@ -262,11 +274,57 @@ A valid Mbed Device must have a Board associated with it.</p>
     mbed_board: Board
     serial_number: str
     serial_port: Optional[str]
-    mount_points: Tuple[Path, ...]</code></pre>
+    mount_points: Tuple[Path, ...]
+    mbed_enabled: bool = False
+    interface_version: Optional[str] = None
+
+    @classmethod
+    def from_candidate(cls, candidate: CandidateDevice) -&gt; &#34;Device&#34;:
+        &#34;&#34;&#34;Contruct a Device from a CandidateDevice.
+
+        We try to resolve a board using data files that may be stored on the CandidateDevice.
+        If this fails we set the board to `None` which means we couldn&#39;t verify this Device
+        as being an Mbed enabled device.
+
+        Args:
+            candidate: The CandidateDevice we&#39;re using to create the Device.
+        &#34;&#34;&#34;
+        device_file_info = read_device_files(candidate.mount_points)
+        try:
+            mbed_board = resolve_board(
+                device_file_info.product_code, device_file_info.online_id, candidate.serial_number
+            )
+            mbed_enabled = True
+        except NoBoardForCandidate:
+            # Create an empty Board to ensure the device is fully populated and rendering is simple
+            mbed_board = Board.from_offline_board_entry({})
+            mbed_enabled = False
+        except ResolveBoardError:
+            raise DeviceLookupFailed(
+                f&#34;Failed to resolve the board for candidate device {candidate!r}. There was a problem looking up the &#34;
+                &#34;board data in the database.&#34;
+            )
+
+        return Device(
+            serial_port=candidate.serial_port,
+            serial_number=candidate.serial_number,
+            mount_points=candidate.mount_points,
+            mbed_board=mbed_board,
+            mbed_enabled=mbed_enabled,
+            interface_version=device_file_info.interface_details.get(&#34;Version&#34;),
+        )</code></pre>
 </details>
 <h3>Class variables</h3>
 <dl>
+<dt id="mbed_tools.devices.device.Device.interface_version"><code class="name">var <span class="ident">interface_version</span> : Union[str, NoneType]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="mbed_tools.devices.device.Device.mbed_board"><code class="name">var <span class="ident">mbed_board</span> : <a title="mbed_tools.targets.board.Board" href="../targets/board.html#mbed_tools.targets.board.Board">Board</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="mbed_tools.devices.device.Device.mbed_enabled"><code class="name">var <span class="ident">mbed_enabled</span> : bool</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -281,6 +339,63 @@ A valid Mbed Device must have a Board associated with it.</p>
 <dt id="mbed_tools.devices.device.Device.serial_port"><code class="name">var <span class="ident">serial_port</span> : Union[str, NoneType]</code></dt>
 <dd>
 <div class="desc"></div>
+</dd>
+</dl>
+<h3>Static methods</h3>
+<dl>
+<dt id="mbed_tools.devices.device.Device.from_candidate"><code class="name flex">
+<span>def <span class="ident">from_candidate</span></span>(<span>candidate: mbed_tools.devices._internal.candidate_device.CandidateDevice) ‑> <a title="mbed_tools.devices.device.Device" href="#mbed_tools.devices.device.Device">Device</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Contruct a Device from a CandidateDevice.</p>
+<p>We try to resolve a board using data files that may be stored on the CandidateDevice.
+If this fails we set the board to <code>None</code> which means we couldn't verify this Device
+as being an Mbed enabled device.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>candidate</code></strong></dt>
+<dd>The CandidateDevice we're using to create the Device.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@classmethod
+def from_candidate(cls, candidate: CandidateDevice) -&gt; &#34;Device&#34;:
+    &#34;&#34;&#34;Contruct a Device from a CandidateDevice.
+
+    We try to resolve a board using data files that may be stored on the CandidateDevice.
+    If this fails we set the board to `None` which means we couldn&#39;t verify this Device
+    as being an Mbed enabled device.
+
+    Args:
+        candidate: The CandidateDevice we&#39;re using to create the Device.
+    &#34;&#34;&#34;
+    device_file_info = read_device_files(candidate.mount_points)
+    try:
+        mbed_board = resolve_board(
+            device_file_info.product_code, device_file_info.online_id, candidate.serial_number
+        )
+        mbed_enabled = True
+    except NoBoardForCandidate:
+        # Create an empty Board to ensure the device is fully populated and rendering is simple
+        mbed_board = Board.from_offline_board_entry({})
+        mbed_enabled = False
+    except ResolveBoardError:
+        raise DeviceLookupFailed(
+            f&#34;Failed to resolve the board for candidate device {candidate!r}. There was a problem looking up the &#34;
+            &#34;board data in the database.&#34;
+        )
+
+    return Device(
+        serial_port=candidate.serial_port,
+        serial_number=candidate.serial_number,
+        mount_points=candidate.mount_points,
+        mbed_board=mbed_board,
+        mbed_enabled=mbed_enabled,
+        interface_version=device_file_info.interface_details.get(&#34;Version&#34;),
+    )</code></pre>
+</details>
 </dd>
 </dl>
 </dd>
@@ -310,8 +425,11 @@ A valid Mbed Device must have a Board associated with it.</p>
 </li>
 <li>
 <h4><code><a title="mbed_tools.devices.device.Device" href="#mbed_tools.devices.device.Device">Device</a></code></h4>
-<ul class="">
+<ul class="two-column">
+<li><code><a title="mbed_tools.devices.device.Device.from_candidate" href="#mbed_tools.devices.device.Device.from_candidate">from_candidate</a></code></li>
+<li><code><a title="mbed_tools.devices.device.Device.interface_version" href="#mbed_tools.devices.device.Device.interface_version">interface_version</a></code></li>
 <li><code><a title="mbed_tools.devices.device.Device.mbed_board" href="#mbed_tools.devices.device.Device.mbed_board">mbed_board</a></code></li>
+<li><code><a title="mbed_tools.devices.device.Device.mbed_enabled" href="#mbed_tools.devices.device.Device.mbed_enabled">mbed_enabled</a></code></li>
 <li><code><a title="mbed_tools.devices.device.Device.mount_points" href="#mbed_tools.devices.device.Device.mount_points">mount_points</a></code></li>
 <li><code><a title="mbed_tools.devices.device.Device.serial_number" href="#mbed_tools.devices.device.Device.serial_number">serial_number</a></code></li>
 <li><code><a title="mbed_tools.devices.device.Device.serial_port" href="#mbed_tools.devices.device.Device.serial_port">serial_port</a></code></li>
