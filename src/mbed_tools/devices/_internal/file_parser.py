@@ -214,8 +214,9 @@ def _read_details_txt(file_contents: str) -> dict:
         if line.startswith("#"):
             continue
 
-        key, value = line.split(":", maxsplit=1)
-        output[key.strip()] = value.strip()
+        key, sep, value = line.partition(":")
+        if key and value:
+            output[key.strip()] = value.strip()
 
     # Some forms of details.txt use Interface Version instead of Version as the key for the version number field
     if "Interface Version" in output and "Version" not in output:

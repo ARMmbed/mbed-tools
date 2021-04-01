@@ -233,8 +233,11 @@ class TestReadDetailsTxt:
             build_short_details_txt(version="0777", commit_sha="99789s", local_mods="No"),
             build_long_details_txt(),
             ("", {}),
+            ("\n", {}),
+            ("blablablablaandbla", {}),
+            ("blablabla\nblaandbla\nversion : 2\n\n", {"version": "2"}),
         ),
-        ids=("short", "short2", "long", "empty"),
+        ids=("short", "short2", "long", "empty", "newline", "nosep", "multiline"),
     )
     def test_parses_details_txt(self, content, expected, tmp_path):
         details_file_path = pathlib.Path(tmp_path, "DETAILS.txt")
