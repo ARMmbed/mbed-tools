@@ -2450,7 +2450,9 @@
         "mbed_os_support": [
             "Mbed OS 6.9"
         ],
-        "mbed_enabled": []
+        "mbed_enabled": [
+            "Baseline"
+        ]
     },
     {
         "board_type": "LPC54114",

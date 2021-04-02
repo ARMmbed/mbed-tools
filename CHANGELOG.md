@@ -12,6 +12,23 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.7.0 (2021-04-02)
+==================
+
+Features
+--------
+
+- Add detection of devices connected with J-Link. (#20210330104425)
+- Targets modified: MAX32625PICO. (#20210402050107)
+
+
+Bugfixes
+--------
+
+- Unpin Click version to minimise the potential for dependency conflicts with other packages. (#245)
+- Make details.txt parsing more lenient to avoid issues with various formats. (#258)
+
+
 7.6.0 (2021-04-01)
 ==================
 

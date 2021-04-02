@@ -75,6 +75,25 @@ def get_board_by_online_id(slug: str, target_type: str) -&gt; Board:
     return get_board(lambda board: board.slug.casefold() == matched_slug and board.target_type == target_type)
 
 
+def get_board_by_jlink_slug(slug: str) -&gt; Board:
+    &#34;&#34;&#34;Returns first `mbed-tools.targets.board.Board` matching given slug.
+
+    With J-Link, the slug is extracted from a board manufacturer URL, and may not match
+    the Mbed slug. The J-Link slug is compared against the slug, board_name and
+    board_type of entries in the board database until a match is found.
+
+    Args:
+        slug: the J-Link slug to look up in the database.
+
+    Raises:
+        UnknownBoard: a board matching the slug was not found.
+    &#34;&#34;&#34;
+    matched_slug = slug.casefold()
+    return get_board(
+        lambda board: any(matched_slug == c.casefold() for c in [board.slug, board.board_name, board.board_type])
+    )
+
+
 def get_board(matching: Callable) -&gt; Board:
     &#34;&#34;&#34;Returns first `mbed_tools.targets.board.Board` for which `matching` is True.
 
@@ -182,6 +201,47 @@ def _get_database_mode() -&gt; _DatabaseMode:
             raise UnknownBoard()</code></pre>
 </details>
 </dd>
+<dt id="mbed_tools.targets.get_board.get_board_by_jlink_slug"><code class="name flex">
+<span>def <span class="ident">get_board_by_jlink_slug</span></span>(<span>slug: str) ‑> <a title="mbed_tools.targets.board.Board" href="board.html#mbed_tools.targets.board.Board">Board</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns first <code>mbed-tools.targets.board.Board</code> matching given slug.</p>
+<p>With J-Link, the slug is extracted from a board manufacturer URL, and may not match
+the Mbed slug. The J-Link slug is compared against the slug, board_name and
+board_type of entries in the board database until a match is found.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>slug</code></strong></dt>
+<dd>the J-Link slug to look up in the database.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>UnknownBoard</code></dt>
+<dd>a board matching the slug was not found.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_board_by_jlink_slug(slug: str) -&gt; Board:
+    &#34;&#34;&#34;Returns first `mbed-tools.targets.board.Board` matching given slug.
+
+    With J-Link, the slug is extracted from a board manufacturer URL, and may not match
+    the Mbed slug. The J-Link slug is compared against the slug, board_name and
+    board_type of entries in the board database until a match is found.
+
+    Args:
+        slug: the J-Link slug to look up in the database.
+
+    Raises:
+        UnknownBoard: a board matching the slug was not found.
+    &#34;&#34;&#34;
+    matched_slug = slug.casefold()
+    return get_board(
+        lambda board: any(matched_slug == c.casefold() for c in [board.slug, board.board_name, board.board_type])
+    )</code></pre>
+</details>
+</dd>
 <dt id="mbed_tools.targets.get_board.get_board_by_online_id"><code class="name flex">
 <span>def <span class="ident">get_board_by_online_id</span></span>(<span>slug: str, target_type: str) ‑> <a title="mbed_tools.targets.board.Board" href="board.html#mbed_tools.targets.board.Board">Board</a></span>
 </code></dt>
@@ -267,6 +327,7 @@ def _get_database_mode() -&gt; _DatabaseMode:
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
 <li><code><a title="mbed_tools.targets.get_board.get_board" href="#mbed_tools.targets.get_board.get_board">get_board</a></code></li>
+<li><code><a title="mbed_tools.targets.get_board.get_board_by_jlink_slug" href="#mbed_tools.targets.get_board.get_board_by_jlink_slug">get_board_by_jlink_slug</a></code></li>
 <li><code><a title="mbed_tools.targets.get_board.get_board_by_online_id" href="#mbed_tools.targets.get_board.get_board_by_online_id">get_board_by_online_id</a></code></li>
 <li><code><a title="mbed_tools.targets.get_board.get_board_by_product_code" href="#mbed_tools.targets.get_board.get_board_by_product_code">get_board_by_product_code</a></code></li>
 </ul>
