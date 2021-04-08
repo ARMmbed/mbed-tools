@@ -390,7 +390,7 @@
     },
     {
         "board_type": "CY8CKIT064B0S2_4343W",
-        "board_name": "PSoC 64 Secure Boot WiFi/BLE Pioneer Kit",
+        "board_name": "\"PSoC 64 Secure Boot\" Wi-Fi / Bluetooth Pioneer Kit",
         "product_code": "1910",
         "target_type": "platform",
         "slug": "CY8CKIT-064B0S2-4343W",
