@@ -2,10 +2,11 @@
 # Copyright (c) 2020-2021 Arm Limited and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
+import logging
 import pytest
 
 from mbed_tools.build._internal.config.config import Config
-from mbed_tools.build._internal.config.source import prepare, ConfigSetting, Override
+from mbed_tools.build._internal.config.source import prepare, ConfigSetting, Memory, Override
 
 
 class TestConfig:
@@ -23,6 +24,17 @@ class TestConfig:
 
         with pytest.raises(ValueError, match="lib.param already defined"):
             conf.update(prepare({"config": {"param": {"value": 0}}}, source_name="lib"))
+
+    def test_logs_ignore_mbed_ram_repeated(self, caplog):
+        caplog.set_level(logging.DEBUG)
+        input_dict = {"mbed_ram_size": "0x80000", "mbed_ram_start": "0x24000000"}
+        input_dict2 = {"mbed_ram_size": "0x78000", "mbed_ram_start": "0x24200000"}
+
+        conf = Config(prepare(input_dict, source_name="lib1"))
+        conf.update(prepare(input_dict2, source_name="lib2"))
+
+        assert "values from `lib2` will be ignored" in caplog.text
+        assert conf["memories"] == [Memory("RAM", "lib1", "0x24000000", "0x80000")]
 
     def test_target_overrides_handled(self):
         conf = Config(
