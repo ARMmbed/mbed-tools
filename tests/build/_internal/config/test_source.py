@@ -2,8 +2,10 @@
 # Copyright (c) 2020-2021 Arm Limited and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
+import pytest
+
 from mbed_tools.build._internal.config import source
-from mbed_tools.build._internal.config.source import Override
+from mbed_tools.build._internal.config.source import Memory, Override
 
 
 class TestPrepareSource:
@@ -118,3 +120,48 @@ class TestPrepareSource:
         assert conf["config"][0].value == {"ETHERNET", "WIFI"}
         assert conf["sectors"] == {0, 2048}
         assert conf["header_info"] == {0, 2048, "bobbins", "magic"}
+
+    def test_memory_attr_extracted(self):
+        lib = {
+            "mbed_ram_size": "0x80000",
+            "mbed_ram_start": "0x24000000",
+            "mbed_rom_size": "0x200000",
+            "mbed_rom_start": "0x08000000",
+        }
+
+        conf = source.prepare(lib, "lib")
+
+        assert Memory("RAM", "lib", "0x24000000", "0x80000") in conf["memories"]
+        assert Memory("ROM", "lib", "0x8000000", "0x200000") in conf["memories"]
+
+    def test_memory_attr_converted_as_hex(self):
+        input_dict = {"mbed_ram_size": "1024", "mbed_ram_start": "0x24000000"}
+
+        conf = source.prepare(input_dict, source_name="lib")
+
+        memory, *_ = conf["memories"]
+        assert memory.size == "0x400"
+
+    def test_raises_memory_size_not_integer(self):
+        input_dict = {"mbed_ram_size": "NOT INT", "mbed_ram_start": "0x24000000"}
+
+        with pytest.raises(ValueError, match="_SIZE in lib, NOT INT is invalid: must be an integer"):
+            source.prepare(input_dict, "lib")
+
+    def test_raises_memory_start_not_integer(self):
+        input_dict = {"mbed_ram_size": "0x80000", "mbed_ram_start": "NOT INT"}
+
+        with pytest.raises(ValueError, match="_START in lib, NOT INT is invalid: must be an integer"):
+            source.prepare(input_dict, "lib")
+
+    def test_raises_memory_size_defined_not_start(self):
+        input_dict = {"mbed_ram_size": "0x80000"}
+
+        with pytest.raises(ValueError, match="Only SIZE is defined"):
+            source.prepare(input_dict)
+
+    def test_raises_memory_start_defined_not_size(self):
+        input_dict = {"mbed_ram_start": "0x24000000"}
+
+        with pytest.raises(ValueError, match="Only START is defined"):
+            source.prepare(input_dict)
