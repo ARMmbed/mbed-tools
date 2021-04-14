@@ -188,6 +188,66 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "NUCLEO_H563ZI",
+        "board_name": "NUCLEO-H563ZI",
+        "product_code": "0878",
+        "target_type": "platform",
+        "slug": "ST-Nucleo-H563ZI",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.9"
+        ],
+        "mbed_enabled": []
+    },
+    {
+        "board_type": "NUCLEO_U595ZIQ",
+        "board_name": "NUCLEO-U595ZI-Q",
+        "product_code": "0877",
+        "target_type": "platform",
+        "slug": "ST-Nucleo-U595ZI-Q",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.9"
+        ],
+        "mbed_enabled": []
+    },
+    {
+        "board_type": "DISCO_C0316",
+        "board_name": "DISCO-C0316",
+        "product_code": "0869",
+        "target_type": "platform",
+        "slug": "ST-Discovery-C0316",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.9"
+        ],
+        "mbed_enabled": []
+    },
+    {
+        "board_type": "DISCO_C0116",
+        "board_name": "DISCO-C0116",
+        "product_code": "0868",
+        "target_type": "platform",
+        "slug": "ST-Discovery-C0116",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.9"
+        ],
+        "mbed_enabled": []
+    },
+    {
+        "board_type": "NUCLEO_C031C6",
+        "board_name": "NUCLEO-C031C6",
+        "product_code": "0867",
+        "target_type": "platform",
+        "slug": "ST-Nucleo-C031C6",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.9"
+        ],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "ARM_MPS2_M55",
         "board_name": "arm_mps2_m55",
         "product_code": "5010",
@@ -229,6 +289,27 @@
         "slug": "ST-Discovery-STM32U599J",
         "build_variant": [],
         "mbed_os_support": [],
+        "mbed_enabled": []
+    },
+    {
+        "board_type": "EP_ATLAS",
+        "board_name": "Atlas Product Development Kit",
+        "product_code": "2603",
+        "target_type": "platform",
+        "slug": "ATLAS-DEV",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.0",
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6",
+            "Mbed OS 6.7",
+            "Mbed OS 6.8",
+            "Mbed OS 6.9"
+        ],
         "mbed_enabled": []
     },
     {
