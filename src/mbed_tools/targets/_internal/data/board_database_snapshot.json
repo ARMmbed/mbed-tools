@@ -200,11 +200,11 @@
         "mbed_enabled": []
     },
     {
-        "board_type": "NUCLEO_U595ZIQ",
-        "board_name": "NUCLEO-U595ZI-Q",
+        "board_type": "NUCLEO_U595ZJQ",
+        "board_name": "NUCLEO-U595ZJ-Q",
         "product_code": "0877",
         "target_type": "platform",
-        "slug": "ST-Nucleo-U595ZI-Q",
+        "slug": "ST-Nucleo-U595ZJ-Q",
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 6.9"

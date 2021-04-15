@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.10.0 (2021-04-15)
+===================
+
+Features
+--------
+
+- Targets added: NUCLEO-U595ZJ-Q.
+  Targets removed: NUCLEO-U595ZI-Q. (#20210415050117)
+
+
 7.9.0 (2021-04-14)
 ==================
 
