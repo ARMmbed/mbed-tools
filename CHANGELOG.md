@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.10.1 (2021-04-23)
+===================
+
+Bugfixes
+--------
+
+- Add support for MBED_ROM_START, MBED_ROM_SIZE, MBED_RAM_START and MBED_RAM_SIZE in config system. (#222)
+
+
 7.10.0 (2021-04-15)
 ===================
 
