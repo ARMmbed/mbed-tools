@@ -557,6 +557,16 @@
         ]
     },
     {
+        "board_type": "FRDM-K32L3A6",
+        "board_name": "FRDM-K32L3A6",
+        "product_code": "0237",
+        "target_type": "platform",
+        "slug": "FRDM-K32L3A6",
+        "build_variant": [],
+        "mbed_os_support": [],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "EP_AGORA",
         "board_name": "Agora Product Development Kit",
         "product_code": "2600",

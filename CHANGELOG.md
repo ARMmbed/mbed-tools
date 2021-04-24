@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.11.0 (2021-04-24)
+===================
+
+Features
+--------
+
+- Targets added: FRDM-K32L3A6. (#20210424050126)
+
+
 7.10.1 (2021-04-23)
 ===================
 
