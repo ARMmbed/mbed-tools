@@ -4,10 +4,14 @@
 #
 """Render jinja templates required by the project package."""
 import datetime
+import logging
 
 from pathlib import Path
 
 import jinja2
+import requests
+
+logger = logging.getLogger(__name__)
 
 TEMPLATES_DIRECTORY = Path("_internal", "templates")
 
@@ -19,11 +23,18 @@ def render_cmakelists_template(cmakelists_file: Path, program_name: str) -> None
         cmakelists_file: The path where CMakeLists.txt will be written.
         program_name: The name of the program, will be used as the app target name.
     """
-    cmakelists_file.write_text(
-        render_jinja_template(
-            "CMakeLists.tmpl", {"program_name": program_name, "year": str(datetime.datetime.now().year)}
-        )
-    )
+    context = {"program_name": program_name, "year": str(datetime.datetime.now().year)}
+
+    try:
+        cmakelists_url = "https://raw.githubusercontent.com/ARMmbed/mbed-os/master/tools/cmake/CMakeLists.tmpl"
+        response = requests.get(cmakelists_url)
+        response.raise_for_status()
+        template = render_jinja_template_from_string(response.text, context)
+    except requests.exceptions.RequestException:
+        template = render_jinja_template("CMakeLists.tmpl", context)
+        logger.warning("Failed to fetch a new version of the template, using a cached copy.")
+
+    cmakelists_file.write_text(template)
 
 
 def render_main_cpp_template(main_cpp: Path) -> None:
@@ -53,4 +64,16 @@ def render_jinja_template(template_name: str, context: dict) -> str:
     """
     env = jinja2.Environment(loader=jinja2.PackageLoader("mbed_tools.project", str(TEMPLATES_DIRECTORY)))
     template = env.get_template(template_name)
+    return template.render(context)
+
+
+def render_jinja_template_from_string(template_text: str, context: dict) -> str:
+    """Render a jinja template from a specified string.
+
+    Args:
+        template_text: The template being rendered.
+        context: Data to render into the jinja template.
+    """
+    env = jinja2.Environment(loader=jinja2.BaseLoader())
+    template = env.from_string(template_text)
     return template.render(context)

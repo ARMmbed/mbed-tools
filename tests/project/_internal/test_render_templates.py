@@ -15,10 +15,25 @@ from mbed_tools.project._internal.render_templates import (
 
 @mock.patch("mbed_tools.project._internal.render_templates.datetime")
 class TestRenderTemplates(TestCase):
-    def test_renders_cmakelists_template(self, mock_datetime):
+    def test_renders_cmakelists_template_from_cache(self, mock_datetime):
         with TemporaryDirectory() as tmpdir:
             the_year = 3999
             mock_datetime.datetime.now.return_value.year = the_year
+            program_name = "mytestprogram"
+            file_path = Path(tmpdir, "mytestpath")
+
+            render_cmakelists_template(file_path, program_name)
+
+            output = file_path.read_text()
+            self.assertIn(str(the_year), output)
+            self.assertIn(program_name, output)
+
+    @mock.patch("mbed_tools.project._internal.render_templates.requests")
+    def test_renders_cmakelists_template_from_mbed(self, mock_requests, mock_datetime):
+        with TemporaryDirectory() as tmpdir:
+            the_year = 3999
+            mock_datetime.datetime.now.return_value.year = the_year
+            mock_requests.get.return_value.text = "{{year}}     {{program_name}}"
             program_name = "mytestprogram"
             file_path = Path(tmpdir, "mytestpath")
 
