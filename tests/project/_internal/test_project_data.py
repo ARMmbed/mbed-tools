@@ -4,85 +4,77 @@
 #
 """Tests for project_data.py."""
 import pathlib
+import pytest
 
-from unittest import TestCase, mock
+from unittest import mock
 
 from mbed_tools.project._internal.project_data import (
     MbedProgramFiles,
     MbedOS,
     MAIN_CPP_FILE_NAME,
 )
-from tests.project.factories import make_mbed_lib_reference, make_mbed_program_files, make_mbed_os_files, patchfs
+from tests.project.factories import make_mbed_lib_reference, make_mbed_program_files, make_mbed_os_files
 
 
-class TestMbedProgramFiles(TestCase):
-    @patchfs
-    def test_from_new_raises_if_program_files_already_exist(self, fs):
-        root = pathlib.Path(fs, "foo")
+class TestMbedProgramFiles:
+    def test_from_new_raises_if_program_files_already_exist(self, tmp_path):
+        root = pathlib.Path(tmp_path, "foo")
         make_mbed_program_files(root)
 
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             MbedProgramFiles.from_new(root)
 
-    @patchfs
-    def test_from_new_returns_valid_program_file_set(self, fs):
-        root = pathlib.Path(fs, "foo")
+    def test_from_new_returns_valid_program_file_set(self, tmp_path):
+        root = pathlib.Path(tmp_path, "foo")
         root.mkdir()
 
         program = MbedProgramFiles.from_new(root)
 
-        self.assertTrue(program.app_config_file.exists())
-        self.assertTrue(program.mbed_os_ref.exists())
-        self.assertTrue(program.cmakelists_file.exists())
+        assert program.app_config_file.exists()
+        assert program.mbed_os_ref.exists()
+        assert program.cmakelists_file.exists()
 
-    @patchfs
-    def test_from_new_calls_render_template_for_gitignore_cmake_and_main(self, fs):
+    def test_from_new_calls_render_template_for_gitignore_and_main(self, tmp_path):
         with mock.patch(
             "mbed_tools.project._internal.project_data.render_cmakelists_template"
-        ) as render_cmakelists_template:
-            with mock.patch(
-                "mbed_tools.project._internal.project_data.render_main_cpp_template"
-            ) as render_main_cpp_template:
-                with mock.patch(
-                    "mbed_tools.project._internal.project_data.render_gitignore_template"
-                ) as render_gitignore_template:
-                    root = pathlib.Path(fs, "foo")
-                    root.mkdir()
-                    program_files = MbedProgramFiles.from_new(root)
-                    render_cmakelists_template.assert_called_once_with(program_files.cmakelists_file, "foo")
-                    render_main_cpp_template.assert_called_once_with(root / MAIN_CPP_FILE_NAME)
-                    render_gitignore_template.assert_called_once_with(root / ".gitignore")
+        ) as render_cmakelists_template, mock.patch(
+            "mbed_tools.project._internal.project_data.render_main_cpp_template"
+        ) as render_main_cpp_template, mock.patch(
+            "mbed_tools.project._internal.project_data.render_gitignore_template"
+        ) as render_gitignore_template:
+            root = pathlib.Path(tmp_path, "foo")
+            root.mkdir()
+            program_files = MbedProgramFiles.from_new(root)
+            render_cmakelists_template.assert_called_once_with(program_files.cmakelists_file, "foo")
+            render_main_cpp_template.assert_called_once_with(root / MAIN_CPP_FILE_NAME)
+            render_gitignore_template.assert_called_once_with(root / ".gitignore")
 
-    @patchfs
-    def test_from_existing_finds_existing_program_data(self, fs):
-        root = pathlib.Path(fs, "foo")
+    def test_from_existing_finds_existing_program_data(self, tmp_path):
+        root = pathlib.Path(tmp_path, "foo")
         make_mbed_program_files(root)
 
         program = MbedProgramFiles.from_existing(root, pathlib.Path("K64F", "develop", "GCC_ARM"))
 
-        self.assertTrue(program.app_config_file.exists())
-        self.assertTrue(program.mbed_os_ref.exists())
-        self.assertTrue(program.cmakelists_file.exists())
+        assert program.app_config_file.exists()
+        assert program.mbed_os_ref.exists()
+        assert program.cmakelists_file.exists()
 
 
-class TestMbedLibReference(TestCase):
-    @patchfs
-    def test_is_resolved_returns_true_if_source_code_dir_exists(self, fs):
-        root = pathlib.Path(fs, "foo")
+class TestMbedLibReference:
+    def test_is_resolved_returns_true_if_source_code_dir_exists(self, tmp_path):
+        root = pathlib.Path(tmp_path, "foo")
         lib = make_mbed_lib_reference(root, resolved=True)
 
-        self.assertTrue(lib.is_resolved())
+        assert lib.is_resolved()
 
-    @patchfs
-    def test_is_resolved_returns_false_if_source_code_dir_doesnt_exist(self, fs):
-        root = pathlib.Path(fs, "foo")
+    def test_is_resolved_returns_false_if_source_code_dir_doesnt_exist(self, tmp_path):
+        root = pathlib.Path(tmp_path, "foo")
         lib = make_mbed_lib_reference(root)
 
-        self.assertFalse(lib.is_resolved())
+        assert not lib.is_resolved()
 
-    @patchfs
-    def test_get_git_reference_returns_lib_file_contents(self, fs):
-        root = pathlib.Path(fs, "foo")
+    def test_get_git_reference_returns_lib_file_contents(self, tmp_path):
+        root = pathlib.Path(tmp_path, "foo")
         url = "https://github.com/mylibrepo"
         ref = "latest"
         references = [f"{url}#{ref}", f"{url}/#{ref}"]
@@ -92,24 +84,22 @@ class TestMbedLibReference(TestCase):
 
             reference = lib.get_git_reference()
 
-            self.assertEqual(reference.repo_url, url)
-            self.assertEqual(reference.ref, ref)
+            assert reference.repo_url == url
+            assert reference.ref == ref
 
 
-class TestMbedOS(TestCase):
-    @patchfs
-    def test_from_existing_finds_existing_mbed_os_data(self, fs):
-        root_path = pathlib.Path(fs, "my-version-of-mbed-os")
+class TestMbedOS:
+    def test_from_existing_finds_existing_mbed_os_data(self, tmp_path):
+        root_path = pathlib.Path(tmp_path, "my-version-of-mbed-os")
         make_mbed_os_files(root_path)
 
         mbed_os = MbedOS.from_existing(root_path)
 
-        self.assertEqual(mbed_os.targets_json_file, root_path / "targets" / "targets.json")
+        assert mbed_os.targets_json_file == root_path / "targets" / "targets.json"
 
-    @patchfs
-    def test_raises_if_files_missing(self, fs):
-        root_path = pathlib.Path(fs, "my-version-of-mbed-os")
+    def test_raises_if_files_missing(self, tmp_path):
+        root_path = pathlib.Path(tmp_path, "my-version-of-mbed-os")
         root_path.mkdir()
 
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             MbedOS.from_existing(root_path)
