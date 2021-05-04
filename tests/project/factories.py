@@ -2,23 +2,12 @@
 # Copyright (c) 2020-2021 Arm Limited and Contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-from functools import wraps
-from tempfile import TemporaryDirectory
 from mbed_tools.project._internal.libraries import MbedLibReference
 from mbed_tools.project._internal.project_data import (
     CMAKELISTS_FILE_NAME,
     APP_CONFIG_FILE_NAME,
     MBED_OS_REFERENCE_FILE_NAME,
 )
-
-
-def patchfs(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        with TemporaryDirectory() as fs:
-            func(*args, fs=fs, **kwargs)
-
-    return wrapper
 
 
 def make_mbed_program_files(root, config_file_name=APP_CONFIG_FILE_NAME):
