@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.13.0 (2021-05-05)
+===================
+
+Features
+--------
+
+- Targets removed: MTB_RAK811.
+  Targets modified: DISCO-WB5MMG. (#20210505050127)
+
+
 7.12.0 (2021-04-28)
 ===================
 

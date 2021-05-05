@@ -426,9 +426,7 @@
         "target_type": "platform",
         "slug": "DISCO-WB5MMG",
         "build_variant": [],
-        "mbed_os_support": [
-            "Mbed OS 6.8"
-        ],
+        "mbed_os_support": [],
         "mbed_enabled": []
     },
     {
@@ -1640,16 +1638,6 @@
         "product_code": "0461",
         "target_type": "platform",
         "slug": "Reserved-0450-0490-for-MODULE12",
-        "build_variant": [],
-        "mbed_os_support": [],
-        "mbed_enabled": []
-    },
-    {
-        "board_type": "MTB_RAK811",
-        "board_name": "MTB_RAK811",
-        "product_code": "0457",
-        "target_type": "platform",
-        "slug": "Reserved-0450-0490-for-MODULE8",
         "build_variant": [],
         "mbed_os_support": [],
         "mbed_enabled": []
