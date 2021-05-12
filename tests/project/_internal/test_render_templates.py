@@ -3,8 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 from pathlib import Path
-from tempfile import TemporaryDirectory
-from unittest import TestCase, mock
+from unittest import mock
 
 from mbed_tools.project._internal.render_templates import (
     render_cmakelists_template,
@@ -14,35 +13,32 @@ from mbed_tools.project._internal.render_templates import (
 
 
 @mock.patch("mbed_tools.project._internal.render_templates.datetime")
-class TestRenderTemplates(TestCase):
-    def test_renders_cmakelists_template(self, mock_datetime):
-        with TemporaryDirectory() as tmpdir:
-            the_year = 3999
-            mock_datetime.datetime.now.return_value.year = the_year
-            program_name = "mytestprogram"
-            file_path = Path(tmpdir, "mytestpath")
+class TestRenderTemplates:
+    def test_renders_cmakelists_template(self, mock_datetime, tmp_path):
+        the_year = 3999
+        mock_datetime.datetime.now.return_value.year = the_year
+        program_name = "mytestprogram"
+        file_path = Path(tmp_path, "mytestpath")
 
-            render_cmakelists_template(file_path, program_name)
+        render_cmakelists_template(file_path, program_name)
+        output = file_path.read_text()
 
-            output = file_path.read_text()
-            self.assertIn(str(the_year), output)
-            self.assertIn(program_name, output)
+        assert str(the_year) in output
+        assert program_name in output
 
-    def test_renders_main_cpp_template(self, mock_datetime):
-        with TemporaryDirectory() as tmpdir:
-            the_year = 3999
-            mock_datetime.datetime.now.return_value.year = the_year
-            file_path = Path(tmpdir, "mytestpath")
+    def test_renders_main_cpp_template(self, mock_datetime, tmp_path):
+        the_year = 3999
+        mock_datetime.datetime.now.return_value.year = the_year
+        file_path = Path(tmp_path, "mytestpath")
 
-            render_main_cpp_template(file_path)
+        render_main_cpp_template(file_path)
 
-            self.assertIn(str(the_year), file_path.read_text())
+        assert str(the_year) in file_path.read_text()
 
-    def test_renders_gitignore_template(self, _):
-        with TemporaryDirectory() as tmpdir:
-            file_path = Path(tmpdir, "mytestpath")
+    def test_renders_gitignore_template(self, _, tmp_path):
+        file_path = Path(tmp_path, "mytestpath")
 
-            render_gitignore_template(file_path)
+        render_gitignore_template(file_path)
 
-            self.assertIn("cmake_build", file_path.read_text())
-            self.assertIn(".mbedbuild", file_path.read_text())
+        assert "cmake_build" in file_path.read_text()
+        assert ".mbedbuild" in file_path.read_text()
