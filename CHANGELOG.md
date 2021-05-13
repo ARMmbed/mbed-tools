@@ -12,6 +12,22 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.14.0 (2021-05-13)
+===================
+
+Features
+--------
+
+- Targets added: B-G473E-ZEST1S.
+  Targets modified: NUCLEO-G071RB. (#20210513050112)
+
+
+Misc
+----
+
+- #20210512103446
+
+
 7.13.0 (2021-05-05)
 ===================
 
