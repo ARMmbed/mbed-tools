@@ -678,9 +678,12 @@
         "slug": "ST-Nucleo-WL55JC",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 6.7"
+            "Mbed OS 6.10"
         ],
-        "mbed_enabled": []
+        "mbed_enabled": [
+            "Advanced",
+            "Baseline"
+        ]
     },
     {
         "board_type": "NUCLEO_L4P5ZG",

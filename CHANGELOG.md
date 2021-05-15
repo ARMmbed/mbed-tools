@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.15.0 (2021-05-15)
+===================
+
+Features
+--------
+
+- Targets modified: NUCLEO-WL55JC. (#20210515050137)
+
+
 7.14.0 (2021-05-13)
 ===================
 
