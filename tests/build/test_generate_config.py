@@ -48,6 +48,10 @@ TARGET_DATA = {
     "supported_toolchains": ["ARM", "GCC_ARM", "IAR"],
     "trustzone": False,
     "OUTPUT_EXT": "hex",
+    "mbed_ram_start": "0",
+    "mbed_ram_size": "0",
+    "mbed_rom_start": "0",
+    "mbed_rom_size": "0",
 }
 
 
@@ -289,6 +293,10 @@ def test_overrides_target_config_param_from_app(matching_target_and_filter, prog
         ("target.macros", ["DEFINE"], "DEFINE"),
         ("target.device_has", ["NOTHING"], "DEVICE_NOTHING"),
         ("target.features", ["ELECTRICITY"], "FEATURE_ELECTRICITY"),
+        ("target.mbed_rom_start", "99", "MBED_ROM_START=0x63"),
+        ("target.mbed_rom_size", "1010", "MBED_ROM_SIZE=0x3f2"),
+        ("target.mbed_ram_start", "99", "MBED_RAM_START=0x63"),
+        ("target.mbed_ram_size", "1010", "MBED_RAM_SIZE=0x3f2"),
         ("OUTPUT_EXT", "hex", 'MBED_OUTPUT_EXT "hex"'),
     ],
 )
