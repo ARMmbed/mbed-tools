@@ -28,7 +28,7 @@ def prepare(
 ) -> dict:
     """Prepare a config source for entry into the Config object.
 
-    Extracts memory, config and override settings from the source. Flattens these nested dictionaries out into
+    Extracts config and override settings from the source. Flattens these nested dictionaries out into
     lists of objects which are namespaced in the way the Mbed config system expects.
 
     Args:
@@ -45,11 +45,6 @@ def prepare(
     namespace = data.pop("name", source_name)
     for key in data:
         data[key] = _sanitise_value(data[key])
-
-    memories = _extract_memories(namespace, data)
-
-    if memories:
-        data["memories"] = memories
 
     if "config" in data:
         data["config"] = _extract_config_settings(namespace, data["config"])
@@ -81,31 +76,6 @@ class ConfigSetting:
     def __post_init__(self) -> None:
         """Convert the value to a set if applicable."""
         self.value = _sanitise_value(self.value)
-
-
-@dataclass
-class Memory:
-    """Representation of a defined RAM/ROM region."""
-
-    name: str
-    namespace: str
-    start: str
-    size: str
-
-    def __post_init__(self) -> None:
-        """Convert start and size to hex format strings."""
-        try:
-            self.start = hex(int(self.start, 0))
-        except ValueError:
-            raise ValueError(
-                f"Value of MBED_{self.name}_START in {self.namespace}, {self.start} is invalid: must be an integer"
-            )
-        try:
-            self.size = hex(int(self.size, 0))
-        except ValueError:
-            raise ValueError(
-                f"Value of MBED_{self.name}_SIZE in {self.namespace}, {self.size} is invalid: must be an integer"
-            )
 
 
 @dataclass
@@ -156,27 +126,6 @@ def _extract_config_settings(namespace: str, config_data: dict) -> List[ConfigSe
         settings.append(setting)
 
     return settings
-
-
-def _extract_memories(namespace: str, data: dict) -> List[Memory]:
-    memories = []
-    for mem in ["rom", "ram"]:
-        start_attr = f"mbed_{mem}_start"
-        size_attr = f"mbed_{mem}_size"
-        start = data.get(start_attr)
-        size = data.get(size_attr)
-
-        if size is not None and start is not None:
-            logger.debug(f"Extracting MBED_{mem.upper()} definitions in {namespace}: _START={start}, _SIZE={size}.")
-
-            memory = Memory(mem.upper(), namespace, start, size)
-            memories.append(memory)
-        elif start is not None or size is not None:
-            raise ValueError(
-                f"{size_attr.upper()} and {start_attr.upper()} must be defined together. Only "
-                f"{'START' if start is not None else 'SIZE'} is defined in the lib {namespace}."
-            )
-    return memories
 
 
 def _extract_target_overrides(
