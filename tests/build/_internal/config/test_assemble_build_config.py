@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from mbed_tools.build._internal.config.assemble_build_config import _assemble_config_from_sources
+from mbed_tools.build._internal.config.assemble_build_config import _assemble_config_from_sources, assemble_config
 from mbed_tools.build._internal.config.config import Config
 from mbed_tools.build._internal.find_files import find_files
 from mbed_tools.build._internal.config.source import prepare
@@ -157,3 +157,47 @@ class TestAssembleConfigFromSourcesAndLibFiles:
             assert config["extra_labels"] == {"EXTRA_HOT"}
             assert config["labels"] == {"A", "PICKLE"}
             assert config["macros"] == {"TICKER", "RED_MACRO"}
+
+    def test_ignores_duplicate_paths_to_lib_files(self, tmp_path, monkeypatch):
+        target = {
+            "labels": {"A"},
+        }
+        mbed_lib_files = [
+            {
+                "path": Path("mbed-os", "TARGET_A", "mbed_lib.json"),
+                "json_contents": {"name": "a", "config": {"a": {"value": 4}}},
+            },
+        ]
+        _ = create_files(tmp_path, mbed_lib_files)
+        monkeypatch.chdir(tmp_path)
+
+        config = assemble_config(target, [tmp_path, Path("mbed-os")], None)
+
+        assert config["config"][0].name == "a"
+        assert config["config"][0].value == 4
+
+    def test_does_not_search_symlinks_in_proj_dir_twice(self, tmp_path, monkeypatch):
+        target = {
+            "labels": {"A"},
+        }
+        mbed_lib_files = [
+            {
+                "path": Path("mbed-os", "TARGET_A", "mbed_lib.json"),
+                "json_contents": {"name": "a", "config": {"a": {"value": 4}}},
+            },
+        ]
+        project_dir = tmp_path / "project"
+        project_dir.mkdir()
+
+        mbed_os_dir = tmp_path / "other" / "mbed-os"
+        mbed_os_dir.mkdir(parents=True)
+        _ = create_files(mbed_os_dir, mbed_lib_files)
+
+        monkeypatch.chdir(project_dir)
+        mbed_symlink = Path("mbed-os")
+        mbed_symlink.symlink_to(mbed_os_dir, target_is_directory=True)
+
+        config = assemble_config(target, [project_dir, mbed_symlink], None)
+
+        assert config["config"][0].name == "a"
+        assert config["config"][0].value == 4
