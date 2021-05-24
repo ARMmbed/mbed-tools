@@ -75,10 +75,6 @@ set(MBED_CONFIG_DEFINITIONS
     "-D{{setting_name}}={{value}}"
     {% endif -%}
 {%- endfor -%}
-{% for memory in memories %}
-    "-DMBED_{{memory.name}}_START={{memory.start}}"
-    "-DMBED_{{memory.name}}_SIZE={{memory.size}}"
-{%- endfor -%}
 {% for macro in macros %}
     "{{macro|replace("\"", "\\\"")}}"
 {%- endfor %}

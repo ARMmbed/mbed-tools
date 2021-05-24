@@ -8,7 +8,7 @@ import logging
 from collections import UserDict
 from typing import Any, Iterable, Hashable, Callable, List
 
-from mbed_tools.build._internal.config.source import Memory, Override, ConfigSetting
+from mbed_tools.build._internal.config.source import Override, ConfigSetting
 
 logger = logging.getLogger(__name__)
 
@@ -18,15 +18,13 @@ class Config(UserDict):
 
     This object understands how to populate the different 'config sections' which all have different rules for how the
     settings are collected.
-    Applies overrides, appends macros, updates memories, and updates config settings.
+    Applies overrides, appends macros, and updates config settings.
     """
 
     def __setitem__(self, key: Hashable, item: Any) -> None:
         """Set an item based on its key."""
         if key == CONFIG_SECTION:
             self._update_config_section(item)
-        elif key == MEMORIES_SECTION:
-            self._update_memories_section(item)
         elif key == OVERRIDES_SECTION:
             self._handle_overrides(item)
         elif key == MACROS_SECTION:
@@ -69,20 +67,6 @@ class Config(UserDict):
 
         self.data[CONFIG_SECTION] = self.data.get(CONFIG_SECTION, []) + config_settings
 
-    def _update_memories_section(self, memories: List[Memory]) -> None:
-        defined_memories = self.data.get(MEMORIES_SECTION, [])
-        for memory in memories:
-            logger.debug(f"Adding memory settings `{memory.name}: start={memory.start} size={memory.size}`")
-            prev_defined = next((mem for mem in defined_memories if mem.name == memory.name), None)
-            if prev_defined is None:
-                defined_memories.append(memory)
-            else:
-                logger.warning(
-                    f"You are attempting to redefine `{memory.name}` from {prev_defined.namespace}.\n"
-                    f"The values from `{memory.namespace}` will be ignored"
-                )
-        self.data[MEMORIES_SECTION] = defined_memories
-
     def _find_first_config_setting(self, predicate: Callable) -> Any:
         """Find first config setting based on `predicate`.
 
@@ -105,7 +89,6 @@ class Config(UserDict):
 
 CONFIG_SECTION = "config"
 MACROS_SECTION = "macros"
-MEMORIES_SECTION = "memories"
 OVERRIDES_SECTION = "overrides"
 
 
