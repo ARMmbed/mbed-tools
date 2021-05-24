@@ -1,0 +1,1 @@
+Avoid searching config file paths twice when mbed-os-path is used and it is a subdirectory of the project path.

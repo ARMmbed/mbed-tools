@@ -52,6 +52,9 @@ def _find_files(filename: str, directory: Path, filters: Optional[List[Callable]
     filtered_children = filter_files(children, filters)
 
     for child in filtered_children:
+        if child.is_symlink():
+            child = child.absolute().resolve()
+
         if child.is_dir():
             # If processed child is a directory, recurse with current set of filters
             result += _find_files(filename, child, filters)
