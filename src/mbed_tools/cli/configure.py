@@ -15,6 +15,12 @@ from mbed_tools.build import generate_config
     help="Generate an Mbed OS config CMake file and write it to a .mbedbuild folder in the program directory."
 )
 @click.option(
+    "--custom-targets-json",
+    type=click.Path(),
+    default=None,
+    help="Path to custom_targets.json.",
+)
+@click.option(
     "-t",
     "--toolchain",
     type=click.Choice(["ARM", "GCC_ARM"], case_sensitive=False),
@@ -32,7 +38,7 @@ from mbed_tools.build import generate_config
 @click.option(
     "--mbed-os-path", type=click.Path(), default=None, help="Path to local Mbed OS directory.",
 )
-def configure(toolchain: str, mbed_target: str, program_path: str, mbed_os_path: str) -> None:
+def configure(toolchain: str, mbed_target: str, program_path: str, mbed_os_path: str, custom_targets_json: str) -> None:
     """Exports a mbed_config.cmake file to build directory in the program root.
 
     The parameters set in the CMake file will be dependent on the combination of
@@ -43,6 +49,7 @@ def configure(toolchain: str, mbed_target: str, program_path: str, mbed_os_path:
     exist.
 
     Args:
+        custom_targets_json: the path to custom_targets.json
         toolchain: the toolchain you are using (eg. GCC_ARM, ARM)
         mbed_target: the target you are building for (eg. K64F)
         program_path: the path to the local Mbed program
@@ -53,6 +60,9 @@ def configure(toolchain: str, mbed_target: str, program_path: str, mbed_os_path:
         program = MbedProgram.from_existing(pathlib.Path(program_path), cmake_build_subdir)
     else:
         program = MbedProgram.from_existing(pathlib.Path(program_path), cmake_build_subdir, pathlib.Path(mbed_os_path))
+    if custom_targets_json is not None:
+        program.files.custom_targets_json = pathlib.Path(custom_targets_json)
+
     mbed_target = mbed_target.upper()
     output_path = generate_config(mbed_target, toolchain, program)
     click.echo(f"mbed_config.cmake has been generated and written to '{str(output_path.resolve())}'")
