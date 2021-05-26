@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.16.0 (2021-05-26)
+===================
+
+Features
+--------
+
+- Targets modified: MultiTech mDot. (#20210526050235)
+
+
 7.15.0 (2021-05-15)
 ===================
 

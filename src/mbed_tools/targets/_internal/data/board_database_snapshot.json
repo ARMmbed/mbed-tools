@@ -4921,7 +4921,6 @@
         "slug": "MTS-mDot-F411",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 2",
             "Mbed OS 5.10",
             "Mbed OS 5.11",
             "Mbed OS 5.12",
@@ -4935,7 +4934,14 @@
             "Mbed OS 5.8",
             "Mbed OS 5.9",
             "Mbed OS 6.0",
-            "Mbed OS 6.1"
+            "Mbed OS 6.1",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6",
+            "Mbed OS 6.7",
+            "Mbed OS 6.8"
         ],
         "mbed_enabled": [
             "Baseline"
