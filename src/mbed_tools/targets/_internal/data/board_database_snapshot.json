@@ -16,9 +16,7 @@
             "Mbed OS 5.8",
             "Mbed OS 5.9"
         ],
-        "mbed_enabled": [
-            "Advanced"
-        ]
+        "mbed_enabled": []
     },
     {
         "board_type": "MTB_MTS_XDOT",
@@ -37,9 +35,7 @@
             "Mbed OS 5.8",
             "Mbed OS 5.9"
         ],
-        "mbed_enabled": [
-            "Advanced"
-        ]
+        "mbed_enabled": []
     },
     {
         "board_type": "ADV_WISE_1510",
@@ -59,9 +55,7 @@
             "Mbed OS 5.8",
             "Mbed OS 5.9"
         ],
-        "mbed_enabled": [
-            "Advanced"
-        ]
+        "mbed_enabled": []
     },
     {
         "board_type": "MTS_DRAGONFLY_F411RE",
@@ -80,9 +74,7 @@
             "Mbed OS 5.8",
             "Mbed OS 5.9"
         ],
-        "mbed_enabled": [
-            "Advanced"
-        ]
+        "mbed_enabled": []
     },
     {
         "board_type": "ADV_WISE_1530",
@@ -101,9 +93,7 @@
             "Mbed OS 5.8",
             "Mbed OS 5.9"
         ],
-        "mbed_enabled": [
-            "Pelion Device Ready"
-        ]
+        "mbed_enabled": []
     },
     {
         "board_type": "MTB_UBLOX_ODIN_W2",
@@ -122,9 +112,7 @@
             "Mbed OS 5.8",
             "Mbed OS 5.9"
         ],
-        "mbed_enabled": [
-            "Pelion Device Ready"
-        ]
+        "mbed_enabled": []
     },
     {
         "board_type": "MTB_ADV_WISE_1570",
@@ -143,9 +131,7 @@
             "Mbed OS 5.8",
             "Mbed OS 5.9"
         ],
-        "mbed_enabled": [
-            "Pelion Device Ready"
-        ]
+        "mbed_enabled": []
     },
     {
         "board_type": "MTB_MXCHIP_EMW3166",
@@ -174,7 +160,9 @@
         "target_type": "module",
         "slug": "murata-type-abz",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 5.15"
+        ],
         "mbed_enabled": []
     },
     {
@@ -1618,7 +1606,15 @@
         "build_variant": [],
         "mbed_os_support": [
             "Mbed OS 6.1",
-            "Mbed OS 6.2"
+            "Mbed OS 6.10",
+            "Mbed OS 6.2",
+            "Mbed OS 6.3",
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6",
+            "Mbed OS 6.7",
+            "Mbed OS 6.8",
+            "Mbed OS 6.9"
         ],
         "mbed_enabled": []
     },

@@ -12,6 +12,22 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.17.0 (2021-05-27)
+===================
+
+Features
+--------
+
+- Targets modified: Advantech WISE-1510, Advantech WISE-1530, Advantech WISE-1570, Multitech Dragonfly, Multitech xDOT, Murata Type ABZ, NUCLEO-G474RE, u-blox NINA-B1, u-blox ODIN-W2. (#20210527050125)
+
+
+Bugfixes
+--------
+
+- Fix issue with memory region overrides being ignored. (#20210524113403)
+- Avoid searching config file paths twice when mbed-os-path is used and it is a subdirectory of the project path. (#20210524175020)
+
+
 7.16.0 (2021-05-26)
 ===================
 
