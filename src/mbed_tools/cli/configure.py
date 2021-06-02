@@ -67,5 +67,5 @@ def configure(
         program.files.cmake_build_dir = pathlib.Path(output_dir)
 
     mbed_target = mbed_target.upper()
-    output_path = generate_config(mbed_target, toolchain, program)
+    _, output_path = generate_config(mbed_target, toolchain, program)
     click.echo(f"mbed_config.cmake has been generated and written to '{str(output_path.resolve())}'")

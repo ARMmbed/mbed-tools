@@ -43,9 +43,6 @@ from mbed_tools.sterm import terminal
     "-f", "--flash", is_flag=True, default=False, help="Flash the binary onto a device",
 )
 @click.option(
-    "--hex-file", is_flag=True, default=False, help="Use hex file, this option should be used with '-f/--flash' option",
-)
-@click.option(
     "-s", "--sterm", is_flag=True, default=False, help="Launch a serial terminal to the device.",
 )
 @click.option(
@@ -61,7 +58,6 @@ def build(
     mbed_target: str = "",
     clean: bool = False,
     flash: bool = False,
-    hex_file: bool = False,
     sterm: bool = False,
     baudrate: int = 9600,
     mbed_os_path: str = None,
@@ -81,7 +77,6 @@ def build(
        mbed_target: The name of the Mbed target to build for.
        clean: Perform a clean build.
        flash: Flash the binary onto a device.
-       hex_file: Use hex file, this option should be used with '-f/--flash' option.
        sterm: Open a serial terminal to the connected target.
        baudrate: Change the serial baud rate (ignored unless --sterm is also given).
     """
@@ -100,7 +95,7 @@ def build(
     click.echo("Configuring project and generating build system...")
     if custom_targets_json is not None:
         program.files.custom_targets_json = pathlib.Path(custom_targets_json)
-    generate_config(mbed_target.upper(), toolchain, program)
+    config, _ = generate_config(mbed_target.upper(), toolchain, program)
     generate_build_system(program.root, build_tree, profile)
 
     click.echo("Building Mbed project...")
@@ -114,10 +109,9 @@ def build(
 
     if flash:
         for dev in devices:
+            hex_file = "OUTPUT_EXT" in config and config["OUTPUT_EXT"] == "hex"
             flashed_path = flash_binary(dev.mount_points[0].resolve(), program.root, build_tree, mbed_target, hex_file)
         click.echo(f"Copied {str(flashed_path.resolve())} to {len(devices)} device(s).")
-    elif hex_file:
-        click.echo("'--hex-file' option should be used with '-f/--flash' option")
 
     if sterm:
         dev = devices[0]

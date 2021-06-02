@@ -5,20 +5,20 @@
 """Parses the Mbed configuration system and generates a CMake config script."""
 import pathlib
 
-from typing import Any
+from typing import Any, Tuple
 
 from mbed_tools.lib.json_helpers import decode_json_file
 from mbed_tools.project import MbedProgram
 from mbed_tools.targets import get_target_by_name
 from mbed_tools.build._internal.cmake_file import render_mbed_config_cmake_template
-from mbed_tools.build._internal.config.assemble_build_config import assemble_config
+from mbed_tools.build._internal.config.assemble_build_config import Config, assemble_config
 from mbed_tools.build._internal.write_files import write_file
 from mbed_tools.build.exceptions import MbedBuildError
 
 CMAKE_CONFIG_FILE = "mbed_config.cmake"
 
 
-def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> pathlib.Path:
+def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> Tuple[Config, pathlib.Path]:
     """Generate an Mbed config file at the program root by parsing the mbed config system.
 
     Args:
@@ -27,6 +27,7 @@ def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> p
         program: The MbedProgram to configure.
 
     Returns:
+        Config object (UserDict)
         Path to the generated config file.
     """
     targets_data = _load_raw_targets_data(program)
@@ -39,7 +40,7 @@ def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> p
     )
     cmake_config_file_path = program.files.cmake_build_dir / CMAKE_CONFIG_FILE
     write_file(cmake_config_file_path, cmake_file_contents)
-    return cmake_config_file_path
+    return config, cmake_config_file_path
 
 
 def _load_raw_targets_data(program: MbedProgram) -> Any:
