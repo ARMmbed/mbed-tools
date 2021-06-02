@@ -68,6 +68,8 @@ class TestBuildCommand(TestCase):
     ):
         program = mbed_program.from_existing()
         with mock_project_directory(program, mbed_config_exists=True, build_tree_exists=False):
+            generate_config.return_value = [mock.MagicMock(), mock.MagicMock()]
+
             runner = CliRunner()
             runner.invoke(build, DEFAULT_BUILD_ARGS)
 
@@ -154,6 +156,8 @@ class TestBuildCommand(TestCase):
             build_tree_exists=True,
             build_subdir=pathlib.Path("K64F", "develop", "GCC_ARM"),
         ):
+            generate_config.return_value = [mock.MagicMock(), mock.MagicMock()]
+
             toolchain = "gcc_arm"
             target = "k64f"
             mbed_os_path = "./extern/mbed-os"
@@ -189,6 +193,8 @@ class TestBuildCommand(TestCase):
             build_tree_exists=True,
             build_subdir=pathlib.Path("K64F", "develop", "GCC_ARM"),
         ):
+            generate_config.return_value = [mock.MagicMock(), mock.MagicMock()]
+
             toolchain = "gcc_arm"
             target = "k64f"
 
@@ -201,22 +207,39 @@ class TestBuildCommand(TestCase):
 
     @mock.patch("mbed_tools.cli.build.flash_binary")
     @mock.patch("mbed_tools.cli.build.find_all_connected_devices")
-    def test_build_flash_option(
-        self, mock_find_devices, flash_binary, generate_config, mbed_program, build_project, generate_build_system
+    def test_build_flash_options_bin_target(
+        self,
+        mock_find_devices,
+        flash_binary,
+        generate_config,
+        mbed_program,
+        build_project,
+        generate_build_system,
     ):
+        # A target with bin images does not need OUTPUT_EXT defined
+        generate_config.return_value = [mock.MagicMock(), mock.MagicMock()]
         mock_find_devices.return_value = [mock.MagicMock()]
         runner = CliRunner()
         runner.invoke(build, ["--flash", *DEFAULT_BUILD_ARGS])
-        flash_binary.assert_called_once()
+        call_args = flash_binary.call_args
+        args, kwargs = call_args
+        flash_binary.assert_called_once_with(args[0], args[1], args[2], args[3], False)
 
     @mock.patch("mbed_tools.cli.build.flash_binary")
     @mock.patch("mbed_tools.cli.build.find_all_connected_devices")
-    def test_build_flash_and_hex_file_options(
-        self, mock_find_devices, flash_binary, generate_config, mbed_program, build_project, generate_build_system
+    def test_build_flash_options_hex_target(
+        self,
+        mock_find_devices,
+        flash_binary,
+        generate_config,
+        mbed_program,
+        build_project,
+        generate_build_system,
     ):
+        generate_config.return_value = [{"OUTPUT_EXT": "hex"}, mock.MagicMock()]
         mock_find_devices.return_value = [mock.MagicMock()]
         runner = CliRunner()
-        runner.invoke(build, ["--flash", "--hex-file", *DEFAULT_BUILD_ARGS])
+        runner.invoke(build, ["--flash", *DEFAULT_BUILD_ARGS])
         call_args = flash_binary.call_args
         args, kwargs = call_args
         flash_binary.assert_called_once_with(args[0], args[1], args[2], args[3], True)
@@ -224,8 +247,15 @@ class TestBuildCommand(TestCase):
     @mock.patch("mbed_tools.cli.build.flash_binary")
     @mock.patch("mbed_tools.cli.build.find_all_connected_devices")
     def test_build_flash_both_two_devices(
-        self, mock_find_devices, flash_binary, generate_config, mbed_program, build_project, generate_build_system
+        self,
+        mock_find_devices,
+        flash_binary,
+        generate_config,
+        mbed_program,
+        build_project,
+        generate_build_system,
     ):
+        generate_config.return_value = [mock.MagicMock(), mock.MagicMock()]
         mock_find_devices.return_value = [mock.MagicMock(), mock.MagicMock()]
         runner = CliRunner()
         runner.invoke(build, ["--flash", *DEFAULT_BUILD_ARGS])
@@ -234,18 +264,19 @@ class TestBuildCommand(TestCase):
     @mock.patch("mbed_tools.cli.build.flash_binary")
     @mock.patch("mbed_tools.cli.build.find_connected_device")
     def test_build_flash_only_identifier_device(
-        self, mock_find_device, flash_binary, generate_config, mbed_program, build_project, generate_build_system
+        self,
+        mock_find_device,
+        flash_binary,
+        generate_config,
+        mbed_program,
+        build_project,
+        generate_build_system,
     ):
+        generate_config.return_value = [mock.MagicMock(), mock.MagicMock()]
         mock_find_device.return_value = mock.MagicMock()
         runner = CliRunner()
         runner.invoke(build, ["--flash", "-m", "K64F[1]", "-t", "GCC_ARM"])
         self.assertEqual(flash_binary.call_count, 1)
-
-    def test_build_only_hex_file_option(self, generate_config, mbed_program, build_project, generate_build_system):
-        runner = CliRunner()
-        result = runner.invoke(build, ["--hex-file", *DEFAULT_BUILD_ARGS])
-
-        self.assertRegex(result.output, "-f/--flash")
 
     @mock.patch("mbed_tools.cli.build.terminal")
     @mock.patch("mbed_tools.cli.build.find_connected_device")
@@ -256,6 +287,7 @@ class TestBuildCommand(TestCase):
         serial_port = "tty.k64f"
         baud = 115200
         mock_find_device.return_value = mock.Mock(serial_port=serial_port)
+        generate_config.return_value = [mock.MagicMock(), mock.MagicMock()]
 
         CliRunner().invoke(build, ["-m", target, "-t", "gcc_arm", "--sterm", "--baudrate", baud])
 
@@ -270,6 +302,7 @@ class TestBuildCommand(TestCase):
         target = "K64F"
         serial_port = None
         mock_find_device.return_value = mock.Mock(serial_port=serial_port)
+        generate_config.return_value = [mock.MagicMock(), mock.MagicMock()]
 
         output = CliRunner().invoke(build, ["-m", target, "-t", "gcc_arm", "--sterm"])
         self.assertEqual(type(output.exception), SystemExit)
