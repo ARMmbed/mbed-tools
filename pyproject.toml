@@ -65,4 +65,6 @@ name = "Misc"
 showcontent = false
 
 [tool.black]
+diff = true
+color = true
 line-length = 120
