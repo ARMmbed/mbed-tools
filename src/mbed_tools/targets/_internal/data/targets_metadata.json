@@ -59,6 +59,12 @@
             "LIKE_CORTEX_M7",
             "CORTEX"
         ],
+        "Cortex-A5": [
+            "A5",
+            "CORTEX_A",
+            "LIKE_CORTEX_A5",
+            "CORTEX"
+        ],
         "Cortex-A9": [
             "A9",
             "CORTEX_A",
