@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.19.0 (2021-06-04)
+===================
+
+Features
+--------
+
+- Add Cortex-A5 Support (#20210603213250)
+
+
 7.18.0 (2021-05-28)
 ===================
 

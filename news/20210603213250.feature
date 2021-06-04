@@ -1,1 +1,0 @@
-Add Cortex-A5 Support
