@@ -47,7 +47,6 @@ TARGET_DATA = {
     "supported_form_factors": ["ARDUINO"],
     "supported_toolchains": ["ARM", "GCC_ARM", "IAR"],
     "trustzone": False,
-    "OUTPUT_EXT": "hex",
     "mbed_ram_start": "0",
     "mbed_ram_size": "0",
     "mbed_rom_start": "0",
@@ -110,9 +109,10 @@ def test_target_and_toolchain_collected(program):
 
 
 def test_custom_targets_data_found(program):
-    program.files.custom_targets_json.write_text(json.dumps({"IMAGINARYBOARD": TARGET_DATA}))
     target = "IMAGINARYBOARD"
     toolchain = "GCC_ARM"
+
+    program.files.custom_targets_json.write_text(json.dumps({target: TARGET_DATA}))
 
     generate_config(target, toolchain, program)
 
@@ -297,7 +297,6 @@ def test_overrides_target_config_param_from_app(matching_target_and_filter, prog
         ("target.mbed_rom_size", "1010", "MBED_ROM_SIZE=0x3f2"),
         ("target.mbed_ram_start", "99", "MBED_RAM_START=0x63"),
         ("target.mbed_ram_size", "1010", "MBED_RAM_SIZE=0x3f2"),
-        ("OUTPUT_EXT", "hex", 'MBED_OUTPUT_EXT "hex"'),
     ],
 )
 def test_overrides_target_non_config_params_from_app(
@@ -499,3 +498,38 @@ def test_config_parsed_when_mbed_os_outside_project_root(program_in_mbed_os_subd
 
     assert "MBED_CONF_PLATFORM_STDIO_BAUD_RATE=9600" in config_text
     assert "MBED_LFS_READ_SIZE=64" in config_text
+
+
+def test_output_ext_unspecified(program):
+    generate_config("K64F", "GCC_ARM", program)
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
+
+    assert 'MBED_OUTPUT_EXT "hex"' not in config_text
+
+
+def test_output_ext_bin(program):
+    target = "IMAGINARYBOARD"
+    toolchain = "GCC_ARM"
+
+    target_data = TARGET_DATA.copy()
+    target_data["OUTPUT_EXT"] = "bin"
+    program.files.custom_targets_json.write_text(json.dumps({target: target_data}))
+
+    generate_config(target, toolchain, program)
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
+
+    assert 'MBED_OUTPUT_EXT "hex"' not in config_text
+
+
+def test_output_ext_hex(program):
+    target = "IMAGINARYBOARD"
+    toolchain = "GCC_ARM"
+
+    target_data = TARGET_DATA.copy()
+    target_data["OUTPUT_EXT"] = "hex"
+    program.files.custom_targets_json.write_text(json.dumps({target: target_data}))
+
+    generate_config(target, toolchain, program)
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
+
+    assert 'MBED_OUTPUT_EXT "hex"' in config_text
