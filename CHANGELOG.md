@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.19.1 (2021-06-05)
+===================
+
+Bugfixes
+--------
+
+- Properly handle --custom-targets-json in configure sub command (#286)
+- Allow choosing output directory in configure sub command (#287)
+
+
 7.19.0 (2021-06-04)
 ===================
 
