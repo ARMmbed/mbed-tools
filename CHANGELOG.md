@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.20.0 (2021-06-08)
+===================
+
+Features
+--------
+
+- The `--flash` option of `mbed-tools compile` now automatically selects bin or hex image. The option `--hex-file` is removed. (#20210602164800)
+- Targets modified: DISCO-WB5MMG. (#20210608050103)
+
+
 7.19.1 (2021-06-05)
 ===================
 

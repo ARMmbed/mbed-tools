@@ -34,20 +34,20 @@
 &#34;&#34;&#34;Parses the Mbed configuration system and generates a CMake config script.&#34;&#34;&#34;
 import pathlib
 
-from typing import Any
+from typing import Any, Tuple
 
 from mbed_tools.lib.json_helpers import decode_json_file
 from mbed_tools.project import MbedProgram
 from mbed_tools.targets import get_target_by_name
 from mbed_tools.build._internal.cmake_file import render_mbed_config_cmake_template
-from mbed_tools.build._internal.config.assemble_build_config import assemble_config
+from mbed_tools.build._internal.config.assemble_build_config import Config, assemble_config
 from mbed_tools.build._internal.write_files import write_file
 from mbed_tools.build.exceptions import MbedBuildError
 
 CMAKE_CONFIG_FILE = &#34;mbed_config.cmake&#34;
 
 
-def generate_config(target_name: str, toolchain: str, program: MbedProgram) -&gt; pathlib.Path:
+def generate_config(target_name: str, toolchain: str, program: MbedProgram) -&gt; Tuple[Config, pathlib.Path]:
     &#34;&#34;&#34;Generate an Mbed config file at the program root by parsing the mbed config system.
 
     Args:
@@ -56,6 +56,7 @@ def generate_config(target_name: str, toolchain: str, program: MbedProgram) -&gt
         program: The MbedProgram to configure.
 
     Returns:
+        Config object (UserDict)
         Path to the generated config file.
     &#34;&#34;&#34;
     targets_data = _load_raw_targets_data(program)
@@ -68,7 +69,7 @@ def generate_config(target_name: str, toolchain: str, program: MbedProgram) -&gt
     )
     cmake_config_file_path = program.files.cmake_build_dir / CMAKE_CONFIG_FILE
     write_file(cmake_config_file_path, cmake_file_contents)
-    return cmake_config_file_path
+    return config, cmake_config_file_path
 
 
 def _load_raw_targets_data(program: MbedProgram) -&gt; Any:
@@ -96,7 +97,7 @@ def _load_raw_targets_data(program: MbedProgram) -&gt; Any:
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="mbed_tools.build.config.generate_config"><code class="name flex">
-<span>def <span class="ident">generate_config</span></span>(<span>target_name: str, toolchain: str, program: <a title="mbed_tools.project.mbed_program.MbedProgram" href="../project/mbed_program.html#mbed_tools.project.mbed_program.MbedProgram">MbedProgram</a>) ‑> pathlib.Path</span>
+<span>def <span class="ident">generate_config</span></span>(<span>target_name: str, toolchain: str, program: <a title="mbed_tools.project.mbed_program.MbedProgram" href="../project/mbed_program.html#mbed_tools.project.mbed_program.MbedProgram">MbedProgram</a>) ‑> Tuple[mbed_tools.build._internal.config.config.Config, pathlib.Path]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Generate an Mbed config file at the program root by parsing the mbed config system.</p>
@@ -110,12 +111,13 @@ def _load_raw_targets_data(program: MbedProgram) -&gt; Any:
 <dd>The MbedProgram to configure.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<p>Path to the generated config file.</p></div>
+<p>Config object (UserDict)
+Path to the generated config file.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def generate_config(target_name: str, toolchain: str, program: MbedProgram) -&gt; pathlib.Path:
+<pre><code class="python">def generate_config(target_name: str, toolchain: str, program: MbedProgram) -&gt; Tuple[Config, pathlib.Path]:
     &#34;&#34;&#34;Generate an Mbed config file at the program root by parsing the mbed config system.
 
     Args:
@@ -124,6 +126,7 @@ def _load_raw_targets_data(program: MbedProgram) -&gt; Any:
         program: The MbedProgram to configure.
 
     Returns:
+        Config object (UserDict)
         Path to the generated config file.
     &#34;&#34;&#34;
     targets_data = _load_raw_targets_data(program)
@@ -136,7 +139,7 @@ def _load_raw_targets_data(program: MbedProgram) -&gt; Any:
     )
     cmake_config_file_path = program.files.cmake_build_dir / CMAKE_CONFIG_FILE
     write_file(cmake_config_file_path, cmake_file_contents)
-    return cmake_config_file_path</code></pre>
+    return config, cmake_config_file_path</code></pre>
 </details>
 </dd>
 </dl>
