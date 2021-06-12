@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.21.0 (2021-06-12)
+===================
+
+Features
+--------
+
+- Targets added: Multitech Dragonfly L496VG. (#20210612050106)
+
+
 7.20.0 (2021-06-08)
 ===================
 

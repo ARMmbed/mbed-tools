@@ -176,6 +176,18 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "MTS_DRAGONFLY_L496VG",
+        "board_name": "Multitech Dragonfly L496VG",
+        "product_code": "0313",
+        "target_type": "platform",
+        "slug": "MTS-DRAGONFLY-L496VG",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.11"
+        ],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "B_G473E_ZEST1S",
         "board_name": "B-G473E-ZEST1S",
         "product_code": "0889",
