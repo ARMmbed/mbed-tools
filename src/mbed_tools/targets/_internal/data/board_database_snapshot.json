@@ -1645,16 +1645,7 @@
         "slug": "ST-Nucleo-G474RE",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 6.1",
-            "Mbed OS 6.10",
-            "Mbed OS 6.2",
-            "Mbed OS 6.3",
-            "Mbed OS 6.4",
-            "Mbed OS 6.5",
-            "Mbed OS 6.6",
-            "Mbed OS 6.7",
-            "Mbed OS 6.8",
-            "Mbed OS 6.9"
+            "Mbed OS 6.11"
         ],
         "mbed_enabled": []
     },
