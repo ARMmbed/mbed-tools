@@ -1647,7 +1647,10 @@
         "mbed_os_support": [
             "Mbed OS 6.11"
         ],
-        "mbed_enabled": []
+        "mbed_enabled": [
+            "Advanced",
+            "Baseline"
+        ]
     },
     {
         "board_type": "FUTURE_SEQUANA",

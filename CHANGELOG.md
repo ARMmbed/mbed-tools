@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.23.0 (2021-06-17)
+===================
+
+Features
+--------
+
+- Targets modified: NUCLEO-G474RE. (#20210617050111)
+
+
 7.22.0 (2021-06-16)
 ===================
 
