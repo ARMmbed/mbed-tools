@@ -47,3 +47,15 @@ class TestConfigureCommand(TestCase):
 
         generate_config.assert_called_once_with("K64F", "GCC_ARM", program)
         self.assertEqual(program.files.cmake_build_dir, output_dir)
+
+    @mock.patch("mbed_tools.cli.configure.generate_config")
+    @mock.patch("mbed_tools.cli.configure.MbedProgram")
+    def test_app_config_used_when_passed(self, program, generate_config):
+        program = program.from_existing()
+        app_config_path = pathlib.Path("alternative_config.json")
+        CliRunner().invoke(
+            configure, ["-t", "gcc_arm", "-m", "k64f", "--app-config", app_config_path]
+        )
+
+        generate_config.assert_called_once_with("K64F", "GCC_ARM", program)
+        self.assertEqual(program.files.app_config_file, app_config_path)
