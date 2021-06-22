@@ -116,18 +116,6 @@ class TestBuildCommand(TestCase):
             self.assertIsNotNone(result.exception)
             self.assertRegex(result.output, "--mbed-target")
 
-    def test_raises_if_gen_config_target_toolchain_not_passed(
-        self, generate_config, mbed_program, build_project, generate_build_system
-    ):
-        program = mbed_program.from_existing()
-        with mock_project_directory(program):
-            runner = CliRunner()
-            result = runner.invoke(build)
-
-            self.assertIsNotNone(result.exception)
-            self.assertRegex(result.output, "--mbed-target")
-            self.assertRegex(result.output, "--toolchain")
-
     def test_raises_if_target_identifier_not_int(
         self, generate_config, mbed_program, build_project, generate_build_system
     ):

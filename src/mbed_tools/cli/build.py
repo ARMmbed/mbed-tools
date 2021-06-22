@@ -22,9 +22,10 @@ from mbed_tools.sterm import terminal
     "-t",
     "--toolchain",
     type=click.Choice(["ARM", "GCC_ARM"], case_sensitive=False),
+    required=True,
     help="The toolchain you are using to build your app.",
 )
-@click.option("-m", "--mbed-target", help="A build target for an Mbed-enabled device, e.g. K64F.")
+@click.option("-m", "--mbed-target", required=True, help="A build target for an Mbed-enabled device, e.g. K64F.")
 @click.option("-b", "--profile", default="develop", help="The build type (release, develop or debug).")
 @click.option("-c", "--clean", is_flag=True, default=False, help="Perform a clean build.")
 @click.option(
@@ -54,14 +55,14 @@ from mbed_tools.sterm import terminal
 def build(
     program_path: str,
     profile: str,
-    toolchain: str = "",
-    mbed_target: str = "",
-    clean: bool = False,
-    flash: bool = False,
-    sterm: bool = False,
-    baudrate: int = 9600,
-    mbed_os_path: str = None,
-    custom_targets_json: str = None,
+    toolchain: str,
+    mbed_target: str,
+    clean: bool,
+    flash: bool,
+    sterm: bool,
+    baudrate: int,
+    mbed_os_path: str,
+    custom_targets_json: str,
 ) -> None:
     """Configure and build an Mbed project using CMake and Ninja.
 
@@ -80,7 +81,6 @@ def build(
        sterm: Open a serial terminal to the connected target.
        baudrate: Change the serial baud rate (ignored unless --sterm is also given).
     """
-    _validate_target_and_toolchain_args(mbed_target, toolchain)
     mbed_target, target_id = _get_target_id(mbed_target)
 
     cmake_build_subdir = pathlib.Path(mbed_target.upper(), profile.lower(), toolchain.upper())
@@ -122,13 +122,6 @@ def build(
             )
 
         terminal.run(dev.serial_port, baudrate)
-
-
-def _validate_target_and_toolchain_args(target: str, toolchain: str) -> None:
-    if not all([toolchain, target]):
-        raise click.UsageError(
-            "Both --toolchain and --mbed-target arguments are required when using the compile subcommand."
-        )
 
 
 def _get_target_id(target: str) -> Tuple[str, Optional[int]]:
