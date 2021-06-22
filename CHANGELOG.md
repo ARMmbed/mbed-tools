@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.24.0 (2021-06-22)
+===================
+
+Features
+--------
+
+- Targets added: PSoC 64 Secure Boot, Wi-Fi / BLE Pioneer Kit.
+  Targets removed: "PSoC 64 Secure Boot" Wi-Fi / Bluetooth Pioneer Kit. (#20210622050108)
+
+
 7.23.0 (2021-06-17)
 ===================
 
