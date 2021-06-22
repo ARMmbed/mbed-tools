@@ -59,3 +59,23 @@ class TestConfigureCommand(TestCase):
 
         generate_config.assert_called_once_with("K64F", "GCC_ARM", program)
         self.assertEqual(program.files.app_config_file, app_config_path)
+
+    @mock.patch("mbed_tools.cli.configure.generate_config")
+    @mock.patch("mbed_tools.cli.configure.MbedProgram")
+    def test_profile_used_when_passed(self, program, generate_config):
+        test_program = program.from_existing()
+        program.reset_mock()  # clear call count from previous line
+
+        toolchain = "gcc_arm"
+        target = "k64f"
+        profile = "release"
+
+        CliRunner().invoke(
+            configure, ["-t", toolchain, "-m", target, "--profile", profile]
+        )
+
+        program.from_existing.assert_called_once_with(
+            pathlib.Path("."),
+            pathlib.Path(target.upper(), profile, toolchain.upper())
+        )
+        generate_config.assert_called_once_with("K64F", "GCC_ARM", test_program)
