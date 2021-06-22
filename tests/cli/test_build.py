@@ -171,6 +171,21 @@ class TestBuildCommand(TestCase):
             generate_config.assert_called_once_with(target.upper(), toolchain.upper(), program)
             self.assertEqual(program.files.custom_targets_json, custom_targets_json_path)
 
+    def test_app_config_used_when_passed(
+        self, generate_config, mbed_program, build_project, generate_build_system
+    ):
+        program = mbed_program.from_existing()
+        with mock_project_directory(program, mbed_config_exists=True, build_tree_exists=True):
+            toolchain = "gcc_arm"
+            target = "k64f"
+            app_config_path = pathlib.Path("alternative_config.json")
+
+            runner = CliRunner()
+            runner.invoke(build, ["-t", toolchain, "-m", target, "--app-config", app_config_path])
+
+            generate_config.assert_called_once_with(target.upper(), toolchain.upper(), program)
+            self.assertEqual(program.files.app_config_file, app_config_path)
+
     def test_build_folder_removed_when_clean_flag_passed(
         self, generate_config, mbed_program, build_project, generate_build_system
     ):

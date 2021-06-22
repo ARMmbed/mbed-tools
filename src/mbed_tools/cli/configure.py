@@ -36,8 +36,17 @@ from mbed_tools.build import generate_config
 @click.option(
     "--mbed-os-path", type=click.Path(), default=None, help="Path to local Mbed OS directory.",
 )
+@click.option(
+    "--app-config", type=click.Path(), default=None, help="Path to application configuration file.",
+)
 def configure(
-    toolchain: str, mbed_target: str, program_path: str, mbed_os_path: str, output_dir: str, custom_targets_json: str
+    toolchain: str,
+    mbed_target: str,
+    program_path: str,
+    mbed_os_path: str,
+    output_dir: str,
+    custom_targets_json: str,
+    app_config: str
 ) -> None:
     """Exports a mbed_config.cmake file to build directory in the program root.
 
@@ -55,6 +64,7 @@ def configure(
         program_path: the path to the local Mbed program
         mbed_os_path: the path to the local Mbed OS directory
         output_dir: the path to the output directory
+        app_config: the path to the application configuration file
     """
     cmake_build_subdir = pathlib.Path(mbed_target.upper(), "develop", toolchain.upper())
     if mbed_os_path is None:
@@ -65,6 +75,8 @@ def configure(
         program.files.custom_targets_json = pathlib.Path(custom_targets_json)
     if output_dir is not None:
         program.files.cmake_build_dir = pathlib.Path(output_dir)
+    if app_config is not None:
+        program.files.app_config_file = pathlib.Path(app_config)
 
     mbed_target = mbed_target.upper()
     _, output_path = generate_config(mbed_target, toolchain, program)
