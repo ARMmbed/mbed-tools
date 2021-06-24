@@ -426,7 +426,8 @@
         "slug": "NUMAKER-M2354",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 5.15"
+            "Mbed OS 5.15",
+            "Mbed OS 6.11"
         ],
         "mbed_enabled": [
             "Advanced",
@@ -452,7 +453,9 @@
         "target_type": "platform",
         "slug": "ST-NUCLEO-WB15CC",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 6.11"
+        ],
         "mbed_enabled": []
     },
     {

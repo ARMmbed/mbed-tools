@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.25.0 (2021-06-24)
+===================
+
+Features
+--------
+
+- Targets modified: NUCLEO-WB15CC, NUMAKER-M2354. (#20210624050112)
+
+
 7.24.0 (2021-06-22)
 ===================
 
