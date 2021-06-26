@@ -444,9 +444,12 @@
         "slug": "DISCO-WB5MMG",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 6.11"
+            "Mbed OS 6.12"
         ],
-        "mbed_enabled": []
+        "mbed_enabled": [
+            "Advanced",
+            "Baseline"
+        ]
     },
     {
         "board_type": "NUCLEO_WB15CC",

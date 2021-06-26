@@ -1,1 +1,0 @@
-Add an option `--app-config` to `configure` and `build` commands to allow users to specify an application configuration file.

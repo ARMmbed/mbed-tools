@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.27.0 (2021-06-26)
+===================
+
+Features
+--------
+
+- Targets modified: DISCO-WB5MMG. (#20210626050110)
+
+
+Bugfixes
+--------
+
+- Add an option `--app-config` to `configure` and `build` commands to allow users to specify an application configuration file. (#291)
+
+
 7.26.0 (2021-06-25)
 ===================
 

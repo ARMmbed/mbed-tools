@@ -51,9 +51,10 @@ from mbed_tools.sterm import terminal
     &#34;-t&#34;,
     &#34;--toolchain&#34;,
     type=click.Choice([&#34;ARM&#34;, &#34;GCC_ARM&#34;], case_sensitive=False),
+    required=True,
     help=&#34;The toolchain you are using to build your app.&#34;,
 )
-@click.option(&#34;-m&#34;, &#34;--mbed-target&#34;, help=&#34;A build target for an Mbed-enabled device, e.g. K64F.&#34;)
+@click.option(&#34;-m&#34;, &#34;--mbed-target&#34;, required=True, help=&#34;A build target for an Mbed-enabled device, e.g. K64F.&#34;)
 @click.option(&#34;-b&#34;, &#34;--profile&#34;, default=&#34;develop&#34;, help=&#34;The build type (release, develop or debug).&#34;)
 @click.option(&#34;-c&#34;, &#34;--clean&#34;, is_flag=True, default=False, help=&#34;Perform a clean build.&#34;)
 @click.option(
@@ -67,6 +68,9 @@ from mbed_tools.sterm import terminal
 )
 @click.option(
     &#34;--custom-targets-json&#34;, type=click.Path(), default=None, help=&#34;Path to custom_targets.json.&#34;,
+)
+@click.option(
+    &#34;--app-config&#34;, type=click.Path(), default=None, help=&#34;Path to application configuration file.&#34;,
 )
 @click.option(
     &#34;-f&#34;, &#34;--flash&#34;, is_flag=True, default=False, help=&#34;Flash the binary onto a device&#34;,
@@ -83,14 +87,15 @@ from mbed_tools.sterm import terminal
 def build(
     program_path: str,
     profile: str,
-    toolchain: str = &#34;&#34;,
-    mbed_target: str = &#34;&#34;,
-    clean: bool = False,
-    flash: bool = False,
-    sterm: bool = False,
-    baudrate: int = 9600,
-    mbed_os_path: str = None,
-    custom_targets_json: str = None,
+    toolchain: str,
+    mbed_target: str,
+    clean: bool,
+    flash: bool,
+    sterm: bool,
+    baudrate: int,
+    mbed_os_path: str,
+    custom_targets_json: str,
+    app_config: str,
 ) -&gt; None:
     &#34;&#34;&#34;Configure and build an Mbed project using CMake and Ninja.
 
@@ -104,12 +109,12 @@ def build(
        custom_targets_json: Path to custom_targets.json.
        toolchain: The toolchain to use for the build.
        mbed_target: The name of the Mbed target to build for.
+       app_config: the path to the application configuration file
        clean: Perform a clean build.
        flash: Flash the binary onto a device.
        sterm: Open a serial terminal to the connected target.
        baudrate: Change the serial baud rate (ignored unless --sterm is also given).
     &#34;&#34;&#34;
-    _validate_target_and_toolchain_args(mbed_target, toolchain)
     mbed_target, target_id = _get_target_id(mbed_target)
 
     cmake_build_subdir = pathlib.Path(mbed_target.upper(), profile.lower(), toolchain.upper())
@@ -124,6 +129,8 @@ def build(
     click.echo(&#34;Configuring project and generating build system...&#34;)
     if custom_targets_json is not None:
         program.files.custom_targets_json = pathlib.Path(custom_targets_json)
+    if app_config is not None:
+        program.files.app_config_file = pathlib.Path(app_config)
     config, _ = generate_config(mbed_target.upper(), toolchain, program)
     generate_build_system(program.root, build_tree, profile)
 
@@ -151,13 +158,6 @@ def build(
             )
 
         terminal.run(dev.serial_port, baudrate)
-
-
-def _validate_target_and_toolchain_args(target: str, toolchain: str) -&gt; None:
-    if not all([toolchain, target]):
-        raise click.UsageError(
-            &#34;Both --toolchain and --mbed-target arguments are required when using the compile subcommand.&#34;
-        )
 
 
 def _get_target_id(target: str) -&gt; Tuple[str, Optional[int]]:
