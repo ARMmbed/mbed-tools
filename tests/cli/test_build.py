@@ -186,6 +186,29 @@ class TestBuildCommand(TestCase):
             generate_config.assert_called_once_with(target.upper(), toolchain.upper(), program)
             self.assertEqual(program.files.app_config_file, app_config_path)
 
+    def test_profile_used_when_passed(
+        self, generate_config, mbed_program, build_project, generate_build_system
+    ):
+        program = mbed_program.from_existing()
+        mbed_program.reset_mock()  # clear call count from previous line
+
+        with mock_project_directory(program, mbed_config_exists=True, build_tree_exists=True):
+            generate_config.return_value = [mock.MagicMock(), mock.MagicMock()]
+
+            toolchain = "gcc_arm"
+            target = "k64f"
+            profile = "release"
+
+            runner = CliRunner()
+            runner.invoke(build, ["-t", toolchain, "-m", target, "--profile", profile])
+
+            mbed_program.from_existing.assert_called_once_with(
+                pathlib.Path(os.getcwd()),
+                pathlib.Path(target.upper(), profile, toolchain.upper())
+            )
+            generate_config.assert_called_once_with(target.upper(), toolchain.upper(), program)
+            generate_build_system.assert_called_once_with(program.root, program.files.cmake_build_dir, profile)
+
     def test_build_folder_removed_when_clean_flag_passed(
         self, generate_config, mbed_program, build_project, generate_build_system
     ):
