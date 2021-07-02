@@ -1204,9 +1204,12 @@
         "slug": "ST-Discovery-L562QE",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 6.0",
-            "Mbed OS 6.1",
-            "Mbed OS 6.2"
+            "Mbed OS 6.10",
+            "Mbed OS 6.11",
+            "Mbed OS 6.12",
+            "Mbed OS 6.7",
+            "Mbed OS 6.8",
+            "Mbed OS 6.9"
         ],
         "mbed_enabled": []
     },

@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.28.0 (2021-07-02)
+===================
+
+Features
+--------
+
+- Targets modified: DISCO-L562QE (STM32L562E-DK). (#20210702050108)
+
+
 7.27.0 (2021-06-26)
 ===================
 
