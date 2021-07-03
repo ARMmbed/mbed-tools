@@ -1,1 +1,0 @@
-Add `-b`, `--profile` to the `configure` subcommand for specifying build profile.

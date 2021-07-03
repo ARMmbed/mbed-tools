@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.28.1 (2021-07-03)
+===================
+
+Bugfixes
+--------
+
+- Add `-b`, `--profile` to the `configure` subcommand for specifying build profile. (#262)
+
+
 7.28.0 (2021-07-02)
 ===================
 

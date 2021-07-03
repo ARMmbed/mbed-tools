@@ -54,6 +54,7 @@ from mbed_tools.build import generate_config
     help=&#34;The toolchain you are using to build your app.&#34;,
 )
 @click.option(&#34;-m&#34;, &#34;--mbed-target&#34;, required=True, help=&#34;A build target for an Mbed-enabled device, eg. K64F&#34;)
+@click.option(&#34;-b&#34;, &#34;--profile&#34;, default=&#34;develop&#34;, help=&#34;The build type (release, develop or debug).&#34;)
 @click.option(&#34;-o&#34;, &#34;--output-dir&#34;, type=click.Path(), default=None, help=&#34;Path to output directory.&#34;)
 @click.option(
     &#34;-p&#34;,
@@ -71,6 +72,7 @@ from mbed_tools.build import generate_config
 def configure(
     toolchain: str,
     mbed_target: str,
+    profile: str,
     program_path: str,
     mbed_os_path: str,
     output_dir: str,
@@ -90,12 +92,13 @@ def configure(
         custom_targets_json: the path to custom_targets.json
         toolchain: the toolchain you are using (eg. GCC_ARM, ARM)
         mbed_target: the target you are building for (eg. K64F)
+        profile: The Mbed build profile (debug, develop or release).
         program_path: the path to the local Mbed program
         mbed_os_path: the path to the local Mbed OS directory
         output_dir: the path to the output directory
         app_config: the path to the application configuration file
     &#34;&#34;&#34;
-    cmake_build_subdir = pathlib.Path(mbed_target.upper(), &#34;develop&#34;, toolchain.upper())
+    cmake_build_subdir = pathlib.Path(mbed_target.upper(), profile.lower(), toolchain.upper())
     if mbed_os_path is None:
         program = MbedProgram.from_existing(pathlib.Path(program_path), cmake_build_subdir)
     else:
