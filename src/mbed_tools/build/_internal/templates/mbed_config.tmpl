@@ -84,7 +84,7 @@ set(MBED_CONFIG_DEFINITIONS
         {% set value = setting.value|replace("\"", "\\\"") -%}
     {%- endif -%}
     {%- if setting.value is not none -%}
-    "-D{{setting_name}}={{value}}"
+    "{{setting_name}}={{value}}"
     {% endif -%}
 {%- endfor -%}
 {% for macro in macros %}

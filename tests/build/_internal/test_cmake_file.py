@@ -60,4 +60,4 @@ class TestRendersCMakeListsFile:
         ]
 
         result = render_mbed_config_cmake_template(config, TOOLCHAIN_NAME, "target_name")
-        assert '"-DMBED_CONF_IOTC_MQTT_HOST={\\"mqtt.2030.ltsapis.goog\\", IOTC_MQTT_PORT}"' in result
+        assert '"MBED_CONF_IOTC_MQTT_HOST={\\"mqtt.2030.ltsapis.goog\\", IOTC_MQTT_PORT}"' in result
