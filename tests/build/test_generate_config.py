@@ -533,3 +533,24 @@ def test_output_ext_hex(program):
     config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
 
     assert 'MBED_OUTPUT_EXT "hex"' in config_text
+
+
+def test_forced_reset_timeout_unspecified(program):
+    generate_config("K64F", "GCC_ARM", program)
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
+
+    assert 'MBED_GREENTEA_TEST_RESET_TIMEOUT ""' in config_text
+
+
+def test_forced_reset_timeout_set(program):
+    target = "IMAGINARYBOARD"
+    toolchain = "GCC_ARM"
+
+    target_data = TARGET_DATA.copy()
+    target_data["forced_reset_timeout"] = 20
+    program.files.custom_targets_json.write_text(json.dumps({target: target_data}))
+
+    generate_config(target, toolchain, program)
+    config_text = (program.files.cmake_build_dir / CMAKE_CONFIG_FILE).read_text()
+
+    assert 'MBED_GREENTEA_TEST_RESET_TIMEOUT "20"' in config_text
