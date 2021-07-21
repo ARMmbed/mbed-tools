@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.28.2 (2021-07-21)
+===================
+
+Bugfixes
+--------
+
+- Fix project definition in CMakeLists.tmpl. (#20210720122929)
+
+
+Misc
+----
+
+- #20210708144331
+
+
 7.28.1 (2021-07-03)
 ===================
 

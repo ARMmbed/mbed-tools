@@ -1,1 +1,0 @@
-Generate mbed_config.cmake without `-D` prepended to each macro in `MBED_CONFIG_DEFINITIONS`
