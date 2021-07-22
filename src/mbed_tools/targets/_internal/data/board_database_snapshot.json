@@ -346,12 +346,14 @@
     },
     {
         "board_type": "B_U585I_IOT02A",
-        "board_name": "DISCO-B-U585I-IOT02A",
+        "board_name": "B-U585I-IOT02A",
         "product_code": "0887",
         "target_type": "platform",
         "slug": "ST-Discovery-B-U585I-IOT02A",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 6.12"
+        ],
         "mbed_enabled": []
     },
     {

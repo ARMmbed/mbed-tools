@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.29.0 (2021-07-22)
+===================
+
+Features
+--------
+
+- Targets added: B-U585I-IOT02A.
+  Targets removed: DISCO-B-U585I-IOT02A. (#20210722050128)
+
+
 7.28.2 (2021-07-21)
 ===================
 
