@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.30.0 (2021-07-23)
+===================
+
+Features
+--------
+
+- Get `forced_reset_timeout` from mbed-os/targets/targets.json and add it to generated mbed_config.cmake as `MBED_GREENTEA_TEST_RESET_TIMEOUT` for use by CTest and mbedhtrun. (#20210720)
+
+
 7.29.0 (2021-07-22)
 ===================
 
