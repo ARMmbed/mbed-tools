@@ -84,13 +84,7 @@ def _get_app_filter_labels(mbed_app_data: dict, config: Config) -> None:
 
 
 def _get_file_filter_overrides(mbed_app_data: dict) -> dict:
-    return {
-        "overrides": [
-            override
-            for override in mbed_app_data.get("overrides", [])
-            if override.modifier or override.name == "requires"
-        ]
-    }
+    return {"overrides": [override for override in mbed_app_data.get("overrides", []) if override.modifier]}
 
 
 @dataclass(frozen=True)
