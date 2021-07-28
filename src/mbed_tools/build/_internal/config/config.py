@@ -6,7 +6,7 @@
 import logging
 
 from collections import UserDict
-from typing import Any, Iterable, Hashable, Callable, List
+from typing import Any, Iterable, Hashable, List
 
 from mbed_tools.build._internal.config.source import Override, ConfigSetting
 
@@ -43,12 +43,14 @@ class Config(UserDict):
                 _apply_override(self.data, override)
                 continue
 
-            try:
-                setting = self._find_first_config_setting(
-                    lambda x: x.name == override.name and x.namespace == override.namespace
-                )
-                setting.value = override.value
-            except ValueError:
+            setting = next(
+                filter(
+                    lambda x: x.name == override.name and x.namespace == override.namespace,
+                    self.data.get(CONFIG_SECTION, []),
+                ),
+                None,
+            )
+            if setting is None:
                 logger.warning(
                     f"You are attempting to override an undefined config parameter "
                     f"`{override.namespace}.{override.name}`.\n"
@@ -56,6 +58,8 @@ class Config(UserDict):
                     "Please check your target_overrides are correct.\n"
                     f"The parameter `{override.namespace}.{override.name}` will not be added to the configuration."
                 )
+            else:
+                setting.value = override.value
 
     def _update_config_section(self, config_settings: List[ConfigSetting]) -> None:
         for setting in config_settings:
@@ -66,25 +70,6 @@ class Config(UserDict):
                 )
 
         self.data[CONFIG_SECTION] = self.data.get(CONFIG_SECTION, []) + config_settings
-
-    def _find_first_config_setting(self, predicate: Callable) -> Any:
-        """Find first config setting based on `predicate`.
-
-        `predicate` is a callable that gets a config setting passed in as an argument. This callable must define the
-        condition for identifying a config setting.
-
-        Example:
-            The following call will find the first ConfigSetting whose name is "foo":
-            `config._find_config_setting(lambda x: x.name == "foo")`
-
-        Args:
-            predicate: A callable that returns True when the desired setting is found.
-        """
-        for elem in self.data.get(CONFIG_SECTION, []):
-            if predicate(elem):
-                return elem
-
-        raise ValueError("Could not find element.")
 
 
 CONFIG_SECTION = "config"
