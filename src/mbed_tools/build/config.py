@@ -19,7 +19,7 @@ CMAKE_CONFIG_FILE = "mbed_config.cmake"
 
 
 def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> Tuple[Config, pathlib.Path]:
-    """Generate an Mbed config file at the program root by parsing the mbed config system.
+    """Generate an Mbed config file after parsing the Mbed config system.
 
     Args:
         target_name: Name of the target to configure for.
@@ -27,7 +27,7 @@ def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> T
         program: The MbedProgram to configure.
 
     Returns:
-        Config object (UserDict)
+        Config object (UserDict).
         Path to the generated config file.
     """
     targets_data = _load_raw_targets_data(program)
