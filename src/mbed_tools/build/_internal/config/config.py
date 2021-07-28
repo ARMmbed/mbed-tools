@@ -35,10 +35,6 @@ class Config(UserDict):
     def _handle_overrides(self, overrides: Iterable[Override]) -> None:
         for override in overrides:
             logger.debug("Applying override '%s.%s'='%s'", override.namespace, override.name, repr(override.value))
-            if override.name == "requires":
-                self.data["requires"] = self.data.get("requires", set()) | override.value
-                continue
-
             if override.name in self.data:
                 _apply_override(self.data, override)
                 continue
