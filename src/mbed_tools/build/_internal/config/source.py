@@ -101,7 +101,7 @@ class Override:
 def _extract_config_settings(namespace: str, config_data: dict) -> List[ConfigSetting]:
     settings = []
     for name, item in config_data.items():
-        logger.debug("Extracting config setting '%s'='%s'", name, item)
+        logger.debug("Extracting config setting from '%s': '%s'='%s'", namespace, name, item)
         if isinstance(item, dict):
             macro_name = item.get("macro_name")
             help_text = item.get("help")
