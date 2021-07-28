@@ -29,6 +29,8 @@ class Config(UserDict):
             self._handle_overrides(item)
         elif key == MACROS_SECTION:
             self.data[MACROS_SECTION] = self.data.get(MACROS_SECTION, set()) | item
+        elif key == REQUIRES_SECTION:
+            self.data[REQUIRES_SECTION] = self.data.get(REQUIRES_SECTION, set()) | item
         else:
             super().__setitem__(key, item)
 
@@ -71,6 +73,7 @@ class Config(UserDict):
 CONFIG_SECTION = "config"
 MACROS_SECTION = "macros"
 OVERRIDES_SECTION = "overrides"
+REQUIRES_SECTION = "requires"
 
 
 def _apply_override(data: dict, override: Override) -> None:

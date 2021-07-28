@@ -111,6 +111,14 @@ class TestConfig:
 
         assert conf["macros"] == {"A", "B"}
 
+    def test_requires_are_appended_to(self):
+        conf = Config({"requires": {"A"}})
+
+        conf.update({"requires": {"B"}})
+        conf.update({"requires": {"C"}})
+
+        assert conf["requires"] == {"A", "B", "C"}
+
     def test_warns_and_skips_override_for_undefined_config_parameter(self, caplog):
         conf = Config()
         override_name = "this-does-not-exist"
