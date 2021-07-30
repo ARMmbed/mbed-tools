@@ -48,7 +48,7 @@ CMAKE_CONFIG_FILE = &#34;mbed_config.cmake&#34;
 
 
 def generate_config(target_name: str, toolchain: str, program: MbedProgram) -&gt; Tuple[Config, pathlib.Path]:
-    &#34;&#34;&#34;Generate an Mbed config file at the program root by parsing the mbed config system.
+    &#34;&#34;&#34;Generate an Mbed config file after parsing the Mbed config system.
 
     Args:
         target_name: Name of the target to configure for.
@@ -56,7 +56,7 @@ def generate_config(target_name: str, toolchain: str, program: MbedProgram) -&gt
         program: The MbedProgram to configure.
 
     Returns:
-        Config object (UserDict)
+        Config object (UserDict).
         Path to the generated config file.
     &#34;&#34;&#34;
     targets_data = _load_raw_targets_data(program)
@@ -100,7 +100,7 @@ def _load_raw_targets_data(program: MbedProgram) -&gt; Any:
 <span>def <span class="ident">generate_config</span></span>(<span>target_name: str, toolchain: str, program: <a title="mbed_tools.project.mbed_program.MbedProgram" href="../project/mbed_program.html#mbed_tools.project.mbed_program.MbedProgram">MbedProgram</a>) ‑> Tuple[mbed_tools.build._internal.config.config.Config, pathlib.Path]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Generate an Mbed config file at the program root by parsing the mbed config system.</p>
+<div class="desc"><p>Generate an Mbed config file after parsing the Mbed config system.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>target_name</code></strong></dt>
@@ -111,14 +111,14 @@ def _load_raw_targets_data(program: MbedProgram) -&gt; Any:
 <dd>The MbedProgram to configure.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<p>Config object (UserDict)
+<p>Config object (UserDict).
 Path to the generated config file.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def generate_config(target_name: str, toolchain: str, program: MbedProgram) -&gt; Tuple[Config, pathlib.Path]:
-    &#34;&#34;&#34;Generate an Mbed config file at the program root by parsing the mbed config system.
+    &#34;&#34;&#34;Generate an Mbed config file after parsing the Mbed config system.
 
     Args:
         target_name: Name of the target to configure for.
@@ -126,7 +126,7 @@ Path to the generated config file.</p></div>
         program: The MbedProgram to configure.
 
     Returns:
-        Config object (UserDict)
+        Config object (UserDict).
         Path to the generated config file.
     &#34;&#34;&#34;
     targets_data = _load_raw_targets_data(program)

@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.30.1 (2021-07-30)
+===================
+
+Bugfixes
+--------
+
+- Fix handling of baremetal "requires" configuration. (#20210729080119)
+
+
 7.30.0 (2021-07-23)
 ===================
 
