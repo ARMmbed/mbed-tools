@@ -67,6 +67,12 @@ set(MBED_TARGET_DEFINITIONS{% for component in components %}
 {% if mbed_ram_size is defined %}
     MBED_RAM_SIZE={{ mbed_ram_size | to_hex }}
 {%- endif %}
+{% if mbed_ram1_start is defined %}
+    MBED_RAM1_START={{ mbed_ram1_start | to_hex }}
+{%- endif %}
+{% if mbed_ram1_size is defined %}
+    MBED_RAM1_SIZE={{ mbed_ram1_size | to_hex }}
+{%- endif %}
     TARGET_LIKE_MBED
     __MBED__=1
 )
