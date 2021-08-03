@@ -49,6 +49,8 @@ TARGET_DATA = {
     "trustzone": False,
     "mbed_ram_start": "0",
     "mbed_ram_size": "0",
+    "mbed_ram1_start": "0",
+    "mbed_ram1_size": "0",
     "mbed_rom_start": "0",
     "mbed_rom_size": "0",
 }
@@ -297,6 +299,8 @@ def test_overrides_target_config_param_from_app(matching_target_and_filter, prog
         ("target.mbed_rom_size", "1010", "MBED_ROM_SIZE=0x3f2"),
         ("target.mbed_ram_start", "99", "MBED_RAM_START=0x63"),
         ("target.mbed_ram_size", "1010", "MBED_RAM_SIZE=0x3f2"),
+        ("target.mbed_ram1_start", "99", "MBED_RAM1_START=0x63"),
+        ("target.mbed_ram1_size", "1010", "MBED_RAM1_SIZE=0x3f2"),
     ],
 )
 def test_overrides_target_non_config_params_from_app(
