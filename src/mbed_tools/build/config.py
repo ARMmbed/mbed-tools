@@ -16,6 +16,7 @@ from mbed_tools.build._internal.write_files import write_file
 from mbed_tools.build.exceptions import MbedBuildError
 
 CMAKE_CONFIG_FILE = "mbed_config.cmake"
+MBEDIGNORE_FILE = ".mbedignore"
 
 
 def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> Tuple[Config, pathlib.Path]:
@@ -40,6 +41,8 @@ def generate_config(target_name: str, toolchain: str, program: MbedProgram) -> T
     )
     cmake_config_file_path = program.files.cmake_build_dir / CMAKE_CONFIG_FILE
     write_file(cmake_config_file_path, cmake_file_contents)
+    mbedignore_path = program.files.cmake_build_dir / MBEDIGNORE_FILE
+    write_file(mbedignore_path, "*")
     return config, cmake_config_file_path
 
 

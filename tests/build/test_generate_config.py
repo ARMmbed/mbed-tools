@@ -4,11 +4,12 @@
 #
 import json
 
+import os
 import pytest
 
 from mbed_tools.project import MbedProgram
 from mbed_tools.build import generate_config
-from mbed_tools.build.config import CMAKE_CONFIG_FILE
+from mbed_tools.build.config import CMAKE_CONFIG_FILE, MBEDIGNORE_FILE
 from mbed_tools.lib.exceptions import ToolsError
 
 
@@ -94,6 +95,17 @@ def program_in_mbed_os_subdir(tmp_path):
 )
 def matching_target_and_filter(request):
     return request.param
+
+
+def test_mbedignore_generated(program):
+    target = "K64F"
+    toolchain = "GCC_ARM"
+
+    generate_config(target, toolchain, program)
+
+    mbedignore_file = (program.files.cmake_build_dir / MBEDIGNORE_FILE)
+
+    assert os.path.isfile(mbedignore_file)
 
 
 def test_target_and_toolchain_collected(program):
