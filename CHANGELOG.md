@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.31.1 (2021-08-12)
+===================
+
+Bugfixes
+--------
+
+- Generate .mbedignore in a project's build directory, to prevent Mbed CLI 1 from picking up CMake build files. (#233)
+
+
 7.31.0 (2021-07-31)
 ===================
 

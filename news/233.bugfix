@@ -1,1 +1,0 @@
-Generate .mbedignore in a project's build directory, to prevent Mbed CLI 1 from picking up CMake build files.
