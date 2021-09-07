@@ -176,6 +176,16 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "MAX32660EVSYS",
+        "board_name": "MAX32660EVSYS",
+        "product_code": "0421",
+        "target_type": "platform",
+        "slug": "MAX32660EVSYS",
+        "build_variant": [],
+        "mbed_os_support": [],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "MTS_DRAGONFLY_L496VG",
         "board_name": "Multitech Dragonfly L496VG",
         "product_code": "0313",
