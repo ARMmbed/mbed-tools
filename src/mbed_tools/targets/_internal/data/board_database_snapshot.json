@@ -182,7 +182,9 @@
         "target_type": "platform",
         "slug": "MAX32660EVSYS",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 6.14"
+        ],
         "mbed_enabled": []
     },
     {

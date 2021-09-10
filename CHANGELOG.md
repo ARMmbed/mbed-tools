@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.34.0 (2021-09-10)
+===================
+
+Features
+--------
+
+- Targets modified: MAX32660EVSYS. (#20210910050127)
+
+
 7.33.0 (2021-09-07)
 ===================
 
