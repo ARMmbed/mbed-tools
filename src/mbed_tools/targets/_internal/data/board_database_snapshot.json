@@ -4584,15 +4584,7 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-F031K6",
         "build_variant": [],
-        "mbed_os_support": [
-            "Mbed OS 2",
-            "Mbed OS 5.10",
-            "Mbed OS 5.11",
-            "Mbed OS 5.12",
-            "Mbed OS 5.13",
-            "Mbed OS 5.14",
-            "Mbed OS 5.15"
-        ],
+        "mbed_os_support": [],
         "mbed_enabled": [
             "Baseline"
         ]

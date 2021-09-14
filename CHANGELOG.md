@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.35.0 (2021-09-14)
+===================
+
+Features
+--------
+
+- Targets modified: NUCLEO-F031K6. (#20210914050122)
+
+
 7.34.0 (2021-09-10)
 ===================
 
