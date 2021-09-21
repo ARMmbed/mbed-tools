@@ -1,0 +1,154 @@
+name: Integration tests
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  mbed-examples:
+    container:
+      image: ghcr.io/armmbed/mbed-os-env:master-latest
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        target: [K64F, DISCO_L475VG_IOT01A, NRF52840_DK]
+        example:
+          - mbed-os-example-blinky
+          - mbed-os-example-blinky-baremetal
+        profile: [release, debug, develop]
+        include:
+          - example: mbed-os-example-kvstore
+            target: K64F
+            profile: develop
+
+          - example: mbed-os-example-ble
+            subexample: BLE_Advertising
+            target: NRF52840_DK
+            profile: develop
+
+          - example: mbed-os-example-cellular
+            target: WIO_3G
+            profile: develop
+
+          - example: mbed-os-example-devicekey
+            target: K66F
+            profile: develop
+
+          - example: mbed-os-example-lorawan
+            target: DISCO_L072CZ_LRWAN1
+            profile: develop
+
+          - example: mbed-os-example-mbed-crypto
+            subexample: getting-started
+            target: K64F
+            profile: develop
+
+          - example: mbed-os-example-nfc
+            subexample: NFC_EEPROM
+            target: DISCO_L475VG_IOT01A
+            profile: develop
+
+          - example: mbed-os-example-sockets
+            target: K64F
+            profile: develop
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: mbedtools
+
+      - name: Install tools
+        run: pip install ./mbedtools
+
+      - name: Build
+        run: |
+          set -e
+          # We use manual clone with depth=1 and single branch for speed
+          git clone --depth=1 --single-branch --branch development https://github.com/ARMmbed/${{ matrix.example }}.git
+          if [ -z ${{ matrix.subexample }} ]; then
+              cd ${{ matrix.example }}
+          else
+              cd ${{ matrix.example }}/${{ matrix.subexample }}
+          fi
+
+          mbed-tools deploy
+          mbed-tools -vvv compile -t GCC_ARM -m ${{ matrix.target }} --profile ${{ matrix.profile }}
+
+  test-project-management:
+    container:
+      image: ghcr.io/armmbed/mbed-os-env:master-latest
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: mbedtools
+
+      - name: Install tools
+        run: pip install ./mbedtools
+
+      - name: New project with new directory
+        run: |
+          mbedtools new test
+          cd test
+          mbedtools compile -t GCC_ARM -m K64F
+
+      - name: New project in pwd
+        run: |
+          mkdir mbed-os-example && cd mbed-os-example
+          mbedtools new .
+          mbedtools compile -t GCC_ARM -m K64F
+
+      - name: Import
+        run: |
+          mbedtools import mbed-os-example-ble
+          cd mbed-os-example-ble
+          # Checkout the development branch on BLE example
+          git fetch origin development
+          git checkout FETCH_HEAD
+          cd BLE_Advertising
+          mbedtools deploy
+          mbedtools compile -t GCC_ARM -m K64F
+
+      - name: Deploy
+        run: |
+          mkdir deploy-test
+          cd deploy-test
+          echo "https://github.com/ARMmbed/mbed-os" > mbed-os.lib
+          git clone --branch=latest https://github.com/ARMmbed/mbed-os.git
+          mbedtools -vvv deploy
+          cd mbed-os
+          git branch --points-at origin/HEAD
+          git branch --points-at origin/HEAD | grep -q "\*" || (echo "Couldn't
+          see current branch points at default branch" && false)
+
+  test-custom-target:
+    container:
+      image: ghcr.io/armmbed/mbed-os-env:master-latest
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: mbedtools
+
+      - name: Install tools
+        run: pip install ./mbedtools
+
+      - name: Build
+        run: |
+          mbedtools new custom-target-test
+          cd custom-target-test
+          cp ../mbedtools/ci/test-data/custom_targets.json .
+          mkdir TARGET_IMAGINARYBOARD
+          cp ../mbedtools/ci/test-data/TARGET_IMAGINARYBOARD/* TARGET_IMAGINARYBOARD
+          cp mbed-os/targets/TARGET_STM/TARGET_STM32L4/TARGET_STM32L475xG/TARGET_DISCO_L475VG_IOT01A/P* TARGET_IMAGINARYBOARD
+          sed -i '/add_subdirectory(${MBED_PATH})/i add_subdirectory(TARGET_IMAGINARYBOARD)' CMakeLists.txt
+          mbedtools compile -t GCC_ARM -m IMAGINARYBOARD
