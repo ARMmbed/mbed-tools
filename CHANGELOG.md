@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.36.0 (2021-09-22)
+===================
+
+Features
+--------
+
+- Targets added: Nucleo-G0B1RE, Nucleo-H723ZG. (#20210922050130)
+
+
 7.35.0 (2021-09-14)
 ===================
 

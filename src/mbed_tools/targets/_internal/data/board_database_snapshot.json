@@ -655,6 +655,26 @@
         ]
     },
     {
+        "board_type": "NUCLEO_G0B1RE",
+        "board_name": "Nucleo-G0B1RE",
+        "product_code": "0872",
+        "target_type": "platform",
+        "slug": "Nucleo-G0B1RE",
+        "build_variant": [],
+        "mbed_os_support": [],
+        "mbed_enabled": []
+    },
+    {
+        "board_type": "NUCLEO_H723ZG",
+        "board_name": "Nucleo-H723ZG",
+        "product_code": "0871",
+        "target_type": "platform",
+        "slug": "Nucleo-H723ZG",
+        "build_variant": [],
+        "mbed_os_support": [],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "WIO_R410",
         "board_name": "Seeed Wio SARA-R410",
         "product_code": "9016",
