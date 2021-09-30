@@ -2058,7 +2058,9 @@
         "target_type": "platform",
         "slug": "mbed-Connect-Cloud",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 5.15"
+        ],
         "mbed_enabled": []
     },
     {

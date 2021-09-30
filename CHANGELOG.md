@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.39.0 (2021-09-30)
+===================
+
+Features
+--------
+
+- Targets modified: Mbed Connect Cloud. (#20210930050119)
+
+
 7.38.0 (2021-09-28)
 ===================
 
