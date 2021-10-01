@@ -364,7 +364,7 @@
         "slug": "ST-Discovery-B-U585I-IOT02A",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 6.12"
+            "Mbed OS 6.15"
         ],
         "mbed_enabled": []
     },

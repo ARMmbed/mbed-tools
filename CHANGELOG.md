@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.40.0 (2021-10-01)
+===================
+
+Features
+--------
+
+- Targets modified: B-U585I-IOT02A. (#20211001050135)
+
+
 7.39.0 (2021-09-30)
 ===================
 
