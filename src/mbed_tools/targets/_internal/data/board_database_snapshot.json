@@ -485,13 +485,11 @@
         "slug": "ST-NUCLEO-WB15CC",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 6.11",
-            "Mbed OS 6.12",
-            "Mbed OS 6.13",
-            "Mbed OS 6.14",
             "Mbed OS 6.15"
         ],
-        "mbed_enabled": []
+        "mbed_enabled": [
+            "Baseline"
+        ]
     },
     {
         "board_type": "NUCLEO_G491RE",

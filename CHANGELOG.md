@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.41.0 (2021-10-07)
+===================
+
+Features
+--------
+
+- Targets modified: NUCLEO-WB15CC. (#20211007050116)
+
+
 7.40.0 (2021-10-01)
 ===================
 
