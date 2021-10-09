@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.42.0 (2021-10-09)
+===================
+
+Features
+--------
+
+- Targets added: DISCO-H573II. (#20211009050109)
+
+
 7.41.0 (2021-10-07)
 ===================
 

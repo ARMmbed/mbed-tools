@@ -176,6 +176,18 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "DISCO_H573II",
+        "board_name": "DISCO-H573II",
+        "product_code": "0831",
+        "target_type": "platform",
+        "slug": "ST-Discovery-H573II",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.15"
+        ],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "MAX32660EVSYS",
         "board_name": "MAX32660EVSYS",
         "product_code": "0421",
