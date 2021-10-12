@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.43.0 (2021-10-12)
+===================
+
+Features
+--------
+
+- Targets added: NUCLEO-H503RB. (#20211012050110)
+
+
 7.42.0 (2021-10-09)
 ===================
 

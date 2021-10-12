@@ -176,6 +176,18 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "NUCLEO_H503RB",
+        "board_name": "NUCLEO-H503RB",
+        "product_code": "0832",
+        "target_type": "platform",
+        "slug": "ST-Nucleo-H503RB",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.15"
+        ],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "DISCO_H573II",
         "board_name": "DISCO-H573II",
         "product_code": "0831",
