@@ -438,7 +438,7 @@
     },
     {
         "board_type": "B_L4S5I_IOT01A",
-        "board_name": "B-L4S5I-IOT01A Discovery kit",
+        "board_name": "DISCO-L4S5I (B-L4S5I-IOT01A)",
         "product_code": "0885",
         "target_type": "platform",
         "slug": "B-L4S5I-IOT01A",

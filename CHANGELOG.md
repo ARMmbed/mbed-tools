@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.44.0 (2021-10-15)
+===================
+
+Features
+--------
+
+- Targets added: DISCO-L4S5I (B-L4S5I-IOT01A).
+  Targets removed: B-L4S5I-IOT01A Discovery kit. (#20211015050129)
+
+
 7.43.0 (2021-10-12)
 ===================
 
