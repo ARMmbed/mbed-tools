@@ -313,7 +313,7 @@
         "slug": "TMPM4KN",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 6.6"
+            "Mbed OS 6.15"
         ],
         "mbed_enabled": []
     },

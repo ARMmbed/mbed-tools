@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.45.0 (2021-10-27)
+===================
+
+Features
+--------
+
+- Targets modified: SBK-M4KN development board. (#20211027050133)
+
+
 7.44.0 (2021-10-15)
 ===================
 
