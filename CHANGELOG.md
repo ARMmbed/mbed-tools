@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.46.0 (2021-12-08)
+===================
+
+Features
+--------
+
+- Targets added: MIMXRT1040-EVK. (#20211208040158)
+
+
 7.45.0 (2021-10-27)
 ===================
 

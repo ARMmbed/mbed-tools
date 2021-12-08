@@ -176,6 +176,18 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "MIMXRT1040_EVK",
+        "board_name": "MIMXRT1040-EVK",
+        "product_code": "0255",
+        "target_type": "platform",
+        "slug": "MIMXRT1040-EVK",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.15"
+        ],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "NUCLEO_H503RB",
         "board_name": "NUCLEO-H503RB",
         "product_code": "0832",
