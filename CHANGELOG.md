@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.47.0 (2021-12-09)
+===================
+
+Features
+--------
+
+- Targets added: NuMaker-IoT-M467.
+  Targets modified: MAX32660EVSYS. (#20211209050102)
+
+
 7.46.0 (2021-12-08)
 ===================
 
