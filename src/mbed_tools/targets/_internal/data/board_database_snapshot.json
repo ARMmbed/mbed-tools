@@ -715,6 +715,16 @@
         ]
     },
     {
+        "board_type": "DISCO_H735G",
+        "board_name": "Disco-H735G",
+        "product_code": "0875",
+        "target_type": "platform",
+        "slug": "Disco-H735G",
+        "build_variant": [],
+        "mbed_os_support": [],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "NUCLEO_G0B1RE",
         "board_name": "Nucleo-G0B1RE",
         "product_code": "0872",

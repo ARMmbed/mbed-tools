@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.48.0 (2021-12-10)
+===================
+
+Features
+--------
+
+- Targets added: Disco-H735G. (#20211210050223)
+
+
 7.47.0 (2021-12-09)
 ===================
 
