@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.49.0 (2021-12-16)
+===================
+
+Features
+--------
+
+- Targets added: NUCLEO-U535RE-Q, NUCLEO-WBA55CG. (#20211216050118)
+
+
 7.48.0 (2021-12-10)
 ===================
 

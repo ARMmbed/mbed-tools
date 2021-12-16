@@ -176,6 +176,30 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "NUCLEO_U535RE_Q",
+        "board_name": "NUCLEO-U535RE-Q",
+        "product_code": "0838",
+        "target_type": "platform",
+        "slug": "ST-Nucleo-U535RE",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.15"
+        ],
+        "mbed_enabled": []
+    },
+    {
+        "board_type": "NUCLEO_WBA55CG",
+        "board_name": "NUCLEO-WBA55CG",
+        "product_code": "0837",
+        "target_type": "platform",
+        "slug": "ST-Nucleo-WBA55CG",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.15"
+        ],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "NUMAKER_IOT_M467",
         "board_name": "NuMaker-IoT-M467",
         "product_code": "1313",
