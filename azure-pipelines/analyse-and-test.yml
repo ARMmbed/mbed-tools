@@ -25,8 +25,8 @@ stages:
               uploadCoverage: "false"
               tox.env: checknews
 
-            Linting_Py_3_6:
-              python.version: '3.6'
+            Linting_Py_3_7:
+              python.version: '3.7'
               vmImageName: ubuntu-latest
               uploadCoverage: "false"
               tox.env: linting
@@ -43,11 +43,11 @@ stages:
               uploadCoverage: "false"
               tox.env: linting
 
-            Linux_Py_3_6:
-              python.version: '3.6'
+            Linux_Py_3_7:
+              python.version: '3.7'
               vmImageName: ubuntu-latest
               uploadCoverage: "false"
-              tox.env: py36
+              tox.env: py37
 
             Linux_Py_3_8:
               python.version: '3.8'
@@ -61,11 +61,11 @@ stages:
               uploadCoverage: "true"
               tox.env: py39
 
-            Windows_Py_3_6:
-              python.version: '3.6'
+            Windows_Py_3_7:
+              python.version: '3.7'
               vmImageName: windows-latest
               uploadCoverage: "false"
-              tox.env: py36
+              tox.env: py37
 
             Windows_Py_3_8:
               python.version: '3.8'
@@ -79,11 +79,11 @@ stages:
               uploadCoverage: "true"
               tox.env: py39
 
-            macOS_Py_3_6:
-              python.version: '3.6'
+            macOS_Py_3_7:
+              python.version: '3.7'
               vmImageName: macOS-latest
               uploadCoverage: "false"
-              tox.env: py36
+              tox.env: py37
 
             macOS_Py_3_8:
               python.version: '3.8'
