@@ -1,0 +1,1 @@
+Add `include_guard` to `mbed_config.cmake`. Users can include it in their application and it won't be reprocessed when it's included again by mbed-os.
