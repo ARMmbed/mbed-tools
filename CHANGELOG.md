@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.49.1 (2021-12-23)
+===================
+
+Bugfixes
+--------
+
+- Add `include_guard` to `mbed_config.cmake`. Users can include it in their application and it won't be reprocessed when it's included again by mbed-os. (#202112221149)
+
+
 7.49.0 (2021-12-16)
 ===================
 
