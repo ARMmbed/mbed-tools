@@ -1,0 +1,1 @@
+Remove `licenseheaders` tool and replace it with `scancode`.

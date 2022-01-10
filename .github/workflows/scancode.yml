@@ -1,0 +1,24 @@
+name: Scancode
+
+on: [pull_request]
+
+jobs:
+  scancode_job:
+    runs-on: ubuntu-latest
+    name: Scan code for licenses
+    steps:
+    - uses: actions/checkout@v1
+    - name: Scan the code
+      id: scancode
+      uses: zephyrproject-rtos/action_scancode@v1
+      with:
+        directory-to-scan: 'scan/'
+    - name: Artifact Upload
+      uses: actions/upload-artifact@v1
+      with:
+        name: scancode
+        path: ./artifacts
+
+    - name: Verify
+      run: |
+        test ! -s ./artifacts/report.txt || (cat ./artifacts/report.txt && exit 1 )
