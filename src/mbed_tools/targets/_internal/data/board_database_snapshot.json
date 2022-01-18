@@ -620,8 +620,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -734,8 +733,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -807,8 +805,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -955,8 +952,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -1023,9 +1019,7 @@
             "Mbed OS 6.8",
             "Mbed OS 6.9"
         ],
-        "mbed_enabled": [
-            "Pelion Device Ready"
-        ]
+        "mbed_enabled": []
     },
     {
         "board_type": "RHOMBIO_L476DMW1K",
@@ -1491,8 +1485,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -1566,8 +1559,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -1722,8 +1714,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -1766,8 +1757,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -1803,8 +1793,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -2794,8 +2783,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -2930,8 +2918,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -3043,8 +3030,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -3408,8 +3394,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -3535,8 +3520,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -4003,8 +3987,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -4071,8 +4054,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -4139,8 +4121,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -4285,8 +4266,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -4323,8 +4303,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -4697,8 +4676,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -5784,8 +5762,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {
@@ -6422,8 +6399,7 @@
         ],
         "mbed_enabled": [
             "Advanced",
-            "Baseline",
-            "Pelion Device Ready"
+            "Baseline"
         ]
     },
     {

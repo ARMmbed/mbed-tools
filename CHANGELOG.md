@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.50.0 (2022-01-18)
+===================
+
+Features
+--------
+
+- Targets modified: Agora Product Development Kit, DISCO-L475VG-IOT01A (B-L475E-IOT01A), FRDM-K64F, FRDM-K66F, GR-LYCHEE, GR-PEACH, NUCLEO-F207ZG, NUCLEO-F429ZI, NUCLEO-F746ZG, NUCLEO-F767ZI, NUCLEO-H743ZI2, NuMaker-IoT-M263A, NuMaker-IoT-M487, NuMaker-PFM-M487, NuMaker-PFM-NUC472, PSoC 6 Wi-Fi BT Prototyping Kit, PSoC 64 Secure Boot, Wi-Fi / BLE Pioneer Kit, SDT64B, Seeed Wio 3G, Seeed Wio LTE M1/NB1(BG96), Uhuru RAVEN, u-blox C030-U201 IoT Starter Kit, u-blox EVK-ODIN-W2. (#20220118050204)
+
+
+Misc
+----
+
+- #202201101535
+
+
 7.49.1 (2021-12-23)
 ===================
 
