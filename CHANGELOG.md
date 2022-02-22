@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.51.0 (2022-02-22)
+===================
+
+Features
+--------
+
+- Targets added: MAX32670EVKIT. (#20220222050138)
+
+
 7.50.0 (2022-01-18)
 ===================
 

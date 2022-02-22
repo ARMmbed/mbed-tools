@@ -176,6 +176,18 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "MAX32670EVKIT",
+        "board_name": "MAX32670EVKIT",
+        "product_code": "0422",
+        "target_type": "platform",
+        "slug": "MAX32670EVKIT",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.15"
+        ],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "NUCLEO_U535RE_Q",
         "board_name": "NUCLEO-U535RE-Q",
         "product_code": "0838",
