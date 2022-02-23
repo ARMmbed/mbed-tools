@@ -178,7 +178,7 @@
     {
         "board_type": "MAX32670EVKIT",
         "board_name": "MAX32670EVKIT",
-        "product_code": "0422",
+        "product_code": "0424",
         "target_type": "platform",
         "slug": "MAX32670EVKIT",
         "build_variant": [],
