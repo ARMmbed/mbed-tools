@@ -496,7 +496,9 @@
         "target_type": "platform",
         "slug": "NUCLEO-U575ZI-Q",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 6.15"
+        ],
         "mbed_enabled": []
     },
     {

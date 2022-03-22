@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.53.0 (2022-03-22)
+===================
+
+Features
+--------
+
+- Targets modified: NUCLEO-U575ZI-Q. (#20220322050209)
+
+
 7.52.0 (2022-02-23)
 ===================
 
