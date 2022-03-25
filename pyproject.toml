@@ -18,8 +18,6 @@ NEWS_DIR = "news/"
 SOURCE_DIR = "src/mbed_tools"
 RELEASE_BRANCH_PATTERN = "^release.*$"
 MODULE_TO_DOCUMENT = "mbed_tools"
-DOCUMENTATION_DEFAULT_OUTPUT_PATH = "local_docs"
-DOCUMENTATION_PRODUCTION_OUTPUT_PATH = "docs/api"
 CHANGELOG_FILE_PATH = "CHANGELOG.md"
 
 [tool.setuptools_scm]

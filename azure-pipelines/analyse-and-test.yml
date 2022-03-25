@@ -3,7 +3,6 @@
 # This pipeline performs multiple actions to ensure the quality of the package:
 # - Performs static analysis and runs test on multiple Python versions and host platforms.
 # - Uploads test coverage to Code Climate
-# - Generates reference documentation
 
 # Trigger on a PR to master, beta or releases branches.
 pr:
@@ -112,27 +111,3 @@ stages:
             displayName: run tox -e $(tox.env)
 
           - template: steps/publish-code-coverage-results.yml
-
-  - stage: DocBuild
-    displayName: 'Build Documentation'
-    dependsOn: []
-    jobs:
-      - job: Docs
-        displayName: 'Build Documentation'
-        pool:
-          vmImage: 'ubuntu-latest'
-
-        steps:
-          - task: UsePythonVersion@0
-            displayName: 'Use Python 3.7'
-            inputs:
-              versionSpec: '3.7'
-
-          - script: |
-              python -m pip install --upgrade tox
-              tox -e generatedocs -- $(Build.Repository.LocalPath)/docs/api
-            displayName: run tox -e generatedocs -- $(Build.Repository.LocalPath)/docs/api
-
-          - publish: $(Build.Repository.LocalPath)/docs/api
-            artifact: Documentation
-            displayName: 'Publish documentation'
