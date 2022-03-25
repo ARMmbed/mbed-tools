@@ -77,7 +77,6 @@ production release here:
 The follow described the major aspects of the project structure:
 
 - `azure-pipelines/` - CI configuration files for Azure Pipelines.
-- `docs/api` - Interface definition and usage documentation.
 - `src/mbed_tools/` - Python source files.
 - `news/` - Collection of news files for unreleased changes.
 - `tests/` - Unit and integration tests.

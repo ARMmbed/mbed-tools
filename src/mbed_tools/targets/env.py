@@ -21,7 +21,6 @@ by any values previously set in your environment.
 import os
 
 import dotenv
-import pdoc
 
 dotenv.load_dotenv(dotenv.find_dotenv(usecwd=True))
 
@@ -30,8 +29,6 @@ class Env:
     """Provides access to environment variables.
 
     Ensures variables are reloaded when environment changes during runtime.
-    Additionally allows to expose documented instance variables in pdoc
-    generated output.
     """
 
     @property
@@ -72,5 +69,3 @@ class Env:
 
 env = Env()
 """Instance of `Env` class."""
-
-env_variables = pdoc.Class("Env", pdoc.Module("mbed_tools.targets.env"), Env).instance_variables()
