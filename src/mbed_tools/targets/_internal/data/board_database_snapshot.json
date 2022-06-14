@@ -1267,7 +1267,20 @@
         "target_type": "platform",
         "slug": "ST-Nucleo-H7A3ZI-Q",
         "build_variant": [],
-        "mbed_os_support": [],
+        "mbed_os_support": [
+            "Mbed OS 6.10",
+            "Mbed OS 6.11",
+            "Mbed OS 6.12",
+            "Mbed OS 6.13",
+            "Mbed OS 6.14",
+            "Mbed OS 6.15",
+            "Mbed OS 6.4",
+            "Mbed OS 6.5",
+            "Mbed OS 6.6",
+            "Mbed OS 6.7",
+            "Mbed OS 6.8",
+            "Mbed OS 6.9"
+        ],
         "mbed_enabled": []
     },
     {

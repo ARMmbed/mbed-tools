@@ -12,6 +12,21 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.54.0 (2022-06-14)
+===================
+
+Features
+--------
+
+- Targets modified: NUCLEO-H7A3ZI-Q. (#20220614103546)
+
+
+Misc
+----
+
+- #202203251430
+
+
 7.53.0 (2022-03-22)
 ===================
 
