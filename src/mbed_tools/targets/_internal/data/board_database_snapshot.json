@@ -299,6 +299,30 @@
         "mbed_enabled": []
     },
     {
+        "board_type": "TMPM4NR",
+        "board_name": "AdBun-M4NR",
+        "product_code": "7022",
+        "target_type": "platform",
+        "slug": "TMPM4NR",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.9"
+        ],
+        "mbed_enabled": []
+    },
+    {
+        "board_type": "TMPM4GR",
+        "board_name": "AdBun-M4GR",
+        "product_code": "7021",
+        "target_type": "platform",
+        "slug": "TMPM4GR",
+        "build_variant": [],
+        "mbed_os_support": [
+            "Mbed OS 6.9"
+        ],
+        "mbed_enabled": []
+    },
+    {
         "board_type": "NUCLEO_H563ZI",
         "board_name": "NUCLEO-H563ZI",
         "product_code": "0878",

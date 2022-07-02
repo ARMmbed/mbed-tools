@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.55.0 (2022-07-02)
+===================
+
+Features
+--------
+
+- Targets added: AdBun-M4GR, AdBun-M4NR. (#20220702050132)
+
+
 7.54.0 (2022-06-14)
 ===================
 
