@@ -41,13 +41,13 @@ def mock_get_libs():
 class TestNewCommand:
     def test_calls_new_function_with_correct_args(self, mock_initialise_project):
         CliRunner().invoke(new, ["path", "--create-only"])
-        mock_initialise_project.assert_called_once_with(pathlib.Path.cwd() / "path", True)
+        mock_initialise_project.assert_called_once_with(pathlib.Path("path").resolve(), True)
 
     def test_echos_mbed_os_message_when_required(self, mock_initialise_project):
         expected = (
             "Creating a new Mbed program at path "
             + "'"
-            + str(pathlib.Path.cwd() / "path")
+            + str(pathlib.Path("path").resolve())
             + "'"
             + ".\nDownloading mbed-os and adding it to the project.\n"
         )
