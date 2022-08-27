@@ -300,7 +300,7 @@
     },
     {
         "board_type": "TMPM4NR",
-        "board_name": "AdBun-M4NR",
+        "board_name": "SBK-M4NR development board",
         "product_code": "7022",
         "target_type": "platform",
         "slug": "TMPM4NR",
