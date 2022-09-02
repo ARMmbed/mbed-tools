@@ -306,7 +306,7 @@
         "slug": "TMPM4NR",
         "build_variant": [],
         "mbed_os_support": [
-            "Mbed OS 6.9"
+            "Mbed OS 6.15"
         ],
         "mbed_enabled": []
     },

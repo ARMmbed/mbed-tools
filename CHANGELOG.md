@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.57.0 (2022-09-02)
+===================
+
+Features
+--------
+
+- Targets modified: SBK-M4NR development board. (#20220902050111)
+
+
 7.56.0 (2022-08-27)
 ===================
 
