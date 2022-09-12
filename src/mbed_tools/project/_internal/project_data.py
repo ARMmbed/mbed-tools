@@ -8,7 +8,7 @@ import logging
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 
 from mbed_tools.project._internal.render_templates import (
     render_cmakelists_template,
@@ -60,13 +60,14 @@ class MbedProgramFiles:
     custom_targets_json: Path
 
     @classmethod
-    def from_new(cls, root_path: Path) -> "MbedProgramFiles":
+    def from_new(cls, root_path: Path, os_path: Any) -> "MbedProgramFiles":
         """Create MbedProgramFiles from a new directory.
 
         A "new directory" in this context means it doesn't already contain an Mbed program.
 
         Args:
             root_path: The directory in which to create the program data files.
+            os_path: The directory in which the mbed-os can be found.
 
         Raises:
             ValueError: A program .mbed or mbed-os.lib file already exists at this path.
@@ -84,7 +85,7 @@ class MbedProgramFiles:
 
         app_config.write_text(json.dumps(DEFAULT_APP_CONFIG, indent=4))
         mbed_os_ref.write_text(f"{MBED_OS_REFERENCE_URL}#{MBED_OS_REFERENCE_ID}")
-        render_cmakelists_template(cmakelists_file, root_path.stem)
+        render_cmakelists_template(cmakelists_file, root_path.stem, os_path)
         render_main_cpp_template(main_cpp)
         render_gitignore_template(gitignore)
         return cls(
