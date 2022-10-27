@@ -12,6 +12,15 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.58.0 (2022-10-27)
+===================
+
+Features
+--------
+
+- Targets modified: AdBun-M4GR. (#20221027050103)
+
+
 7.57.0 (2022-09-02)
 ===================
 
