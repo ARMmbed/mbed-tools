@@ -12,6 +12,16 @@ beta releases are not included in this history. For a full list of all releases,
 
 [//]: # (begin_release_notes)
 
+7.59.0 (2022-11-16)
+===================
+
+Features
+--------
+
+- Targets added: AdBun-M4NR development board.
+  Targets removed: SBK-M4NR development board. (#20221116050105)
+
+
 7.58.0 (2022-10-27)
 ===================
 
