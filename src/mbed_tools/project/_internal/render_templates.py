@@ -12,16 +12,18 @@ import jinja2
 TEMPLATES_DIRECTORY = Path("_internal", "templates")
 
 
-def render_cmakelists_template(cmakelists_file: Path, program_name: str) -> None:
+def render_cmakelists_template(cmakelists_file: Path, program_name: str, os_path: str) -> None:
     """Render CMakeLists.tmpl with the copyright year and program name as the app target name.
 
     Args:
         cmakelists_file: The path where CMakeLists.txt will be written.
         program_name: The name of the program, will be used as the app target name.
+        os_path: The directory where the mbed os is stored.
     """
     cmakelists_file.write_text(
         render_jinja_template(
-            "CMakeLists.tmpl", {"program_name": program_name, "year": str(datetime.datetime.now().year)}
+            "CMakeLists.tmpl", {"program_name": program_name, "os_path": os_path,
+                                "year": str(datetime.datetime.now().year)}
         )
     )
 

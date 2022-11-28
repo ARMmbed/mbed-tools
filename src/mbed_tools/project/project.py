@@ -39,14 +39,15 @@ def import_project(url: str, dst_path: Any = None, recursive: bool = False) -> p
     return dst_path
 
 
-def initialise_project(path: pathlib.Path, create_only: bool) -> None:
+def initialise_project(path: pathlib.Path, create_only: bool, os_path: Any) -> None:
     """Create a new Mbed project, optionally fetching and adding mbed-os.
 
     Args:
         path: Path to the project folder. Created if it doesn't exist.
         create_only: Flag which suppreses fetching mbed-os. If the value is `False`, fetch mbed-os from the remote.
+        os_path: Path to where the mbed os is loacated. defaults to ./mbed-os
     """
-    program = MbedProgram.from_new(path)
+    program = MbedProgram.from_new(path, os_path)
     if not create_only:
         libs = LibraryReferences(root=program.root, ignore_paths=["mbed-os"])
         libs.fetch()

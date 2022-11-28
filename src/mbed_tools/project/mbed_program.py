@@ -6,7 +6,7 @@
 import logging
 
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Any
 from urllib.parse import urlparse
 
 from mbed_tools.project.exceptions import ProgramNotFound, ExistingProgram, MbedOSNotFound
@@ -41,13 +41,14 @@ class MbedProgram:
         self.mbed_os = mbed_os
 
     @classmethod
-    def from_new(cls, dir_path: Path) -> "MbedProgram":
+    def from_new(cls, dir_path: Path, os_path: Any) -> "MbedProgram":
         """Create an MbedProgram from an empty directory.
 
         Creates the directory if it doesn't exist.
 
         Args:
             dir_path: Directory in which to create the program.
+            os_path: Directory where the mbed os is stored.
 
         Raises:
             ExistingProgram: An existing program was found in the path.
@@ -60,9 +61,10 @@ class MbedProgram:
 
         logger.info(f"Creating Mbed program at path '{dir_path.resolve()}'")
         dir_path.mkdir(exist_ok=True)
-        program_files = MbedProgramFiles.from_new(dir_path)
+        program_files = MbedProgramFiles.from_new(dir_path, os_path)
         logger.info(f"Creating git repository for the Mbed program '{dir_path}'")
-        mbed_os = MbedOS.from_new(dir_path / MBED_OS_DIR_NAME)
+        os_path = Path(os_path) if os_path else dir_path / MBED_OS_DIR_NAME
+        mbed_os = MbedOS.from_new(os_path)
         return cls(program_files, mbed_os)
 
     @classmethod
